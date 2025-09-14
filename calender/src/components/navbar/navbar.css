@@ -1,0 +1,9 @@
+.navbar-container {
+    display: flex;
+    width: 100vw;
+    box-shadow: 0px 0px 10px black ;
+    background-color: white;
+    justify-content: center;
+    align-items: center;
+    gap: 20vw;
+}

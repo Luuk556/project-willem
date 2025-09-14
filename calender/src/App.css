@@ -17,6 +17,17 @@
 .App-header {
   background: #4f5cc4;
   background: linear-gradient(0deg,rgba(79, 92, 196, 1) 0%, rgba(83, 224, 237, 1) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.app-body {
+  background: #4f5cc4;
+  background: linear-gradient(0deg,rgba(79, 92, 196, 1) 0%, rgba(83, 224, 237, 1) 100%);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
