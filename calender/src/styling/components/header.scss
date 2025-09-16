@@ -1,0 +1,32 @@
+.header{
+    padding: 2rem 3.7rem;
+    background-color: $blue;
+    display: flex;
+    justify-content: space-between;
+
+    .home{
+
+        &__list{
+
+            &--item{
+                color: $white;
+            }
+        }
+    }
+
+    .navigation{
+
+        &__list{
+            list-style-type: none;
+
+            &--item{
+                display: inline-block;
+                color: $white;
+            }
+
+            &--item:not(:first-child):not(:last-child){
+                margin: 0 2rem;
+            }
+        }
+    }
+}
