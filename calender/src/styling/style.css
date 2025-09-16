@@ -4,11 +4,6 @@
   box-sizing: border-box;
 }
 
-.admin {
-  padding: 0rem 2rem;
-  margin-top: 1.7rem;
-}
-
 .header {
   padding: 2rem 3.7rem;
   background-color: #0000a6;
@@ -27,6 +22,11 @@
 }
 .header .navigation__list--item:not(:first-child):not(:last-child) {
   margin: 0 2rem;
+}
+
+.admin {
+  padding: 0rem 2rem;
+  margin-top: 1.7rem;
 }
 
 .work {

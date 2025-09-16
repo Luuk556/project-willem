@@ -4,12 +4,8 @@
     box-sizing: border-box;
 }
 
-.admin{
-    padding: 0rem 2rem;
-    margin-top: 1.7rem;
-}
-
 @import "variable";
 @import "components/header";
 @import "login/login";
+@import "admin/admin";
 @import "admin/dashboard";
