@@ -5,62 +5,84 @@ interface eventTime {
     duration: number;
     eventDate: Date;
 }
-const Calendar = () => {
-    const dateArray = new Array<String>("Monday", "Tuesday", "Wednessday", "Thursday", "Friday", "Saturday", "Sunday")
-    const timeArray = new Array<String>(
-        "0:00",
-        "1:00",
-        "2:00",
-        "3:00",
-        "4:00",
-        "5:00",
-        "6:00",
-        "7:00",
-        "8:00",
-        "9:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
-        "17:00",
-        "18:00",
-        "19:00",
-        "20:00",
-        "21:00",
-        "22:00",
-        "23:00")
+
+interface calendarSettings {
+    selectedDate: Date;
+    dateAmount: number;
+
+}
+
+const Calendar: React.FC<calendarSettings> = ({
+    selectedDate = new Date(Date.now()),
+    dateAmount = 5
+}) => {
+    const dateArray = new Array<Date>
+
+    for (let i = 0; i < dateAmount; i++) {
+        let date: Date = new Date(Date.now());
+        date.setDate(selectedDate.getDate() + i)
+        dateArray.push(date)
+    }
+
+    const timeArray = new Array<number>()
+    for (let i = 0; i < 24; i++) {
+        timeArray.push(i);
+    }
+
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']
+    function getDayName(dayIndex: number) {
+        return days[dayIndex]
+    }
 
     const eventList: eventTime[] = new Array<eventTime>(
         {
-            eventName: "1",
+            eventName: "event 1",
             duration: 30,
-            eventDate: new Date(2024, 7, 22, 9, 15)
+            eventDate: new Date(2025, 8, 17, 15)
         },
         {
-            eventName: "2",
+            eventName: "event 2",
             duration: 60,
-            eventDate: new Date(2024, 7, 22, 11)
+            eventDate: new Date(2025, 8, 17, 11)
         },
         {
-            eventName: "3",
+            eventName: "event 3",
             duration: 60,
-            eventDate: new Date(2024, 7, 23, 11)
+            eventDate: new Date(2025, 8, 18, 11)
+        },
+        {
+            eventName: "event 4",
+            duration: 60,
+            eventDate: new Date(2025, 8, 18, 11)
         })
 
-    return (
-        <div className="calendar">{
-        }
+    function getEvent(date: Date, time: number) {
+        let events = new Array<eventTime>
+        for (const eventEntry of eventList) {
+            const eventDate = eventEntry.eventDate;
+            if (
+                eventDate.getFullYear() === date.getFullYear() &&
+                eventDate.getMonth() === date.getMonth() &&
+                eventDate.getDate() === date.getDate()
+            ) {
+                if (eventDate.getHours() >= time && eventDate.getHours() < time + 1) {
+                    events.push(eventEntry)
+                }
 
+            }
+        }
+        return events;
+    }
+
+    return (
+        <div className="calendar">
             <table cellSpacing={0} className="calendar-table">
                 <thead>
                     <tr>
                         <td className="calendar-table-cell"> </td>
                         {
-                            dateArray.map((day) => (
-                                <th className="calendar-table-cell">{day}</th>
+                            dateArray.map((date) => (
+                                <th className="calendar-table-cell">{getDayName(date.getDay())}</th>
                             ))
                         }
                         <th></th>
@@ -68,13 +90,22 @@ const Calendar = () => {
                 </thead>
                 <tbody>
                     {
-                        timeArray.map((time, index) => (
+                        timeArray.map((time) => (
                             <tr>
-                                <td className="calendar-table-cell">{time}</td>
+                                <td className="calendar-table-cell">{time + ":00"}</td>
                                 {
-                                    dateArray.map((day) => (
-                                        <td className="calendar-table-cell">events on {day} between {time} and {timeArray[index + 1]}</td>
-                                    ))
+                                    dateArray.map((date) => {
+                                        const events = getEvent(date, time)
+                                        return (
+                                            <td className="calendar-table-cell">
+                                                {
+                                                    events.map((eventData) => (
+                                                        <div className="calendar-event-button">{eventData.eventName}</div>
+                                                    ))
+                                                }
+                                            </td>
+                                        )
+                                    })
                                 }
                             </tr>
                         ))
