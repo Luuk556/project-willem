@@ -9,12 +9,13 @@ interface EventTime {
 interface CalendarSettings {
     selectedDate: Date;
     dateAmount: number;
-
+    isCompact: boolean;
 }
 
 const Calendar: React.FC<CalendarSettings> = ({
     selectedDate = new Date(2025, 8, 16),
-    dateAmount = 5
+    dateAmount = 5,
+    isCompact = false
 }) => {
     const dateArray = new Array<Date>
 
@@ -38,22 +39,22 @@ const Calendar: React.FC<CalendarSettings> = ({
         {
             eventName: "event 1",
             duration: 30,
-            eventDate: new Date(2025, 8, 17, 15)
+            eventDate: new Date(2025, 8, 19, 11)
         },
         {
             eventName: "event 2",
             duration: 60,
-            eventDate: new Date(2025, 8, 17, 11)
+            eventDate: new Date(2025, 8, 19, 15)
         },
         {
             eventName: "event 3",
             duration: 15,
-            eventDate: new Date(2025, 8, 18, 11)
+            eventDate: new Date(2025, 8, 20, 11)
         },
         {
             eventName: "event 4",
             duration: 45,
-            eventDate: new Date(2025, 8, 18, 11, 15)
+            eventDate: new Date(2025, 8, 20, 11, 15)
         })
 
     function getEvent(date: Date, time: number) {
@@ -67,7 +68,6 @@ const Calendar: React.FC<CalendarSettings> = ({
             ) {
                 if (eventDate.getHours() >= time && eventDate.getHours() < time + 1) {
                     events.push(eventEntry)
-                    console.log(eventEntry.eventDate.getMinutes() / 60 * 100 + "%")
                 }
 
             }
@@ -78,8 +78,8 @@ const Calendar: React.FC<CalendarSettings> = ({
     return (
         <div className="calendar">
             <table cellSpacing={0} className="calendar-table">
-                <thead>
-                    <tr>
+                <thead className="calendar-table-head">
+                    <tr className="calendar-table-row">
                         <td className="calendar-table-cell"> </td>
                         {
                             dateArray.map((date) => (
@@ -92,13 +92,14 @@ const Calendar: React.FC<CalendarSettings> = ({
                 <tbody>
                     {
                         timeArray.map((time) => (
-                            <tr>
+                            <tr className="calendar-table-row">
                                 <td className="calendar-table-cell">{time + ":00"}</td>
                                 {
                                     dateArray.map((date) => {
                                         const events = getEvent(date, time)
                                         return (
-                                            <td className="calendar-table-cell">
+                                            <td className="calendar-table-cell" style={{ height: isCompact ? "40px" : "80px" }}>
+                                                <div className="calendar-table-cell-half"></div>
                                                 {
                                                     events.map((eventData) => (
                                                         <div style={{ height: eventData.duration / 60 * 100 + "%", top: eventData.eventDate.getMinutes() / 60 * 100 + "%" }} className="calendar-event-button">{eventData.eventName}</div>
