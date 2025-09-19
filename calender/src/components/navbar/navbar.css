@@ -1,0 +1,12 @@
+.navbar-container {
+    position: sticky;
+    display: flex;
+    height: 5vh;
+    width: 100vw;
+    box-shadow: 0px 0px 10px black;
+    background-color: white;
+    justify-content: center;
+    align-items: center;
+    gap: 10vw;
+    z-index: 100;
+}
