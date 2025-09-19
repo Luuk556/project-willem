@@ -1,19 +1,19 @@
 import "./calendar.css"
 
-interface eventTime {
+interface EventTime {
     eventName: string;
     duration: number;
     eventDate: Date;
 }
 
-interface calendarSettings {
+interface CalendarSettings {
     selectedDate: Date;
     dateAmount: number;
 
 }
 
-const Calendar: React.FC<calendarSettings> = ({
-    selectedDate = new Date(Date.now()),
+const Calendar: React.FC<CalendarSettings> = ({
+    selectedDate = new Date(2025, 8, 16),
     dateAmount = 5
 }) => {
     const dateArray = new Array<Date>
@@ -34,7 +34,7 @@ const Calendar: React.FC<calendarSettings> = ({
         return days[dayIndex]
     }
 
-    const eventList: eventTime[] = new Array<eventTime>(
+    const eventList: EventTime[] = new Array<EventTime>(
         {
             eventName: "event 1",
             duration: 30,
@@ -47,17 +47,17 @@ const Calendar: React.FC<calendarSettings> = ({
         },
         {
             eventName: "event 3",
-            duration: 60,
+            duration: 15,
             eventDate: new Date(2025, 8, 18, 11)
         },
         {
             eventName: "event 4",
-            duration: 60,
-            eventDate: new Date(2025, 8, 18, 11)
+            duration: 45,
+            eventDate: new Date(2025, 8, 18, 11, 15)
         })
 
     function getEvent(date: Date, time: number) {
-        let events = new Array<eventTime>
+        let events = new Array<EventTime>
         for (const eventEntry of eventList) {
             const eventDate = eventEntry.eventDate;
             if (
@@ -67,6 +67,7 @@ const Calendar: React.FC<calendarSettings> = ({
             ) {
                 if (eventDate.getHours() >= time && eventDate.getHours() < time + 1) {
                     events.push(eventEntry)
+                    console.log(eventEntry.eventDate.getMinutes() / 60 * 100 + "%")
                 }
 
             }
@@ -100,7 +101,7 @@ const Calendar: React.FC<calendarSettings> = ({
                                             <td className="calendar-table-cell">
                                                 {
                                                     events.map((eventData) => (
-                                                        <div className="calendar-event-button">{eventData.eventName}</div>
+                                                        <div style={{ height: eventData.duration / 60 * 100 + "%", top: eventData.eventDate.getMinutes() / 60 * 100 + "%" }} className="calendar-event-button">{eventData.eventName}</div>
                                                     ))
                                                 }
                                             </td>
