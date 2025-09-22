@@ -1,8 +1,12 @@
+import { useState } from "react";
+import CalendarEvent from "./calendarEvent.tsx";
+
 //An interface that contains the data required for a preview of an event on the calendar
 interface EventPreview {
     eventName: string;
     duration: number;
     eventDate: Date;
+    eventID: number;
 }
 
 //An interface that contains the settings of the calendar
@@ -24,6 +28,8 @@ const Calendar: React.FC<CalendarSettings> = ({
     isCompact = false
 }) => {
     const dateArray = new Array<Date>;
+    const [selectedEvent, setSelectedEvent] = useState(-1)
+
 
     //gets the start date given to the calendar, and adds dates based on the amount of days shown
     for (let i = 0; i < dateAmount; i++) {
@@ -49,22 +55,26 @@ const Calendar: React.FC<CalendarSettings> = ({
         {
             eventName: "event 1",
             duration: 30,
-            eventDate: new Date(2025, 8, 23, 11)
+            eventDate: new Date(2025, 8, 23, 11),
+            eventID: 0,
         },
         {
             eventName: "event 2",
             duration: 60,
-            eventDate: new Date(2025, 8, 23, 15)
+            eventDate: new Date(2025, 8, 23, 15),
+            eventID: 1,
         },
         {
             eventName: "event 3",
             duration: 15,
-            eventDate: new Date(2025, 8, 24, 11)
+            eventDate: new Date(2025, 8, 24, 11),
+            eventID: 2,
         },
         {
             eventName: "event 4",
             duration: 45,
-            eventDate: new Date(2025, 8, 24, 11, 15)
+            eventDate: new Date(2025, 8, 24, 11, 15),
+            eventID: 3,
         });
 
     function getEvent(date: Date, time: number) {
@@ -93,7 +103,7 @@ const Calendar: React.FC<CalendarSettings> = ({
                         <td className="calendar-table-cell"> </td>
                         {
                             dateArray.map((date) => (
-                                <th className="calendar-table-cell">{getDayName(date.getDay())} {date.getMonth()} / {date.getDate()}</th>
+                                <th key={date.toISOString()} className="calendar-table-cell">{getDayName(date.getDay())} {date.getMonth()} / {date.getDate()}</th>
                             ))
                         }
                         <th></th>
@@ -102,17 +112,22 @@ const Calendar: React.FC<CalendarSettings> = ({
                 <tbody>
                     {
                         timeArray.map((time) => (
-                            <tr className="calendar-table-row">
+                            <tr className="calendar-table-row" key={time}>
                                 <td className="calendar-table-cell">{time + ":00"}</td>
                                 {
-                                    dateArray.map((date) => {
+                                    dateArray.map((date, dateIndex) => {
                                         const events = getEvent(date, time)
                                         return (
-                                            <td className="calendar-table-cell" style={{ height: isCompact ? "40px" : "80px" }}>
+                                            <td className="calendar-table-cell" style={{ height: isCompact ? "40px" : "80px" }} key={dateIndex}>
                                                 <div className="calendar-table-cell-half"></div>
                                                 {
                                                     events.map((eventData) => (
-                                                        <div style={{ height: eventData.duration / 60 * 100 + "%", top: eventData.eventDate.getMinutes() / 60 * 100 + "%" }} className="calendar-event-button">{eventData.eventName}</div>
+                                                        <button
+                                                            key={eventData.eventID}
+                                                            style={{ height: eventData.duration / 60 * 100 + "%", top: eventData.eventDate.getMinutes() / 60 * 100 + "%" }}
+                                                            className="calendar-event-button"
+                                                            onClick={() => { setSelectedEvent(eventData.eventID) }}
+                                                        >{eventData.eventName}</button>
                                                     ))
                                                 }
                                             </td>
@@ -124,6 +139,13 @@ const Calendar: React.FC<CalendarSettings> = ({
                     }
                 </tbody>
             </table>
+
+            {selectedEvent >= 0 && (
+                <CalendarEvent
+                    eventID={selectedEvent}
+                    closePopup={() => setSelectedEvent(-1)}
+                />
+            )}
         </div>
     )
 }

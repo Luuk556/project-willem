@@ -188,6 +188,26 @@
   padding: 0;
   margin: 0;
   background-color: rgb(182, 184, 255);
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.event-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  width: 20%;
+  height: 40%;
+  border: 1px solid black;
+}
+.event-container .close-button {
+  float: right;
+  border: none;
+  background-color: rgb(255, 0, 0);
+  padding: 10px;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=style.css.map */
