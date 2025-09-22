@@ -1,64 +1,74 @@
-import "./calendar.css"
-
-interface EventTime {
+//An interface that contains the data required for a preview of an event on the calendar
+interface EventPreview {
     eventName: string;
     duration: number;
     eventDate: Date;
 }
 
+//An interface that contains the settings of the calendar
 interface CalendarSettings {
     selectedDate: Date;
     dateAmount: number;
     isCompact: boolean;
 }
 
+/**
+ *  A calendar that shows events for specified dates
+ * @param selectedDate the first date of the calendar
+ * @param dateAmount the amount of days that are shown on the calendar
+ * @param isCompact wether the calendar should be shown at half size 
+ */
 const Calendar: React.FC<CalendarSettings> = ({
-    selectedDate = new Date(2025, 8, 16),
+    selectedDate = new Date(Date.now()),
     dateAmount = 5,
     isCompact = false
 }) => {
-    const dateArray = new Array<Date>
+    const dateArray = new Array<Date>;
 
+    //gets the start date given to the calendar, and adds dates based on the amount of days shown
     for (let i = 0; i < dateAmount; i++) {
         let date: Date = new Date(Date.now());
         date.setDate(selectedDate.getDate() + i)
-        dateArray.push(date)
+        dateArray.push(date);
     }
 
+    //Creates an array that contains the numbers 0 - 24 that represent the hours of the day
     const timeArray = new Array<number>()
     for (let i = 0; i < 24; i++) {
         timeArray.push(i);
     }
 
+    //Gets the name of the current day of the week
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']
     function getDayName(dayIndex: number) {
-        return days[dayIndex]
+        return days[dayIndex];
     }
 
-    const eventList: EventTime[] = new Array<EventTime>(
+    //temporary list. will be removed when there is a backend.
+    const eventList: EventPreview[] = new Array<EventPreview>(
         {
             eventName: "event 1",
             duration: 30,
-            eventDate: new Date(2025, 8, 19, 11)
+            eventDate: new Date(2025, 8, 23, 11)
         },
         {
             eventName: "event 2",
             duration: 60,
-            eventDate: new Date(2025, 8, 19, 15)
+            eventDate: new Date(2025, 8, 23, 15)
         },
         {
             eventName: "event 3",
             duration: 15,
-            eventDate: new Date(2025, 8, 20, 11)
+            eventDate: new Date(2025, 8, 24, 11)
         },
         {
             eventName: "event 4",
             duration: 45,
-            eventDate: new Date(2025, 8, 20, 11, 15)
-        })
+            eventDate: new Date(2025, 8, 24, 11, 15)
+        });
 
     function getEvent(date: Date, time: number) {
-        let events = new Array<EventTime>
+        let events = new Array<EventPreview>
         for (const eventEntry of eventList) {
             const eventDate = eventEntry.eventDate;
             if (
@@ -67,7 +77,7 @@ const Calendar: React.FC<CalendarSettings> = ({
                 eventDate.getDate() === date.getDate()
             ) {
                 if (eventDate.getHours() >= time && eventDate.getHours() < time + 1) {
-                    events.push(eventEntry)
+                    events.push(eventEntry);
                 }
 
             }
@@ -83,7 +93,7 @@ const Calendar: React.FC<CalendarSettings> = ({
                         <td className="calendar-table-cell"> </td>
                         {
                             dateArray.map((date) => (
-                                <th className="calendar-table-cell">{getDayName(date.getDay())}</th>
+                                <th className="calendar-table-cell">{getDayName(date.getDay())} {date.getMonth()} / {date.getDate()}</th>
                             ))
                         }
                         <th></th>
