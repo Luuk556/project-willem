@@ -53,27 +53,27 @@ const Calendar: React.FC<CalendarSettings> = ({
     //temporary list. will be removed when there is a backend.
     const eventList: EventPreview[] = new Array<EventPreview>(
         {
-            eventName: "event 1",
+            eventName: "Daily standup",
             duration: 30,
-            eventDate: new Date(2025, 8, 23, 11),
+            eventDate: new Date(2025, 8, 26, 11),
             eventID: 0,
         },
         {
             eventName: "event 2",
             duration: 60,
-            eventDate: new Date(2025, 8, 23, 15),
+            eventDate: new Date(2025, 8, 26, 15),
             eventID: 1,
         },
         {
             eventName: "event 3",
             duration: 15,
-            eventDate: new Date(2025, 8, 24, 11),
+            eventDate: new Date(2025, 8, 27, 11),
             eventID: 2,
         },
         {
             eventName: "event 4",
             duration: 45,
-            eventDate: new Date(2025, 8, 24, 11, 15),
+            eventDate: new Date(2025, 8, 27, 11, 15),
             eventID: 3,
         });
 
