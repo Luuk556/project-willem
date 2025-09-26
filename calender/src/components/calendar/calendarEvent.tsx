@@ -1,6 +1,5 @@
 interface CalendarEventProperties {
     eventID: number;
-    closePopup: () => void;
 }
 
 interface EventDetails {
@@ -17,7 +16,7 @@ interface EventDetails {
  * A popup that displays the details of an event.
  * @param eventID The id of an event 
  */
-const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1, closePopup }) => {
+const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
     //Temporary list of events. will be removed once there is a backend. 
     const eventDetailList: EventDetails[] = new Array<EventDetails>(
         {
@@ -31,8 +30,8 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1, closeP
         },
         {
             ID: 2,
-            title: "Call with product owner",
-            description: "call",
+            title: "P.O. meeting",
+            description: "Call with product owner",
             startDate: new Date(2025, 8, 26, 15),
             duration: 60,
             roomID: 1,
@@ -80,9 +79,6 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1, closeP
     }
     return (
         <div className="event-container">
-            <button
-                onClick={closePopup}
-                className="close-button">X</button>
             {
                 (() => {
                     const eventDetails: EventDetails = getEventDetails(eventID);

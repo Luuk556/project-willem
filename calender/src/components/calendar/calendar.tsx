@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CalendarEvent from "./calendarEvent.tsx";
+import PopupComponent from "../popup/popup.tsx";
 
 //An interface that contains the data required for a preview of an event on the calendar
 interface EventPreview {
@@ -29,6 +30,7 @@ const Calendar: React.FC<CalendarSettings> = ({
 }) => {
     const dateArray = new Array<Date>;
     const [selectedEvent, setSelectedEvent] = useState(-1)
+    const [openEventPopup, setOpenEventPopup] = useState(false)
 
 
     //gets the start date given to the calendar, and adds dates based on the amount of days shown
@@ -56,25 +58,25 @@ const Calendar: React.FC<CalendarSettings> = ({
             eventName: "Daily standup",
             duration: 30,
             eventDate: new Date(2025, 8, 26, 11),
-            eventID: 0,
-        },
-        {
-            eventName: "event 2",
-            duration: 60,
-            eventDate: new Date(2025, 8, 26, 15),
             eventID: 1,
         },
         {
-            eventName: "event 3",
-            duration: 15,
-            eventDate: new Date(2025, 8, 27, 11),
+            eventName: "P.O. meeting",
+            duration: 60,
+            eventDate: new Date(2025, 8, 26, 15),
             eventID: 2,
         },
         {
-            eventName: "event 4",
+            eventName: "Daily standup",
+            duration: 15,
+            eventDate: new Date(2025, 8, 27, 11),
+            eventID: 3,
+        },
+        {
+            eventName: "Lunch",
             duration: 45,
             eventDate: new Date(2025, 8, 27, 11, 15),
-            eventID: 3,
+            eventID: 4,
         });
 
     function getEvent(date: Date, time: number) {
@@ -126,7 +128,7 @@ const Calendar: React.FC<CalendarSettings> = ({
                                                             key={eventData.eventID}
                                                             style={{ height: eventData.duration / 60 * 100 + "%", top: eventData.eventDate.getMinutes() / 60 * 100 + "%" }}
                                                             className="calendar-event-button"
-                                                            onClick={() => { setSelectedEvent(eventData.eventID) }}
+                                                            onClick={() => { setSelectedEvent(eventData.eventID); setOpenEventPopup(true) }}
                                                         >{eventData.eventName}</button>
                                                     ))
                                                 }
@@ -140,12 +142,12 @@ const Calendar: React.FC<CalendarSettings> = ({
                 </tbody>
             </table>
 
-            {selectedEvent >= 0 && (
-                <CalendarEvent
-                    eventID={selectedEvent}
-                    closePopup={() => setSelectedEvent(-1)}
-                />
-            )}
+            <PopupComponent
+                closePopup={() => setOpenEventPopup(false)}
+                isOpen={openEventPopup}
+            >
+                <CalendarEvent eventID={selectedEvent} />
+            </PopupComponent>
         </div>
     )
 }
