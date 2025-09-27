@@ -4,14 +4,6 @@
   box-sizing: border-box;
 }
 
-.scrollbar {
-  display: block;
-  overflow-y: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  height: 210px;
-}
-
 .header {
   padding: 2rem 3.7rem;
   background-color: #0000a6;
@@ -104,6 +96,8 @@
   height: 20rem;
 }
 .userlist .dashboard-card {
+  display: flex;
+  flex-direction: column;
   background-color: #0000a6;
   width: 33%;
   padding: 0.9rem 0.4rem;
@@ -114,10 +108,14 @@
 .userlist .dashboard-card .card-h__title--text {
   text-align: center;
   color: #ffffff;
-  font-size: bold;
+  font-weight: bold;
 }
 .userlist .dashboard-card .card-b {
   width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 .userlist .dashboard-card .card-b__col {
   display: grid;
@@ -127,6 +125,9 @@
   padding: 0.4rem 0;
 }
 .userlist .dashboard-card .card-b__header {
+  position: sticky;
+  top: 0;
+  background-color: #0000a6;
   text-align: center;
 }
 .userlist .dashboard-card .card-b__header--title {
@@ -138,9 +139,6 @@
 }
 .userlist .dashboard-card .card-b__row--text {
   color: #ffffff;
-}
-.userlist .dashboard-card__body::-webkit-scrollbar {
-  display: none;
 }
 
 .scroll {

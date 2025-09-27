@@ -5,6 +5,8 @@
     height: 20rem;
 
     .dashboard-card{
+        display: flex;
+        flex-direction: column;
         background-color: $blue;
         width: 33%;
         padding: 0.9rem 0.4rem;
@@ -17,13 +19,17 @@
                 &--text{
                     text-align: center;
                     color: $white;
-                    font-size: bold;
+                    font-weight: bold;
                 }
             }
         }
 
         .card-b{
             width: 100%;
+            flex: 1;
+            overflow-y: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
 
             &__col{
                 display: grid;
@@ -34,6 +40,9 @@
             }
 
             &__header{
+                position: sticky;
+                top: 0;
+                background-color: $blue;
                 text-align: center;
 
                 &--title{
@@ -49,10 +58,6 @@
                     color: $white;
                 }
             }
-        }
-
-        &__body::-webkit-scrollbar {
-            display: none;
         }
     }
 }

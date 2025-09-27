@@ -126,17 +126,14 @@ function AdminDashboard() {
                                 <p className="card-b__header--title">Mail</p>
                                 <p className="card-b__header--title">Edit</p>
                             </div>
-
-                            <div className="scrollbar">
-                                {users.map((user) => (
-                                    <div key={user.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 4 }}>
-                                        <p className="card-b__row--text">{ user.name }</p>
-                                        <p className="card-b__row--text">{ user.username }</p>
-                                        <p className="card-b__row--text">{ user.email }</p>
-                                        <p className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
-                                    </div>
-                                ))}
-                            </div>
+                            {users.map((user) => (
+                                <div key={user.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 4 }}>
+                                    <p className="card-b__row--text">{ user.name }</p>
+                                    <p className="card-b__row--text">{ user.username }</p>
+                                    <p className="card-b__row--text">{ user.email }</p>
+                                    <p className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                                </div>
+                            ))}
                         </div>
                     </section>
 

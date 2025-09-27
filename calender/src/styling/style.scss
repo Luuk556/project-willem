@@ -4,14 +4,6 @@
     box-sizing: border-box;
 }
 
-.scrollbar{
-    display: block;
-    overflow-y: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    height: 210px;
-}
-
 @import "variable";
 @import "components/header";
 @import "login/login";
