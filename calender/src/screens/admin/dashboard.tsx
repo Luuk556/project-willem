@@ -30,33 +30,33 @@ function AdminDashboard() {
         },
         {
             id: 2,
-            name: "Joran",
-            username: "Klootzak",
-            email: "joran@ziggo.com"
+            name: "Pieter",
+            username: "Works",
+            email: "Pieter@ziggo.com"
         },
         {
             id: 3,
-            name: "Joran",
-            username: "Klootzak",
-            email: "joran@ziggo.com"
+            name: "Pieter",
+            username: "Works",
+            email: "Pieter@ziggo.com"
         },
         {
             id: 4,
-            name: "Joran",
-            username: "Klootzak",
-            email: "joran@ziggo.com"
+            name: "Pieter",
+            username: "Works",
+            email: "Pieter@ziggo.com"
         },
         {
             id: 5,
-            name: "Joran",
-            username: "Klootzak",
-            email: "joran@ziggo.com"
+            name: "Pieter",
+            username: "Works",
+            email: "Pieter@ziggo.com"
         },
         {
             id: 6,
-            name: "Peter",
-            username: "Pan",
-            email: "peter@ziggo.com"
+            name: "Pieter",
+            username: "Works",
+            email: "Pieter@ziggo.com"
         },
         {
             id: 7,
