@@ -57,25 +57,25 @@ const Calendar: React.FC<CalendarSettings> = ({
         {
             eventName: "Daily standup",
             duration: 30,
-            eventDate: new Date(2025, 8, 26, 11),
+            eventDate: new Date(2025, 8, 29, 11),
             eventID: 1,
         },
         {
             eventName: "P.O. meeting",
             duration: 60,
-            eventDate: new Date(2025, 8, 26, 15),
+            eventDate: new Date(2025, 8, 29, 15),
             eventID: 2,
         },
         {
             eventName: "Daily standup",
-            duration: 15,
-            eventDate: new Date(2025, 8, 27, 11),
+            duration: 30,
+            eventDate: new Date(2025, 8, 30, 11),
             eventID: 3,
         },
         {
             eventName: "Lunch",
             duration: 45,
-            eventDate: new Date(2025, 8, 27, 11, 15),
+            eventDate: new Date(2025, 8, 30, 12, 30),
             eventID: 4,
         });
 
