@@ -89,12 +89,6 @@
   margin-top: 1.7rem;
 }
 
-.work {
-  display: block;
-  height: 200px;
-  overflow-y: auto;
-}
-
 .userlist {
   display: flex;
   justify-content: space-between;
@@ -102,9 +96,11 @@
   height: 20rem;
 }
 .userlist .dashboard-card {
+  display: flex;
+  flex-direction: column;
   background-color: #0000a6;
   width: 33%;
-  padding: 0.9rem 0.7rem;
+  padding: 0.9rem 0.4rem;
 }
 .userlist .dashboard-card .card-h {
   margin-bottom: 1.5rem;
@@ -112,44 +108,37 @@
 .userlist .dashboard-card .card-h__title--text {
   text-align: center;
   color: #ffffff;
-}
-.userlist .dashboard-card .card-b {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-.userlist .dashboard-card .card-b__header {
-  display: flex;
-  width: 100%;
-}
-.userlist .dashboard-card .card-b__header--title {
-  text-align: center;
-  flex: 1;
-  color: #ffffff;
   font-weight: bold;
 }
-.userlist .dashboard-card .card-b__body {
-  display: flex;
-  flex-direction: column;
+.userlist .dashboard-card .card-b {
   width: 100%;
-  height: 200px;
+  flex: 1;
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.userlist .dashboard-card .card-b__body--row {
-  display: flex;
+.userlist .dashboard-card .card-b__col {
+  display: grid;
+  grid-template-columns: repeat(var(--row-count), 1fr);
   width: 100%;
-  padding: 0.1rem 0;
-  border-bottom: solid #ffffff 1px;
+  border-bottom: 1px solid #ffffff;
+  padding: 0.4rem 0;
 }
-.userlist .dashboard-card .card-b__body--text {
-  flex: 1;
-  color: #ffffff;
+.userlist .dashboard-card .card-b__header {
+  position: sticky;
+  top: 0;
+  background-color: #0000a6;
   text-align: center;
 }
-.userlist .dashboard-card__body::-webkit-scrollbar {
-  display: none;
+.userlist .dashboard-card .card-b__header--title {
+  color: #ffffff;
+  font-weight: bold;
+}
+.userlist .dashboard-card .card-b__row {
+  text-align: center;
+}
+.userlist .dashboard-card .card-b__row--text {
+  color: #ffffff;
 }
 
 .scroll {
