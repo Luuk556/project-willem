@@ -22,17 +22,17 @@
     transition: 0.5s;
 }
 
-.indicator-default {
+.indicator-active {
+    width: 100%;
+    background-color: rgb(0, 128, 255);
+}
+
+.indicator-inactive {
     width: 5%;
     background-color: gray;
 }
 
-.indicator-hovering {
+.indicator-hover {
     width: 40%;
-    background-color: rgb(0, 128, 255);
-}
-
-.indicator-active {
-    width: 100%;
     background-color: rgb(0, 128, 255);
 }

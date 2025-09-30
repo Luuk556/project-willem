@@ -1,32 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import "./navbar-cell.css"
 import { Link } from 'react-router-dom';
+import Cell from "../../NavbarCellprops";
 
-interface NavbarCellProps {
-  text?: string;
-  isHovering?: boolean;
-  isActive?: boolean;
-  linkTo?: string;
-}
-
-const NavbarCell: React.FC<NavbarCellProps> = ({
-  text = "",
-  isHovering = false,
+const NavbarCell: React.FC<Cell> = ({
+  id = 0,
+  title = "",
   isActive = false,
-  linkTo = "/"
+  linkTo = "/",
+  setIsActive
 }) => {
-  const indicatorClass = isActive
-    ? "indicator indicator-active"
-    : isHovering
-      ? "indicator indicator-hovering"
-      : "indicator indicator-default";
+
+  const [isHovering, setIsHovering] = useState(false)
   return (
     <Link
       to={linkTo}
       className="navbar-cell-container"
+      onClick={() => setIsActive(id)}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => { setIsHovering(false) }}
     >
-      <p className="navbar-cell-text">{text}</p>
-      <div className={indicatorClass}></div>
+      <p className="navbar-cell-text">{title}</p>
+      <div className={isActive ? "indicator indicator-active" : isHovering ? "indicator indicator-hover" : "indicator indicator-inactive"}></div>
     </Link>
   );
 };
