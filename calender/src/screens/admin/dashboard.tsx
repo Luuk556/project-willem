@@ -1,3 +1,4 @@
+import { FC, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
@@ -20,77 +21,77 @@ interface MeetingDetails {
     date: string;
 }
 
-function AdminDashboard() {
-    const users: Userdetails[] = [
-        {
-            id: 1,
-            name: "Peter",
-            username: "Pan",
-            email: "peter@ziggo.com"
-        },
-        {
-            id: 2,
-            name: "Pieter",
-            username: "Works",
-            email: "Pieter@ziggo.com"
-        },
-        {
-            id: 3,
-            name: "Pieter",
-            username: "Works",
-            email: "Pieter@ziggo.com"
-        },
-        {
-            id: 4,
-            name: "Pieter",
-            username: "Works",
-            email: "Pieter@ziggo.com"
-        },
-        {
-            id: 5,
-            name: "Pieter",
-            username: "Works",
-            email: "Pieter@ziggo.com"
-        },
-        {
-            id: 6,
-            name: "Pieter",
-            username: "Works",
-            email: "Pieter@ziggo.com"
-        },
-        {
-            id: 7,
-            name: "Peter",
-            username: "Pan",
-            email: "peter@ziggo.com"
-        },
-    ];
+const AdminDashboard: FC = () => {
+const [users, setUsers] = useState<Userdetails[]>([
+    {
+        id: 1,
+        name: "Peter",
+        username: "Pan",
+        email: "peter@ziggo.com"
+    },
+    {
+        id: 2,
+        name: "Pieter",
+        username: "Works",
+        email: "Pieter@ziggo.com"
+    },
+    {
+        id: 3,
+        name: "Pieter",
+        username: "Works",
+        email: "Pieter@ziggo.com"
+    },
+    {
+        id: 4,
+        name: "Pieter",
+        username: "Works",
+        email: "Pieter@ziggo.com"
+    },
+    {
+        id: 5,
+        name: "Pieter",
+        username: "Works",
+        email: "Pieter@ziggo.com"
+    },
+    {
+        id: 6,
+        name: "Pieter",
+        username: "Works",
+        email: "Pieter@ziggo.com"
+    },
+    {
+        id: 7,
+        name: "Peter",
+        username: "Pan",
+        email: "peter@ziggo.com"
+    },
+]);
 
-    const rooms: RoomDetails[] = [
-        {
-            id: 1,
-            name: "Room 101",
-            capacity: 40,
-        },
-        {
-            id: 2,
-            name: "Room 102",
-            capacity: 20,
-        }
-    ];
+const [rooms, setRooms] = useState<RoomDetails[]>([
+    {
+        id: 1,
+        name: "Room 101",
+        capacity: 40,
+    },
+    {
+        id: 2,
+        name: "Room 102",
+        capacity: 20,
+    }
+]);
 
-    const Meetings: MeetingDetails[] = [
-        {
-            id: 1,
-            name: "Meeting",
-            date: "18-09-2025",
-        },
-        {
-            id: 2,
-            name: "Project Update",
-            date: "18-10-2025",
-        }
-    ];
+const [meetings, setMeetings] = useState<MeetingDetails[]>([
+    {
+        id: 1,
+        name: "Meeting",
+        date: "18-09-2025",
+    },
+    {
+        id: 2,
+        name: "Project Update",
+        date: "18-10-2025",
+    }
+]);
 
     return (
         <div>
@@ -176,7 +177,7 @@ function AdminDashboard() {
                                 <p className="card-b__header--title">Edit</p>
                             </div>
                             <div className="scrollbar">
-                                {Meetings.map((meeting) => (
+                                {meetings.map((meeting) => (
                                     <div key={meeting.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
                                         <p className="card-b__row--text">{ meeting.name }</p>
                                         <p className="card-b__row--text">{ meeting.date }</p>
@@ -190,7 +191,6 @@ function AdminDashboard() {
             </div>
         </div>
     );
-}
-
+};
 
 export default AdminDashboard
