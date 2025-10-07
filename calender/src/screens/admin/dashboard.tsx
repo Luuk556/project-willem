@@ -1,4 +1,8 @@
 import { FC, useState } from "react";
+import Popup from "./popups/popup.tsx";
+import PopupUsers from "./popups/popupUsers.tsx";
+import PopupRooms from "./popups/popupRooms.tsx";
+import PopupEvents from "./popups/popupEvents.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
@@ -80,7 +84,7 @@ const [rooms, setRooms] = useState<RoomDetails[]>([
     }
 ]);
 
-const [meetings, setMeetings] = useState<MeetingDetails[]>([
+const [events, setEvents] = useState<MeetingDetails[]>([
     {
         id: 1,
         name: "Meeting",
@@ -93,8 +97,21 @@ const [meetings, setMeetings] = useState<MeetingDetails[]>([
     }
 ]);
 
+const [popup, setPopup] = useState<boolean>(false);
+const [popupData, setPopupData] = useState<Object>({});
+const [popupType, setPopupType] = useState<String>("")
+
 return (
     <div>
+    <Popup closePopup={() => setPopup(false)} isOpen={popup} >
+    { popupType === "users" ? (
+        <PopupUsers userData={popupData} />
+    ) : popupType === "rooms" ? (
+        <PopupRooms roomData={popupData} />
+    ) : popupType === "events" ? (
+        <PopupEvents eventData={popupData} />
+    ): null}
+    </Popup>
         <header className="header">
             <section className="home">
                 <div className="home__list">
@@ -130,7 +147,7 @@ return (
                                 <p className="card-b__row--text">{ user.name }</p>
                                 <p className="card-b__row--text">{ user.username }</p>
                                 <p className="card-b__row--text">{ user.email }</p>
-                                <p className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                                <p onClick={() => {setPopupType("users"); setPopupData(user); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
                             </div>
                         ))}
                     </div>
@@ -153,7 +170,7 @@ return (
                                 <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
                                     <p className="card-b__row--text">{ room.name }</p>
                                     <p className="card-b__row--text">{ room.capacity }</p>
-                                    <p className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                                    <p onClick={() => {setPopupType("rooms"); setPopupData(room); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
                                 </div>
                             ))}
                         </div>
@@ -173,11 +190,11 @@ return (
                             <p className="card-b__header--title">Edit</p>
                         </div>
                         <div className="scrollbar">
-                            {meetings.map((meeting) => (
-                                <div key={meeting.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
-                                    <p className="card-b__row--text">{ meeting.name }</p>
-                                    <p className="card-b__row--text">{ meeting.date }</p>
-                                    <p className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                            {events.map((event) => (
+                                <div key={event.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
+                                    <p className="card-b__row--text">{ event.name }</p>
+                                    <p className="card-b__row--text">{ event.date }</p>
+                                    <p  onClick={() => {setPopupType("events"); setPopupData(event); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
                                 </div>
                             ))}
                         </div>
