@@ -57,25 +57,37 @@ const Calendar: React.FC<CalendarSettings> = ({
         {
             eventName: "Daily standup",
             duration: 30,
-            eventDate: new Date(2025, 8, 29, 11),
+            eventDate: new Date(2025, 9, 3, 11),
             eventID: 1,
         },
         {
             eventName: "P.O. meeting",
+            duration: 30,
+            eventDate: new Date(2025, 9, 3, 15),
+            eventID: 2,
+        },
+        {
+            eventName: "P.O. meeting part 2",
             duration: 60,
-            eventDate: new Date(2025, 8, 29, 15),
+            eventDate: new Date(2025, 9, 3, 15, 30),
+            eventID: 2,
+        },
+        {
+            eventName: "P.O. meeting part 3",
+            duration: 60,
+            eventDate: new Date(2025, 9, 3, 16, 30),
             eventID: 2,
         },
         {
             eventName: "Daily standup",
             duration: 30,
-            eventDate: new Date(2025, 8, 30, 11),
+            eventDate: new Date(2025, 9, 4, 11),
             eventID: 3,
         },
         {
             eventName: "Lunch",
             duration: 45,
-            eventDate: new Date(2025, 8, 30, 12, 30),
+            eventDate: new Date(2025, 9, 4, 12, 30),
             eventID: 4,
         });
 
@@ -91,10 +103,35 @@ const Calendar: React.FC<CalendarSettings> = ({
                 if (eventDate.getHours() >= time && eventDate.getHours() < time + 1) {
                     events.push(eventEntry);
                 }
-
             }
         }
         return events;
+    }
+
+    const getHeight = (duration: number): string => {
+        let result: number = duration / 60 * 100
+        return result.toString() + "%"
+    }
+
+    const displayCell = (date: Date, time: number) => {
+        const events: EventPreview[] = getEvent(date, time);
+        return (
+            <td className="calendar-table-cell" style={{ height: isCompact ? "40px" : "80px" }}>
+                <div className="calendar-table-cell-half"></div>
+                <div className="calendar-cell-content">
+                    {
+                        events.map((eventData) => (
+                            <button
+                                key={eventData.eventID}
+                                style={{ height: getHeight(eventData.duration), top: getHeight(eventData.eventDate.getMinutes()) }}
+                                className="calendar-event-button"
+                                onClick={() => { setSelectedEvent(eventData.eventID); setOpenEventPopup(true) }}
+                            >{eventData.eventName}</button>
+                        ))
+                    }
+                </div>
+            </td>
+        )
     }
 
     return (
@@ -117,24 +154,9 @@ const Calendar: React.FC<CalendarSettings> = ({
                             <tr className="calendar-table-row" key={time}>
                                 <td className="calendar-table-cell">{time + ":00"}</td>
                                 {
-                                    dateArray.map((date, dateIndex) => {
-                                        const events = getEvent(date, time)
-                                        return (
-                                            <td className="calendar-table-cell" style={{ height: isCompact ? "40px" : "80px" }} key={dateIndex}>
-                                                <div className="calendar-table-cell-half"></div>
-                                                {
-                                                    events.map((eventData) => (
-                                                        <button
-                                                            key={eventData.eventID}
-                                                            style={{ height: eventData.duration / 60 * 100 + "%", top: eventData.eventDate.getMinutes() / 60 * 100 + "%" }}
-                                                            className="calendar-event-button"
-                                                            onClick={() => { setSelectedEvent(eventData.eventID); setOpenEventPopup(true) }}
-                                                        >{eventData.eventName}</button>
-                                                    ))
-                                                }
-                                            </td>
-                                        )
-                                    })
+                                    dateArray.map((date, dateIndex) => (
+                                        displayCell(date, time)
+                                    ))
                                 }
                             </tr>
                         ))

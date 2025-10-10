@@ -18,6 +18,13 @@
         min-width: 120px;
         width: auto;
         vertical-align: top;
+        padding: 0;
+    }
+
+    .calendar-cell-content {
+        height: 100%;
+        width: 100%;
+        display: grid;
     }
 
     .calendar-table-cell-half {
@@ -28,6 +35,9 @@
     }
 
     .calendar-event-button {
+        z-index: 1;
+        grid-row-start: 1;
+        grid-column-start: 1;
         position: relative;
         width: 100%;
         min-height: 1.5em;
@@ -36,5 +46,6 @@
         background-color: rgb(182, 184, 255);
         border: 1px solid black;
         cursor: pointer;
+        box-sizing: border-box;
     }
 }
