@@ -170,7 +170,7 @@
   transform: translate(-50%, -50%);
   background-color: white;
   width: 20%;
-  height: 40%;
+  min-height: 40%;
   border: 1px solid black;
 }
 .popup-container .popup-header {
