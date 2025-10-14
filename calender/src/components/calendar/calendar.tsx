@@ -142,7 +142,7 @@ const Calendar: React.FC<CalendarSettings> = ({
                         <td className="calendar-table-cell"> </td>
                         {
                             dateArray.map((date) => (
-                                <th key={date.toISOString()} className="calendar-table-cell">{getDayName(date.getDay())} {date.getMonth()} / {date.getDate()}</th>
+                                <th key={date.toISOString()} className="calendar-table-cell">{getDayName(date.getDay())} {date.getMonth() + 1} / {date.getDate()}</th>
                             ))
                         }
                         <th></th>
