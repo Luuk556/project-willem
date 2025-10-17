@@ -24,7 +24,7 @@ const PopupUsers: React.FC<popupUsersData> = ({ userData, saveUserChanges }) => 
   });
 
   const changeUser = () => {
-    saveUserChanges(userChanges, userData.id)
+    if (userData.id != undefined) saveUserChanges(userChanges, userData.id)
   }
 
   return (
