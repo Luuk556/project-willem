@@ -1,4 +1,5 @@
 .navbar-container {
+    position: sticky;
     display: flex;
     height: 5vh;
     width: 100vw;
@@ -7,4 +8,5 @@
     justify-content: center;
     align-items: center;
     gap: 10vw;
+    z-index: 100;
 }
