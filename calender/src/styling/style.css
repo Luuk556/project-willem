@@ -187,4 +187,28 @@
   cursor: pointer;
 }
 
+.roommap-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f1f5f9;
+  overflow: hidden;
+}
+.roommap-container .room-button {
+  position: absolute;
+  border: 2px solid black;
+  border-radius: 8px;
+  background-color: #dbeafe;
+  cursor: pointer;
+}
+
+.room-container .back-button {
+  background-color: rgb(116, 175, 252);
+  padding: 20px;
+  border: none;
+  border-radius: 8px;
+  margin: 20px;
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=style.css.map */

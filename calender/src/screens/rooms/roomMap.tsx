@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface Room {
     id: number;
@@ -111,34 +112,25 @@ const RoomMap: React.FC = () => {
 
     function placeRoom(room: Room) {
         return (
+            <Link to={`/rooms/${room.id}`}>
             <button
                 key={room.id}
+                className='room-button'
                 style={{
-                    position: 'absolute',
                     top: `${room.posY}vh`,
                     left: `${room.posX}vw`,
                     height: `${room.sizeY}vh`,
-                    width: `${room.sizeX}vw`,
-                    border: '2px solid black',
-                    backgroundColor: '#dbeafe',
-                    borderRadius: '8px',
+                    width: `${room.sizeX}vw`,                    
                 }}
             >
                 {room.name || `Room ${room.id}`}
             </button>
+            </Link>
         );
     }
 
     return (
-        <div
-            style={{
-                position: 'relative',
-                width: '100vw',
-                height: '100vh',
-                backgroundColor: '#f1f5f9',
-                overflow: 'hidden',
-            }}
-        >
+        <div className='roommap-container'>
             {roomArray.map(placeRoom)}
         </div>
     );
