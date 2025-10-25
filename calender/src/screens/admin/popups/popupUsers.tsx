@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-interface popupUsersData {
+interface popupUserData {
   userData: {
       id?: number;
       name?: string;
@@ -16,7 +16,7 @@ interface changeUserData {
   email: string;
 }
 
-const PopupUsers: React.FC<popupUsersData> = ({ userData, saveUserChanges }) => {
+const PopupUsers: React.FC<popupUserData> = ({ userData, saveUserChanges }) => {
   const [userChanges, setUserChanges] = useState<changeUserData>({
     name: userData.name || "",
     username: userData.username || "",

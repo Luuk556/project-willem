@@ -112,15 +112,37 @@ const userChanges = (userChanges: Object, id: Number) => {
     setPopupType("")
 };
 
+const roomChanges = (roomChanges: Object, id: Number) => {
+    setRooms(rooms =>
+        rooms.map(oldRoom =>
+            (oldRoom.id === id) ? { ...oldRoom, ...roomChanges } : oldRoom
+        )
+    );
+    setPopup(false)
+    setPopupData({})
+    setPopupType("")
+};
+
+const eventChanges = (roomChanges: Object, id: Number) => {
+    setEvents(events =>
+        events.map(oldEvent =>
+            (oldEvent.id === id) ? { ...oldEvent, ...roomChanges } : oldEvent
+        )
+    );
+    setPopup(false)
+    setPopupData({})
+    setPopupType("")
+};
+
 return (
     <div>
     <Popup closePopup={() => setPopup(false)} isOpen={popup} >
     { popupType === "users" ? (
         <PopupUsers userData={popupData} saveUserChanges={userChanges}  />
     ) : popupType === "rooms" ? (
-        <PopupRooms roomData={popupData} />
+        <PopupRooms roomData={popupData} saveRoomChanges={roomChanges} />
     ) : popupType === "events" ? (
-        <PopupEvents eventData={popupData} />
+        <PopupEvents eventData={popupData} saveEventChanges={eventChanges} />
     ): null}
     </Popup>
         <header className="header">
