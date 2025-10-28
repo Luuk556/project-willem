@@ -1,0 +1,34 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  box-sizing: border-box;
+  background: linear-gradient(0deg,rgba(79, 92, 196, 1) 0%, rgba(83, 224, 237, 1) 100%);
+  border: 2px solid white;
+  border-radius: 8px;
+  padding: 100px;
+}
+
+label {
+  display: flex;
+  padding-bottom: 5px;
+}
+
+input {
+  display: flex;
+  outline-width: 0;
+  border: 1px solid white;
+}
+
+.submit-button {
+  margin-top: 50px;
+  background: white;
+  border: 2px solid white;
+  padding: 10px;
+}
+
+.submit-button:hover {
+  transition-duration: .2s;
+  background-color: rgb(238, 238, 238)
+}
