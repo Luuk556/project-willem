@@ -1,8 +1,8 @@
 import { useState } from "react";
 import CalendarEvent from "./calendarEvent.tsx";
 import PopupComponent from "../popup/popup.tsx";
-import { EventPreview } from "./eventDatatypes.ts";
-import EventList from "./events.ts"
+import { EventPreview } from "../../data/datatypes/eventDatatypes.ts";
+import EventList from "../../data/EventData.ts"
 
 
 //An interface that contains the settings of the calendar

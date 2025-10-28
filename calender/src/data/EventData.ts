@@ -1,59 +1,59 @@
-import { EventDetails, EventPreview } from "./eventDatatypes"
+import { EventDetails, EventPreview } from "./datatypes/eventDatatypes"
 // a temporary file containing a list of all events
 
 class EventList {
     eventList: EventDetails[] = [{
-        ID: 1,
+        ID: 0,
         title: "Daily standup",
         description: "Long daily standup description so i can test how it would look if the description of this event is long.",
         startDate: new Date(2025, 9, 3, 11),
         duration: 30,
-        roomID: 1,
+        roomID: 9,
         isOpenEvent: false,
         userList: [0, 1, 2]
     },
     {
-        ID: 2,
+        ID: 1,
         title: "P.O. meeting",
         description: "Call with product owner",
         startDate: new Date(2025, 9, 3, 15),
         duration: 30,
-        roomID: 1,
+        roomID: 8,
+        isOpenEvent: false,
+        userList: [3, 4, 5]
+    },
+    {
+        ID: 2,
+        title: "P.O. meeting part 2",
+        description: "Call with product owner",
+        startDate: new Date(2025, 9, 3, 15, 30),
+        duration: 60,
+        roomID: 8,
         isOpenEvent: false,
         userList: [3, 4, 5]
     },
     {
         ID: 3,
-        title: "P.O. meeting part 2",
+        title: "P.O. meeting part 3",
         description: "Call with product owner",
-        startDate: new Date(2025, 9, 3, 15, 30),
+        startDate: new Date(2025, 9, 3, 16, 30),
         duration: 60,
-        roomID: 1,
+        roomID: 8,
         isOpenEvent: false,
         userList: [3, 4, 5]
     },
     {
         ID: 4,
-        title: "P.O. meeting part 3",
-        description: "Call with product owner",
-        startDate: new Date(2025, 9, 3, 16, 30),
-        duration: 60,
-        roomID: 1,
-        isOpenEvent: false,
-        userList: [3, 4, 5]
-    },
-    {
-        ID: 5,
         title: "Daily standup",
         description: "Daily standup description",
         startDate: new Date(2025, 9, 4, 11),
         duration: 30,
-        roomID: 1,
+        roomID: 9,
         isOpenEvent: false,
         userList: []
     },
     {
-        ID: 6,
+        ID: 5,
         title: "Lunch",
         description: "Lunch in canteen",
         startDate: new Date(2025, 9, 4, 12, 30),

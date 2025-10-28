@@ -1,5 +1,6 @@
-import { EventDetails } from "./eventDatatypes";
-import EventList from "./events.ts"
+import { EventDetails } from "../../data/datatypes/eventDatatypes.ts";
+import EventList from "../../data/EventData.ts"
+import RoomList from "../../data/RoomData.ts"
 interface CalendarEventProperties {
     eventID: number;
 }
@@ -11,6 +12,7 @@ interface CalendarEventProperties {
 const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
 
     const eventList = EventList
+    const roomList = RoomList
 
     //Gets the name of the current day of the week
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']
@@ -20,9 +22,8 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
         return inputDate.getMinutes() + inputDate.getHours() * 60
     }
 
-    //Temporary lists. Will be removed when there is a backend.
+    //Temporary list. Will be removed when there is a backend.
     const users = ["Piet", "Klaas", "Jan", "Kees", "johan", "Pieter"]
-    const rooms = ["Canteen", "Room 1"]
 
     return (
         <div className="event-container">
@@ -61,7 +62,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
                                         })()}
                                     </div>
                                     <div className="room-information">
-                                        <p>In {rooms[eventDetails.roomID]}</p>
+                                        <p>In {roomList.getRoomById(eventDetails.roomID).toString()}</p>
                                         {(() => {
                                             if (eventDetails.isOpenEvent) return <button>Join event</button>
                                         })()}
