@@ -1,16 +1,7 @@
+import { EventDetails } from "./eventDatatypes";
+import EventList from "./events.ts"
 interface CalendarEventProperties {
     eventID: number;
-}
-
-interface EventDetails {
-    ID: number;
-    title: string;
-    description: string;
-    startDate: Date;
-    duration: number;
-    roomID: number;
-    isOpenEvent: boolean;
-    userList: number[];
 }
 
 /**
@@ -18,6 +9,8 @@ interface EventDetails {
  * @param eventID The id of an event 
  */
 const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
+
+    const eventList = EventList
 
     //Gets the name of the current day of the week
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']
@@ -30,75 +23,12 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
     //Temporary lists. Will be removed when there is a backend.
     const users = ["Piet", "Klaas", "Jan", "Kees", "johan", "Pieter"]
     const rooms = ["Canteen", "Room 1"]
-    const eventDetailList: EventDetails[] = new Array<EventDetails>(
-        {
-            ID: 1,
-            title: "Daily standup",
-            description: "Long daily standup description so i can test how it would look if the description of this event is long.",
-            startDate: new Date(2025, 9, 3, 10, 30),
-            duration: 30,
-            roomID: 1,
-            isOpenEvent: false,
-            userList: [0, 1, 2]
-        },
-        {
-            ID: 2,
-            title: "P.O. meeting",
-            description: "Call with product owner",
-            startDate: new Date(2025, 9, 3, 15),
-            duration: 60,
-            roomID: 1,
-            isOpenEvent: false,
-            userList: [3, 4, 5]
-        },
-        {
-            ID: 3,
-            title: "Daily standup",
-            description: "Daily standup description",
-            startDate: new Date(2025, 9, 4, 11),
-            duration: 30,
-            roomID: 1,
-            isOpenEvent: false,
-            userList: []
-        },
-        {
-            ID: 4,
-            title: "Lunch",
-            description: "Lunch in canteen",
-            startDate: new Date(2025, 9, 4, 11, 15),
-            duration: 45,
-            roomID: 0,
-            isOpenEvent: true,
-            userList: []
-        }
-    )
 
-    const getEventDetails = (eventID: number): EventDetails => {
-        console.log(eventID)
-        let result: EventDetails = {
-            ID: 0,
-            title: "Could not find event details",
-            description: "",
-            startDate: new Date(Date.now()),
-            duration: 0,
-            roomID: 0,
-            isOpenEvent: false,
-            userList: []
-        }
-        for (let i = 0; i < eventDetailList.length; i++) {
-            if (eventID === eventDetailList[i].ID) {
-                result = eventDetailList[i];
-                break;
-            }
-        }
-
-        return result;
-    }
     return (
         <div className="event-container">
             {
                 (() => {
-                    const eventDetails: EventDetails = getEventDetails(eventID);
+                    const eventDetails: EventDetails = eventList.getEventById(eventID);
                     return (
                         <div>
                             <div className="left-panel">
