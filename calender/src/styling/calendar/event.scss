@@ -1,18 +1,42 @@
 .event-container {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    width: 20%;
-    height: 40%;
-    border: 1px solid black;
-
-    .close-button {
-        float: right;
-        border: none;
-        background-color: rgb(255, 0, 0);
-        padding: 10px;
-        cursor: pointer;
+    .title {
+        font-size: 18px;
     }
+
+    .left-panel {
+        float: left;
+        display: flex;
+        flex-direction: column;
+        width: 75%;
+
+        p {
+            margin: 5px;
+        }
+
+        .left-top {
+            width: 100%;
+            float: left;
+        }
+
+        .left-bottom {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            border-top: 1px solid rgb(199, 199, 199);
+        }
+
+        .room-information {
+            width: 50%;
+            text-align: center;
+
+        }
+    }
+
+    .right-panel {
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid rgb(199, 199, 199);
+    }
+
+
 }
