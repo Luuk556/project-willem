@@ -106,6 +106,14 @@ class EventList {
         return events;
     }
 
+    getEventsByRoom(roomID: number): Array<EventDetails> {
+        let events: Array<EventDetails> = []
+        for (const event of this.eventList) {
+            events.push(event)
+        }
+        return events
+    }
+
 }
 
 export default new EventList();
