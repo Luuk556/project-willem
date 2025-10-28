@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import RoomMap from './screens/rooms/roomMap.tsx';
 import Room from './screens/rooms/room.tsx';
 import Profile from './screens/Profile/Profile.tsx'
+import CreateEvent from './screens/event/create.tsx'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path='/calendar' element={<CalendarScreen />} />
+          <Route path='/event/create' element={<CreateEvent />} />
           <Route path="/" element={<Login />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/rooms" element={<RoomMap />} />
