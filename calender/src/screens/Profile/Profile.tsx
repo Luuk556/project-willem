@@ -1,46 +1,56 @@
-import React from "react"
+import React, { useState } from "react"
 import "./Profile.css"
 
-let editing: boolean = false;
-
-interface ProfileProps{fieldname: string}
-
-const Field: React.FC<ProfileProps> = ({fieldname = "n/a"}) => {
-    let input_type: string = "text"
-    let placeholder: string; // haal value op uit database?
-
-    if (fieldname === "Password") {
-        input_type = "password"
-    }
-
-    if (editing) {
-        placeholder = "Type new "+fieldname+".."
-    } else {
-        placeholder = "fieldvalue"
-    }
-
-    return (
-        <div className="profilefield">
-            <div>{fieldname}</div>
-            <input type={input_type} className="field-input" placeholder={placeholder}></input>
-        </div>
-    )
-}
-
 const Profile: React.FC = () => {
-    
-    function Edit() {
-        editing = true;
+    const mockdata = ["username", "email", "password"]
+
+    const [username, setUsername] = useState(mockdata[0])
+    const [email, setEmail] = useState(mockdata[1])
+    const [password, setPassword] = useState(mockdata[2])
+
+    const handleSubmit = (e: any) => {
+        e.preventDefault()
+
+        const profile = {username, email, password}
+
+        fetch('http://localhost:8000/profile', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(profile)
+        }).then(() => {
+            console.log("Profile data updated")
+        })
     }
 
     return (
         <div className="container">
-            <button className="submit-button" onClick={Edit}>Edit</button>
-            <Field fieldname="Email"></Field>
-            <Field fieldname="Password"></Field>
-            <Field fieldname="First Name"></Field>
-            <Field fieldname="Last Name"></Field>
-            <button className="submit-button">Submit</button>
+            <form onSubmit={handleSubmit}>
+                <label>Username</label>
+                <input
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                />
+                <br />
+                <label>Email</label>
+                <input
+                type="text"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                />
+                <br />
+                <label>Password</label>
+                <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                />
+                <br />
+                <button className="submit-button">Submit Changes</button>
+            </form>
         </div>
     )
 }
