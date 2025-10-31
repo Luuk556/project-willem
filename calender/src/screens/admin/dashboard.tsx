@@ -25,6 +25,12 @@ interface MeetingDetails {
     date: string;
 }
 
+interface popupDetails {
+    user?: Object;
+    room?: Object;
+    event?: Object;
+};
+
 const AdminDashboard: FC = () => {
 const [users, setUsers] = useState<Userdetails[]>([
     {
@@ -97,9 +103,7 @@ const [events, setEvents] = useState<MeetingDetails[]>([
     }
 ]);
 
-const [popup, setPopup] = useState<boolean>(false);
-const [popupData, setPopupData] = useState<Object>({});
-const [popupType, setPopupType] = useState<String>("")
+const [popup, setPopup] = useState<popupDetails>({});
 
 const userChanges = (userChanges: Object, id: Number) => {
     setUsers(users =>
@@ -107,9 +111,7 @@ const userChanges = (userChanges: Object, id: Number) => {
             (oldUser.id === id) ? { ...oldUser, ...userChanges } : oldUser
         )
     );
-    setPopup(false)
-    setPopupData({})
-    setPopupType("")
+    setPopup({})
 };
 
 const roomChanges = (roomChanges: Object, id: Number) => {
@@ -118,9 +120,7 @@ const roomChanges = (roomChanges: Object, id: Number) => {
             (oldRoom.id === id) ? { ...oldRoom, ...roomChanges } : oldRoom
         )
     );
-    setPopup(false)
-    setPopupData({})
-    setPopupType("")
+    setPopup({})
 };
 
 const eventChanges = (roomChanges: Object, id: Number) => {
@@ -129,22 +129,21 @@ const eventChanges = (roomChanges: Object, id: Number) => {
             (oldEvent.id === id) ? { ...oldEvent, ...roomChanges } : oldEvent
         )
     );
-    setPopup(false)
-    setPopupData({})
-    setPopupType("")
+    setPopup({})
 };
 
 return (
 <main>
-    <Popup closePopup={() => setPopup(false)} isOpen={popup} >
-    { popupType === "users" ? (
-        <PopupUsers userData={popupData} saveUserChanges={userChanges}  />
-    ) : popupType === "rooms" ? (
-        <PopupRooms roomData={popupData} saveRoomChanges={roomChanges} />
-    ) : popupType === "events" ? (
-        <PopupEvents eventData={popupData} saveEventChanges={eventChanges} />
+    <Popup closePopup={() => setPopup({})} openPopup={popup} >
+    { popup.user ? (
+        <PopupUsers userData={popup.user} saveUserChanges={userChanges}  />
+    ) : popup.room ? (
+        <PopupRooms roomData={popup.room} saveRoomChanges={roomChanges} />
+    ) : popup.event ? (
+        <PopupEvents eventData={popup.event} saveEventChanges={eventChanges} />
     ): null}
     </Popup>
+
     <div className="admin">
         <div className="userlist">
             <section className="dashboard-card">
@@ -165,7 +164,7 @@ return (
                             <p className="card-b__row--text">{ user.name }</p>
                             <p className="card-b__row--text">{ user.username }</p>
                             <p className="card-b__row--text">{ user.email }</p>
-                            <p onClick={() => {setPopupType("users"); setPopupData(user); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                            <p onClick={() => {setPopup({user: user})}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
                         </div>
                     ))}
                 </div>
@@ -188,7 +187,7 @@ return (
                             <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
                                 <p className="card-b__row--text">{ room.name }</p>
                                 <p className="card-b__row--text">{ room.capacity }</p>
-                                <p onClick={() => {setPopupType("rooms"); setPopupData(room); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                                <p onClick={() => {setPopup({room: room})}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
                             </div>
                         ))}
                     </div>
@@ -212,7 +211,7 @@ return (
                             <div key={event.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
                                 <p className="card-b__row--text">{ event.name }</p>
                                 <p className="card-b__row--text">{ event.date }</p>
-                                <p  onClick={() => {setPopupType("events"); setPopupData(event); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                                <p  onClick={() => {setPopup({event: event})}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
                             </div>
                         ))}
                     </div>
