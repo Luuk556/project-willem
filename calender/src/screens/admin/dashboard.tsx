@@ -135,7 +135,7 @@ const eventChanges = (roomChanges: Object, id: Number) => {
 };
 
 return (
-    <div>
+<main>
     <Popup closePopup={() => setPopup(false)} isOpen={popup} >
     { popupType === "users" ? (
         <PopupUsers userData={popupData} saveUserChanges={userChanges}  />
@@ -145,97 +145,82 @@ return (
         <PopupEvents eventData={popupData} saveEventChanges={eventChanges} />
     ): null}
     </Popup>
-        <header className="header">
-            <section className="home">
-                <div className="home__list">
-                    <p className="home__list--item">Home</p>
+    <div className="admin">
+        <div className="userlist">
+            <section className="dashboard-card">
+                <div className="card-h">
+                    <div className="card-h__title">
+                        <p className="card-h__title--text">Users</p>
+                    </div>
+                </div>
+                <div className="card-b">
+                    <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 4 }}>
+                        <p className="card-b__header--title">Name</p>
+                        <p className="card-b__header--title">Username</p>
+                        <p className="card-b__header--title">Mail</p>
+                        <p className="card-b__header--title">Edit</p>
+                    </div>
+                    {users.map((user) => (
+                        <div key={user.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 4 }}>
+                            <p className="card-b__row--text">{ user.name }</p>
+                            <p className="card-b__row--text">{ user.username }</p>
+                            <p className="card-b__row--text">{ user.email }</p>
+                            <p onClick={() => {setPopupType("users"); setPopupData(user); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                        </div>
+                    ))}
                 </div>
             </section>
-            <nav className="navigation">
-                <ul className="navigation__list">
-                    <li className="navigation__list--item">Calendar</li>
-                    <li className="navigation__list--item">Rooms</li>
-                    <li className="navigation__list--item">Logout</li>
-                </ul>
-            </nav>
-        </header>
 
-        <div className="admin">
-            <div className="userlist">
-                <section className="dashboard-card">
-                    <div className="card-h">
-                        <div className="card-h__title">
-                            <p className="card-h__title--text">Users</p>
-                        </div>
+            <section className="dashboard-card">
+                <div className="card-h">
+                    <div className="card-h__title">
+                        <p className="card-h__title--text">Rooms</p>
                     </div>
-                    <div className="card-b">
-                        <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 4 }}>
-                            <p className="card-b__header--title">Name</p>
-                            <p className="card-b__header--title">Username</p>
-                            <p className="card-b__header--title">Mail</p>
-                            <p className="card-b__header--title">Edit</p>
-                        </div>
-                        {users.map((user) => (
-                            <div key={user.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 4 }}>
-                                <p className="card-b__row--text">{ user.name }</p>
-                                <p className="card-b__row--text">{ user.username }</p>
-                                <p className="card-b__row--text">{ user.email }</p>
-                                <p onClick={() => {setPopupType("users"); setPopupData(user); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                </div>
+                <div className="card-b">
+                    <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
+                        <p className="card-b__header--title">Name</p>
+                        <p className="card-b__header--title">Capacity</p>
+                        <p className="card-b__header--title">Edit</p>
+                    </div>
+                    <div className="scrollbar">
+                        {rooms.map((room) => (
+                            <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
+                                <p className="card-b__row--text">{ room.name }</p>
+                                <p className="card-b__row--text">{ room.capacity }</p>
+                                <p onClick={() => {setPopupType("rooms"); setPopupData(room); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
                             </div>
                         ))}
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <section className="dashboard-card">
-                    <div className="card-h">
-                        <div className="card-h__title">
-                            <p className="card-h__title--text">Rooms</p>
-                        </div>
+            <section className="dashboard-card">
+                <div className="card-h">
+                    <div className="card-h__title">
+                        <p className="card-h__title--text">Events</p>
                     </div>
-                    <div className="card-b">
-                        <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
-                            <p className="card-b__header--title">Name</p>
-                            <p className="card-b__header--title">Capacity</p>
-                            <p className="card-b__header--title">Edit</p>
-                        </div>
-                        <div className="scrollbar">
-                            {rooms.map((room) => (
-                                <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
-                                    <p className="card-b__row--text">{ room.name }</p>
-                                    <p className="card-b__row--text">{ room.capacity }</p>
-                                    <p onClick={() => {setPopupType("rooms"); setPopupData(room); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
-                                </div>
-                            ))}
-                        </div>
+                </div>
+                <div className="card-b">
+                    <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
+                        <p className="card-b__header--title">Name</p>
+                        <p className="card-b__header--title">Date</p>
+                        <p className="card-b__header--title">Edit</p>
                     </div>
-                </section>
-
-                <section className="dashboard-card">
-                    <div className="card-h">
-                        <div className="card-h__title">
-                            <p className="card-h__title--text">Events</p>
-                        </div>
+                    <div className="scrollbar">
+                        {events.map((event) => (
+                            <div key={event.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
+                                <p className="card-b__row--text">{ event.name }</p>
+                                <p className="card-b__row--text">{ event.date }</p>
+                                <p  onClick={() => {setPopupType("events"); setPopupData(event); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                            </div>
+                        ))}
                     </div>
-                    <div className="card-b">
-                        <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
-                            <p className="card-b__header--title">Name</p>
-                            <p className="card-b__header--title">Date</p>
-                            <p className="card-b__header--title">Edit</p>
-                        </div>
-                        <div className="scrollbar">
-                            {events.map((event) => (
-                                <div key={event.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
-                                    <p className="card-b__row--text">{ event.name }</p>
-                                    <p className="card-b__row--text">{ event.date }</p>
-                                    <p  onClick={() => {setPopupType("events"); setPopupData(event); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            </div>
+                </div>
+            </section>
         </div>
     </div>
+</main>
 );
 };
 

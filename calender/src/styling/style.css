@@ -4,24 +4,10 @@
   box-sizing: border-box;
 }
 
-.header {
-  padding: 2rem 3.7rem;
-  background-color: #0000a6;
-  display: flex;
-  justify-content: space-between;
-}
-.header .home__list--item {
-  color: #ffffff;
-}
-.header .navigation__list {
-  list-style-type: none;
-}
-.header .navigation__list--item {
-  display: inline-block;
-  color: #ffffff;
-}
-.header .navigation__list--item:not(:first-child):not(:last-child) {
-  margin: 0 2rem;
+.app {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
 .background-login {
