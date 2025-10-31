@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import './Create.css'
 
 const Profile: React.FC = () => {
     const mockdata = ["event title", "event info", "event description"]
@@ -41,14 +42,13 @@ const Profile: React.FC = () => {
                 />
                 <br />
                 <label>Event Description</label>
-                <input
-                type="text"
+                <textarea
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 />
                 <br />
-                <button className="submit-button">Submit Changes</button>
+                <button className="submit-button">Create Event</button>
             </form>
         </div>
     )
