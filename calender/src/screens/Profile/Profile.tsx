@@ -43,7 +43,12 @@ function ProfileEdit({oldusername, oldemail, oldpassword, oldimg, oldbio}: Editp
     const profileData = {username, email, password, img}
     return (
         <div className="profile">
-            <form onSubmit={(event) => handleSubmit(event, profileData)}>
+
+        <div>
+            <img className="profile-picture" src={img}></img>    
+        </div>
+
+            <form className="profile-fields" onSubmit={(event) => handleSubmit(event, profileData)}>
                 <label>Username</label>
                 <input
                 type="text"
@@ -51,7 +56,6 @@ function ProfileEdit({oldusername, oldemail, oldpassword, oldimg, oldbio}: Editp
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 />
-                <br />
                 <label>Email</label>
                 <input
                 type="text"
@@ -59,7 +63,6 @@ function ProfileEdit({oldusername, oldemail, oldpassword, oldimg, oldbio}: Editp
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 />
-                <br />
                 <label>Password</label>
                 <input
                 type="password"
@@ -67,9 +70,17 @@ function ProfileEdit({oldusername, oldemail, oldpassword, oldimg, oldbio}: Editp
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 />
-                <br />
-                <button className="submit-button">Submit Changes</button>
+                <label>Bio</label>
+                <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                ></textarea>
+                <label>Choose a profile picture:</label>
+                <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" onChange={(e) => setPicture(e.target.value)}/>
             </form>
+            <div>
+                <button className="submit-button">Submit Changes</button>
+            </div>
         </div>
     )
 }
@@ -78,14 +89,26 @@ function Profile({username, email, password, img, bio}: profileProps) {
     const [editing, setEditing] = useState(false)
 
     const editProfileView = <div>
-                            <ProfileEdit oldusername={username} oldemail={email} oldpassword={password} oldimg={img} oldbio={bio}></ProfileEdit>
-                            </div>
+        <ProfileEdit oldusername={username} oldemail={email} oldpassword={password} oldimg={img} oldbio={bio}></ProfileEdit>
+    </div>
+
     var profileView = <div className="profile">
-        <h1 className="profile-field">Username: {username}</h1>
-        <h1 className="profile-field">Email: {email}</h1>
-        <h1 className="profile-field">Password: {password}</h1>
-        <h1 className="profile-field">Bio: {bio}</h1>
-        <button onClick={(event) => setEditing(true)}>Edit</button>
+        <div>
+            <img className="profile-picture" src={img}></img>    
+        </div>
+        <div className="profile-fields">
+            <label>Username: </label>
+            <input value={username} readOnly></input>
+            <label>Email: </label>
+            <input value={email} readOnly></input>
+            <label>Password: </label>
+            <input type="password" value={password} readOnly></input>
+            <label>Bio: </label>
+            <textarea value={bio} readOnly></textarea>
+        </div>
+        <div>
+            <button className="edit-button" onClick={() => setEditing(true)}>Edit details</button>
+        </div>
     </div>
 
     if (editing) {
@@ -102,7 +125,7 @@ function Profile({username, email, password, img, bio}: profileProps) {
 export default function() {
     return (
         <div>
-            <Profile username="kai" email="kai@gmail.com" password="secret" img="" bio="hellooorrr"></Profile>
+            <Profile username="kai" email="kai@gmail.com" password="secret" img="https://media.gettyimages.com/id/1473893794/nl/foto/smiling-businessman-gesturing-against-blue-background.jpg?s=612x612&w=gi&k=20&c=yfxs87VpKNVd8MDJ8cXNt1k6jGjkMt1gKVtXNoUwn6o=" bio="biobiobiobiobiobiobibobobibobibobibobibobibobibobibobibo"></Profile>
         </div>
     )
 };
