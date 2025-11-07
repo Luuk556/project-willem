@@ -1,15 +1,6 @@
 import React, { ProfilerProps, useState } from "react"
 import "./Profile.css"
 
-const mockdata = ["username", "email", "password"]
-
-interface profileProps {
-    username: string,
-    email: string,
-    password: string,
-    img: string,
-    bio: string,
-}
 
 const handleSubmit = (e: any, profileData: {}) => {
     e.preventDefault()
@@ -38,47 +29,54 @@ function Profile() {
 
     if (editing) {
         return (
-        <div className="profile">
-            <div>
-            <label>
+                    <div className="profile-card">
+            <div className="profile-header">
+                <label>
                 <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" onChange={(e) => setPicture(e.target.value)}/>
-                <img className="profile-picture" src={img} />
+                <img className="profile-pic" src={img} />
             </label>
-            </div>
-            <div className="profile-fields">
-                <label>Username: </label>
+              <div>
                 <input value={username} onChange={(e) => setUsername(e.target.value)}></input>
-                <label>Email: </label>
-                <input value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                <label>Password: </label>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
-                <label>Bio: </label>
-                <textarea value={bio} onChange={(e) => setBio(e.target.value)}></textarea>
+                <p className="profile-role">Student Developer</p>
+              </div>
             </div>
-            <button className="submit-button" onClick={(e) => handleSubmit(e, profileData)}>Submit changes</button>
-        </div>
+            <div className="profile-info">
+              <input value={email} onChange={(e) => setEmail(e.target.value)}></input>
+              <p>Project: Project Willem</p>
+            </div>
+            <button
+              onClick={(e) => handleSubmit(e, profileData)}
+              className="btn-green"
+            > Submit
+            </button>
+          </div>
+        
         )
     }
 
     return (
-    <div className="profile">
-        <div>
-            <label>
-                <img className="profile-picture" src={img}></img> 
-            </label>   
-        </div>
-        <div className="profile-fields">
-            <label>Username: </label>
-            <input value={username} readOnly></input>
-            <label>Email: </label>
-            <input value={email} readOnly></input>
-            <label>Password: </label>
-            <input type="password" value={password} readOnly></input>
-            <label>Bio: </label>
-            <textarea value={bio} readOnly></textarea>
-        </div>
-        <button className="edit-button" onClick={() => setEditing(true)}>Edit details</button>
-    </div>
+        <div className="profile-card">
+            <div className="profile-header">
+              <img
+                src={img}
+                alt="Profile image"
+                className="profile-pic"
+              />
+              <div>
+                <h3 className="profile-name">{username}</h3>
+                <p className="profile-role">Student Developer</p>
+              </div>
+            </div>
+            <div className="profile-info">
+              <p>{email}</p>
+              <p>Project: Project Willem</p>
+            </div>
+            <button
+              onClick={() => setEditing(true)}
+              className="btn-green"
+            > Edit
+            </button>
+          </div>
     )
 }
 
