@@ -1,4 +1,3 @@
-import "./calendar-screen.css"
 import Calendar from "../../components/calendar/calendar.tsx"
 import { useState } from "react";
 const CalendarScreen = () => {
