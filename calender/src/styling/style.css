@@ -89,12 +89,6 @@
   margin-top: 1.7rem;
 }
 
-.work {
-  display: block;
-  height: 200px;
-  overflow-y: auto;
-}
-
 .userlist {
   display: flex;
   justify-content: space-between;
@@ -102,9 +96,11 @@
   height: 20rem;
 }
 .userlist .dashboard-card {
+  display: flex;
+  flex-direction: column;
   background-color: #0000a6;
   width: 33%;
-  padding: 0.9rem 0.7rem;
+  padding: 0.9rem 0.4rem;
 }
 .userlist .dashboard-card .card-h {
   margin-bottom: 1.5rem;
@@ -112,44 +108,37 @@
 .userlist .dashboard-card .card-h__title--text {
   text-align: center;
   color: #ffffff;
-}
-.userlist .dashboard-card .card-b {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-.userlist .dashboard-card .card-b__header {
-  display: flex;
-  width: 100%;
-}
-.userlist .dashboard-card .card-b__header--title {
-  text-align: center;
-  flex: 1;
-  color: #ffffff;
   font-weight: bold;
 }
-.userlist .dashboard-card .card-b__body {
-  display: flex;
-  flex-direction: column;
+.userlist .dashboard-card .card-b {
   width: 100%;
-  height: 200px;
+  flex: 1;
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.userlist .dashboard-card .card-b__body--row {
-  display: flex;
+.userlist .dashboard-card .card-b__col {
+  display: grid;
+  grid-template-columns: repeat(var(--row-count), 1fr);
   width: 100%;
-  padding: 0.1rem 0;
-  border-bottom: solid #ffffff 1px;
+  border-bottom: 1px solid #ffffff;
+  padding: 0.4rem 0;
 }
-.userlist .dashboard-card .card-b__body--text {
-  flex: 1;
-  color: #ffffff;
+.userlist .dashboard-card .card-b__header {
+  position: sticky;
+  top: 0;
+  background-color: #0000a6;
   text-align: center;
 }
-.userlist .dashboard-card__body::-webkit-scrollbar {
-  display: none;
+.userlist .dashboard-card .card-b__header--title {
+  color: #ffffff;
+  font-weight: bold;
+}
+.userlist .dashboard-card .card-b__row {
+  text-align: center;
+}
+.userlist .dashboard-card .card-b__row--text {
+  color: #ffffff;
 }
 
 .scroll {
@@ -174,6 +163,12 @@
   min-width: 120px;
   width: auto;
   vertical-align: top;
+  padding: 0;
+}
+.calendar .calendar-cell-content {
+  height: 100%;
+  width: 100%;
+  display: grid;
 }
 .calendar .calendar-table-cell-half {
   position: relative;
@@ -182,31 +177,121 @@
   border: 1px rgb(237, 237, 237) dashed;
 }
 .calendar .calendar-event-button {
+  z-index: 1;
+  grid-row-start: 1;
+  grid-column-start: 1;
   position: relative;
   width: 100%;
   min-height: 1.5em;
   padding: 0;
   margin: 0;
-  background-color: rgb(182, 184, 255);
+  /*background-color: rgb(182, 184, 255);*/
+  background-color: white;
   border: 1px solid black;
+  border-radius: 5px;
   cursor: pointer;
+  box-sizing: border-box;
+  box-shadow: gray 3px 3px 5px;
 }
 
-.event-container {
+.event-container .title {
+  font-size: 18px;
+}
+.event-container .left-panel {
+  float: left;
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+.event-container .left-panel p {
+  margin: 5px;
+}
+.event-container .left-panel .left-top {
+  width: 100%;
+  float: left;
+}
+.event-container .left-panel .left-bottom {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-top: 1px solid rgb(199, 199, 199);
+}
+.event-container .left-panel .room-information {
+  width: 50%;
+  text-align: center;
+}
+.event-container .right-panel {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgb(199, 199, 199);
+}
+
+.popup-background {
+  z-index: 100;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(210, 210, 210, 0.5);
+  z-index: 1;
+}
+.popup-background .background-close {
+  opacity: 0;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.popup-container {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  width: 20%;
+  width: 40%;
   height: 40%;
   border: 1px solid black;
 }
-.event-container .close-button {
+.popup-container .popup-header {
+  width: 100%;
+  border-bottom: 1px solid rgb(199, 199, 199);
+  min-height: 55px;
+}
+.popup-container .close-button {
   float: right;
   border: none;
-  background-color: rgb(255, 0, 0);
-  padding: 10px;
+  background-color: rgba(87, 87, 87, 0.3);
+  border-radius: 100%;
+  margin: 5px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.roommap-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f1f5f9;
+  overflow: hidden;
+}
+.roommap-container .room-button {
+  position: absolute;
+  border: 2px solid black;
+  border-radius: 8px;
+  background-color: #dbeafe;
+  cursor: pointer;
+}
+
+.room-container .back-button {
+  background-color: rgb(116, 175, 252);
+  padding: 20px;
+  border: none;
+  border-radius: 8px;
+  margin: 20px;
   cursor: pointer;
 }
 
