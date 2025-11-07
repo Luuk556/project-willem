@@ -11,7 +11,6 @@ interface CalendarSettings {
     selectedDate: Date;
     dateAmount: number;
     isCompact: boolean;
-    onlyEvents: boolean;
 }
 
 /**
@@ -24,7 +23,6 @@ const Calendar: React.FC<CalendarSettings> = ({
     selectedDate = new Date(Date.now()),
     dateAmount = 5,
     isCompact = false,
-    onlyEvents = false
 }) => {
     const dateArray = new Array<Date>;
     const [selectedEvent, setSelectedEvent] = useState(-1)
