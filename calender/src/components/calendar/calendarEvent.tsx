@@ -40,12 +40,8 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
                                 <div className="left-bottom">
                                     <div className="date-information">
                                         <p>{days[eventDetails.startDate.getDay()]} {eventDetails.startDate.getDate()} {months[eventDetails.startDate.getMonth()]}</p>
-                                        <p>{
-                                            eventDetails.startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
-                                            {new Date(eventDetails.startDate.getTime() + eventDetails.duration * 60000).toLocaleTimeString(
-                                                [], {
-                                                hour: '2-digit', minute: '2-digit'
-                                            })} ({eventDetails.duration} minutes)
+                                        <p>{eventDetails.startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {eventDetails.endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            ({getMinute(eventDetails.endDate) - getMinute(eventDetails.startDate)} minutes)
                                         </p>
                                         {(() => {
                                             const currentDate: Date = new Date(Date.now());

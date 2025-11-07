@@ -7,7 +7,7 @@ class EventList {
         title: "Daily standup",
         description: "Long daily standup description so i can test how it would look if the description of this event is long.",
         startDate: new Date(2025, 9, 3, 11),
-        duration: 30,
+        endDate: new Date(2025, 9, 3, 11, 30),
         roomID: 9,
         isOpenEvent: false,
         userList: [0, 1, 2]
@@ -17,7 +17,7 @@ class EventList {
         title: "P.O. meeting",
         description: "Call with product owner",
         startDate: new Date(2025, 9, 3, 15),
-        duration: 30,
+        endDate: new Date(2025, 9, 3, 45),
         roomID: 8,
         isOpenEvent: false,
         userList: [3, 4, 5]
@@ -27,7 +27,7 @@ class EventList {
         title: "P.O. meeting part 2",
         description: "Call with product owner",
         startDate: new Date(2025, 9, 3, 15, 30),
-        duration: 60,
+        endDate: new Date(2025, 9, 3, 16, 30),
         roomID: 8,
         isOpenEvent: false,
         userList: [3, 4, 5]
@@ -37,7 +37,7 @@ class EventList {
         title: "P.O. meeting part 3",
         description: "Call with product owner",
         startDate: new Date(2025, 9, 3, 16, 30),
-        duration: 60,
+        endDate: new Date(2025, 9, 3, 17, 30),
         roomID: 8,
         isOpenEvent: false,
         userList: [3, 4, 5]
@@ -47,7 +47,7 @@ class EventList {
         title: "Daily standup",
         description: "Daily standup description",
         startDate: new Date(2025, 9, 4, 11),
-        duration: 30,
+        endDate: new Date(2025, 9, 4, 11, 30),
         roomID: 9,
         isOpenEvent: false,
         userList: []
@@ -57,7 +57,7 @@ class EventList {
         title: "Lunch",
         description: "Lunch in canteen",
         startDate: new Date(2025, 9, 4, 12, 30),
-        duration: 45,
+        endDate: new Date(2025, 9, 4, 13, 15),
         roomID: 0,
         isOpenEvent: true,
         userList: []
@@ -69,7 +69,7 @@ class EventList {
             title: "Could not find event details",
             description: "",
             startDate: new Date(Date.now()),
-            duration: 0,
+            endDate: new Date(Date.now()),
             roomID: 0,
             isOpenEvent: false,
             userList: []
@@ -85,22 +85,16 @@ class EventList {
 
     getEventPreview(date: Date, time: number) {
         let events = new Array<EventPreview>
+        const targetDate: Date = new Date(date)
+        targetDate.setHours(time)
         for (const event of this.eventList) {
-            const eventDate = event.startDate;
-            if (
-                eventDate.getFullYear() === date.getFullYear() &&
-                eventDate.getMonth() === date.getMonth() &&
-                eventDate.getDate() === date.getDate()
-            ) {
-                if (eventDate.getHours() >= time && eventDate.getHours() < time + 1) {
-                    events.push({
-                        eventName: event.title,
-                        duration: event.duration,
-                        eventDate: event.startDate,
-                        eventID: event.ID
-                    }
-                    );
-                }
+            if (event.startDate > targetDate && event.endDate < targetDate) {
+                events.push({
+                    eventName: event.title,
+                    startDate: event.startDate,
+                    endDate: event.endDate,
+                    eventID: event.ID
+                });
             }
         }
         return events;
