@@ -31,10 +31,11 @@ const Calendar: React.FC<CalendarSettings> = ({
 
     //gets the start date given to the calendar, and adds dates based on the amount of days shown
     for (let i = 0; i < dateAmount; i++) {
-        let date: Date = new Date(Date.now());
+        let date: Date = new Date(selectedDate);
         date.setDate(selectedDate.getDate() + i)
         dateArray.push(date);
     }
+
 
     //Creates an array that contains the numbers 0 - 24 that represent the hours of the day
     const timeArray = new Array<number>()
@@ -48,14 +49,20 @@ const Calendar: React.FC<CalendarSettings> = ({
         return days[dayIndex];
     }
 
-    const getHeight = (duration: number): string => {
-        let result: number = duration / 60 * 100
-        return result.toString() + "%"
+    const getEventHeight = (start: Date, end: Date): string => {
+        const duration = (end.getTime() - start.getTime()) / 1000 / 60;
+        const heightPercent = duration / 60 * 100;
+        return `${heightPercent}%`;
+    }
+
+    const getEventTop = (start: Date): string => {
+        const minutes = start.getMinutes();
+        const topPercent = minutes / 60 * 100;
+        return `${topPercent}%`;
     }
 
     const displayCell = (date: Date, time: number) => {
         const events: EventPreview[] = eventList.getEventPreview(date, time);
-        if (events.length > 0) console.log(events)
         return (
             <td className="calendar-table-cell" style={{ height: isCompact ? "40px" : "80px" }}>
                 <div className="calendar-table-cell-half"></div>
@@ -64,7 +71,7 @@ const Calendar: React.FC<CalendarSettings> = ({
                         events.map((eventData) => (
                             <button
                                 key={eventData.eventID}
-                                style={{ height: getHeight(eventData.startDate.getMinutes()), top: getHeight(eventData.endDate.getMinutes()) }}
+                                style={{ height: getEventHeight(eventData.startDate, eventData.endDate), top: getEventTop(eventData.startDate) }}
                                 className="calendar-event-button"
                                 onClick={() => { setSelectedEvent(eventData.eventID); setOpenEventPopup(true) }}
                             >{eventData.eventName}</button>
@@ -83,7 +90,7 @@ const Calendar: React.FC<CalendarSettings> = ({
                         <th className="calendar-table-cell"> </th>
                         {
                             dateArray.map((date) => (
-                                <th key={date.toISOString()} className="calendar-table-cell">{getDayName(date.getDay())} {date.getMonth() + 1} / {date.getDate()}</th>
+                                <th key={date.toISOString()} className="calendar-table-cell">{getDayName(date.getDay())} {date.getMonth()} / {date.getDate()}</th>
                             ))
                         }
                         <th></th>
@@ -95,7 +102,7 @@ const Calendar: React.FC<CalendarSettings> = ({
                             <tr className="calendar-table-row" key={time}>
                                 <td className="calendar-table-cell">{time + ":00"}</td>
                                 {
-                                    dateArray.map((date, dateIndex) => (
+                                    dateArray.map((date) => (
                                         displayCell(date, time)
                                     ))
                                 }

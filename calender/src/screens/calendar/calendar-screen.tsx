@@ -44,7 +44,8 @@ const CalendarScreen = () => {
             </div>
             <div className="calendar-window">
                 <Calendar
-                    selectedDate={date}
+                    //selectedDate={date}
+                    selectedDate={new Date(2025, 9, 3)}
                     dateAmount={dayAmount}
                     isCompact={isCompact}
                 />

@@ -16,8 +16,8 @@ class EventList {
         ID: 1,
         title: "P.O. meeting",
         description: "Call with product owner",
-        startDate: new Date(2025, 9, 3, 15),
-        endDate: new Date(2025, 9, 3, 45),
+        startDate: new Date(2025, 9, 3, 12, 15),
+        endDate: new Date(2025, 9, 3, 12, 45),
         roomID: 8,
         isOpenEvent: false,
         userList: [3, 4, 5]
@@ -83,12 +83,17 @@ class EventList {
         return result;
     }
 
-    getEventPreview(date: Date, time: number) {
+    getEventPreview(date: Date, hour: number) {
         let events = new Array<EventPreview>
-        const targetDate: Date = new Date(date)
-        targetDate.setHours(time)
+
+        const targetDateStart = new Date(date)
+        targetDateStart.setHours(hour, 0, 0, 0)
+
+        const targetDateEnd = new Date(targetDateStart)
+        targetDateEnd.setHours(hour + 1)
+
         for (const event of this.eventList) {
-            if (event.startDate > targetDate && event.endDate < targetDate) {
+            if (event.startDate < targetDateEnd && event.endDate > targetDateStart) {
                 events.push({
                     eventName: event.title,
                     startDate: event.startDate,
