@@ -53,9 +53,9 @@ const [users, setUsers] = useState<Userdetails[]>([
     },
     {
         id: 4,
-        name: "Pieter",
-        username: "Works",
-        email: "Pieter@ziggo.com"
+        name: "Jantje",
+        username: "Brakel",
+        email: "jantje@ziggo.com"
     },
     {
         id: 5,
@@ -76,6 +76,7 @@ const [users, setUsers] = useState<Userdetails[]>([
         email: "peter@ziggo.com"
     },
 ]);
+const [listUsers, setListUsers] = useState(users);
 
 const [rooms, setRooms] = useState<RoomDetails[]>([
     {
@@ -132,6 +133,13 @@ const eventChanges = (roomChanges: Object, id: Number) => {
     setPopup({})
 };
 
+const searchUsers = (input_text: string) => {
+    const matched_list = users.filter((user: Userdetails) =>
+            user.name.toLowerCase().startsWith(input_text.toLowerCase())
+    )
+    setListUsers((matched_list.length) ? matched_list : users)
+}
+
 return (
 <main>
     <Popup closePopup={() => setPopup({})} openPopup={popup} >
@@ -151,6 +159,9 @@ return (
                     <div className="card-h__title">
                         <p className="card-h__title--text">Users</p>
                     </div>
+                    <div className="card-h__search">
+                        <input type="text" onChange={e => {searchUsers(e.target.value.trim())}}/>
+                    </div>
                 </div>
                 <div className="card-b">
                     <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 4 }}>
@@ -159,7 +170,7 @@ return (
                         <p className="card-b__header--title">Mail</p>
                         <p className="card-b__header--title">Edit</p>
                     </div>
-                    {users.map((user) => (
+                    {listUsers.map((user) => (
                         <div key={user.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 4 }}>
                             <p className="card-b__row--text">{ user.name }</p>
                             <p className="card-b__row--text">{ user.username }</p>
