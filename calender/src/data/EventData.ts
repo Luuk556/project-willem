@@ -83,7 +83,7 @@ class EventList {
         return result;
     }
 
-    getEventPreview(date: Date, hour: number) {
+    getEventPreview(date: Date, hour: number): EventPreview[] {
         let events = new Array<EventPreview>
 
         const targetDateStart = new Date(date)
@@ -104,6 +104,33 @@ class EventList {
         }
         return events;
     }
+
+getEventPreviewByDate(date: Date): EventPreview[] {
+    let events: EventPreview[] = [];
+
+    for (const event of this.eventList) {
+        const start = event.startDate;
+        const end = event.endDate;
+
+        if (
+            (start.getFullYear() === date.getFullYear() &&
+             start.getMonth() === date.getMonth() &&
+             start.getDate() === date.getDate()) ||
+            (end.getFullYear() === date.getFullYear() &&
+             end.getMonth() === date.getMonth() &&
+             end.getDate() === date.getDate())
+        ) {
+            events.push({
+                eventName: event.title,
+                startDate: start,
+                endDate: end,
+                eventID: event.ID
+            });
+        }
+    }
+
+    return events;
+}
 
     getEventsByRoom(roomID: number): Array<EventDetails> {
         let events: Array<EventDetails> = []

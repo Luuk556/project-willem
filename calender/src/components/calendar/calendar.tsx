@@ -3,6 +3,7 @@ import CalendarEvent from "./calendarEvent.tsx";
 import PopupComponent from "../popup/popup.tsx";
 import { EventPreview } from "../../data/datatypes/eventDatatypes.ts";
 import EventList from "../../data/EventData.ts"
+import EventButton from "./EventButton.tsx";
 
 
 //An interface that contains the settings of the calendar
@@ -10,6 +11,7 @@ interface CalendarSettings {
     selectedDate: Date;
     dateAmount: number;
     isCompact: boolean;
+    onlyEvents: boolean;
 }
 
 /**
@@ -21,7 +23,8 @@ interface CalendarSettings {
 const Calendar: React.FC<CalendarSettings> = ({
     selectedDate = new Date(Date.now()),
     dateAmount = 5,
-    isCompact = false
+    isCompact = false,
+    onlyEvents = false
 }) => {
     const dateArray = new Array<Date>;
     const [selectedEvent, setSelectedEvent] = useState(-1)
@@ -49,32 +52,44 @@ const Calendar: React.FC<CalendarSettings> = ({
         return days[dayIndex];
     }
 
-    const getEventHeight = (start: Date, end: Date): string => {
-        const duration = (end.getTime() - start.getTime()) / 1000 / 60;
-        const heightPercent = duration / 60 * 100;
-        return `${heightPercent}%`;
+
+    // Turns the date of an event int a key for a map
+    function getDateKey(date: Date): string {
+        return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
     }
 
-    const getEventTop = (start: Date): string => {
-        const minutes = start.getMinutes();
-        const topPercent = minutes / 60 * 100;
-        return `${topPercent}%`;
-    }
+    // a map with the date of an event as the key. the second map has the time of the event as the key.
+    // this map stores when an event is to take place.
+    let eventMap: Map<string, Map<number, EventPreview[]>> = new Map()
+    dateArray.forEach(date => {
+        const hourMap: Map<number, EventPreview[]> = new Map();
+        const events = eventList.getEventPreviewByDate(date);
+        events.forEach(event => {
+            const hour = event.startDate.getHours();
+            if ( !hourMap.has(hour) ) {
+                hourMap.set(hour, []);
+            }
+            hourMap.get(hour)!.push(event);
+        })
+
+        if (hourMap.size > 0) {
+            eventMap.set(getDateKey(date), hourMap);
+        }
+    });
 
     const displayCell = (date: Date, time: number) => {
-        const events: EventPreview[] = eventList.getEventPreview(date, time);
+        const hourMap = eventMap.get(getDateKey(date));
+        const events: EventPreview[] = hourMap?.get(time) ?? [];
+            
         return (
             <td className="calendar-table-cell" style={{ height: isCompact ? "40px" : "80px" }}>
                 <div className="calendar-table-cell-half"></div>
                 <div className="calendar-cell-content">
                     {
                         events.map((eventData) => (
-                            <button
-                                key={eventData.eventID}
-                                style={{ height: getEventHeight(eventData.startDate, eventData.endDate), top: getEventTop(eventData.startDate) }}
-                                className="calendar-event-button"
-                                onClick={() => { setSelectedEvent(eventData.eventID); setOpenEventPopup(true) }}
-                            >{eventData.eventName}</button>
+                            <div onClick={() => { setSelectedEvent(eventData.eventID); setOpenEventPopup(true) }}>
+                                <EventButton data =  {eventData}/>
+                            </div>
                         ))
                     }
                 </div>
@@ -93,7 +108,6 @@ const Calendar: React.FC<CalendarSettings> = ({
                                 <th key={date.toISOString()} className="calendar-table-cell">{getDayName(date.getDay())} {date.getMonth()} / {date.getDate()}</th>
                             ))
                         }
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
