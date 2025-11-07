@@ -19,7 +19,7 @@ interface RoomDetails {
     capacity: number;
 }
 
-interface MeetingDetails {
+interface EventDetails {
     id: number;
     name: string;
     date: string;
@@ -76,7 +76,7 @@ const [users, setUsers] = useState<Userdetails[]>([
         email: "peter@ziggo.com"
     },
 ]);
-const [listUsers, setListUsers] = useState(users);
+const [filterdUsers, setFilterdUsers] = useState(users);
 
 const [rooms, setRooms] = useState<RoomDetails[]>([
     {
@@ -90,8 +90,9 @@ const [rooms, setRooms] = useState<RoomDetails[]>([
         capacity: 20,
     }
 ]);
+const [filterdRooms, setFilterdRooms] = useState(rooms);
 
-const [events, setEvents] = useState<MeetingDetails[]>([
+const [events, setEvents] = useState<EventDetails[]>([
     {
         id: 1,
         name: "Meeting",
@@ -103,6 +104,7 @@ const [events, setEvents] = useState<MeetingDetails[]>([
         date: "18-10-2025",
     }
 ]);
+const [filterdEvents, setFilterdEvents] = useState(events);
 
 const [popup, setPopup] = useState<popupDetails>({});
 
@@ -134,10 +136,24 @@ const eventChanges = (roomChanges: Object, id: Number) => {
 };
 
 const searchUsers = (input_text: string) => {
-    const matched_list = users.filter((user: Userdetails) =>
-            user.name.toLowerCase().startsWith(input_text.toLowerCase())
+    const filterd_list = users.filter((user: Userdetails) =>
+        user.name.toLowerCase().startsWith(input_text.toLowerCase())
     )
-    setListUsers((matched_list.length) ? matched_list : users)
+    setFilterdUsers((filterd_list.length) ? filterd_list : [])
+}
+
+const searchRooms = (input_text: string) => {
+    const filterd_list = rooms.filter((room: RoomDetails) =>
+        room.name.toLowerCase().startsWith(input_text.toLowerCase())
+    )
+    setFilterdRooms((filterd_list.length) ? filterd_list : [])
+}
+
+const searchEvents = (input_text: string) => {
+    const filterd_list = events.filter((event: EventDetails) =>
+        event.name.toLowerCase().startsWith(input_text.toLowerCase())
+    )
+    setFilterdEvents((filterd_list.length) ? filterd_list : [])
 }
 
 return (
@@ -160,7 +176,12 @@ return (
                         <p className="card-h__title--text">Users</p>
                     </div>
                     <div className="card-h__search">
-                        <input type="text" onChange={e => {searchUsers(e.target.value.trim())}}/>
+                        <input
+                            type="text"
+                            className="card-h__search--input"
+                            placeholder="Search user"
+                            onChange={e => {searchUsers(e.target.value.trim())}}
+                        />
                     </div>
                 </div>
                 <div className="card-b">
@@ -170,7 +191,7 @@ return (
                         <p className="card-b__header--title">Mail</p>
                         <p className="card-b__header--title">Edit</p>
                     </div>
-                    {listUsers.map((user) => (
+                    {filterdUsers.map((user) => (
                         <div key={user.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 4 }}>
                             <p className="card-b__row--text">{ user.name }</p>
                             <p className="card-b__row--text">{ user.username }</p>
@@ -186,6 +207,14 @@ return (
                     <div className="card-h__title">
                         <p className="card-h__title--text">Rooms</p>
                     </div>
+                    <div className="card-h__search">
+                        <input
+                            type="text"
+                            className="card-h__search--input"
+                            placeholder="Search rooms"
+                            onChange={e => {searchRooms(e.target.value.trim())}}
+                        />
+                    </div>
                 </div>
                 <div className="card-b">
                     <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
@@ -194,7 +223,7 @@ return (
                         <p className="card-b__header--title">Edit</p>
                     </div>
                     <div className="scrollbar">
-                        {rooms.map((room) => (
+                        {filterdRooms.map((room) => (
                             <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
                                 <p className="card-b__row--text">{ room.name }</p>
                                 <p className="card-b__row--text">{ room.capacity }</p>
@@ -210,6 +239,14 @@ return (
                     <div className="card-h__title">
                         <p className="card-h__title--text">Events</p>
                     </div>
+                    <div className="card-h__search">
+                        <input
+                            type="text"
+                            className="card-h__search--input"
+                            placeholder="Search events"
+                            onChange={e => {searchEvents(e.target.value.trim())}}
+                        />
+                    </div>
                 </div>
                 <div className="card-b">
                     <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
@@ -218,7 +255,7 @@ return (
                         <p className="card-b__header--title">Edit</p>
                     </div>
                     <div className="scrollbar">
-                        {events.map((event) => (
+                        {filterdEvents.map((event) => (
                             <div key={event.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
                                 <p className="card-b__row--text">{ event.name }</p>
                                 <p className="card-b__row--text">{ event.date }</p>
