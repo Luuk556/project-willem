@@ -87,14 +87,15 @@
   background-color: #0000a6;
   width: 33%;
   padding: 0.9rem 0.4rem;
+  row-gap: 0.5rem;
+}
+.userlist .dashboard-card .card-h__title {
+  margin-bottom: 0.5rem;
 }
 .userlist .dashboard-card .card-h__title--text {
   text-align: center;
   color: #ffffff;
   font-weight: bold;
-}
-.userlist .dashboard-card .card-h__search {
-  margin: 0.5rem 0;
 }
 .userlist .dashboard-card .card-h__search--input {
   width: 100%;

@@ -10,10 +10,12 @@
         background-color: $blue;
         width: 33%;
         padding: 0.9rem 0.4rem;
+        row-gap: 0.5rem;
 
         .card-h{
 
             &__title{
+                margin-bottom: 0.5rem;
 
                 &--text{
                     text-align: center;
@@ -23,7 +25,6 @@
             }
 
             &__search{
-                margin: 0.5rem 0;
 
                 &--input{
                     width: 100%;
