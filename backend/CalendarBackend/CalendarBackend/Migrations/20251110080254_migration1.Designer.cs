@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CalendarBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251107135702_migration4")]
-    partial class migration4
+    [Migration("20251110080254_migration1")]
+    partial class migration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

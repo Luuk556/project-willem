@@ -22,7 +22,7 @@ User user = new User
 userRepository.Create(user);
 Console.WriteLine(user.Id);
 
-User? testUser = userRepository.Get(0);
+User? testUser = userRepository.Get(1);
 if (testUser != null)
 {
     Console.WriteLine(testUser.Name);
