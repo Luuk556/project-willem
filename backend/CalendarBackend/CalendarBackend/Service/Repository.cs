@@ -16,7 +16,6 @@ public class Repository<T> where T : class
     public void Create(T entity)
     {
         _dbSet.Add(entity);
-        _context.SaveChanges();
     }
 
     public T? Get(int id)
@@ -29,15 +28,29 @@ public class Repository<T> where T : class
         return  _dbSet.ToArray();
     }
 
+    public int GetCount()
+    {
+        return _dbSet.Count();
+    }
+
     public void Update(T entity)
     {
         _dbSet.Update(entity);
-        _context.SaveChanges();
     }
 
     public void Delete(T entity)
     {
         _dbSet.Remove(entity);
+    }
+    
+    public void DeleteById(int id)
+    {
+        var entity = _dbSet.Find(id);
+        _dbSet.Remove(entity);
+    }
+    
+    public void SaveChanges()
+    {
         _context.SaveChanges();
     }
 }
