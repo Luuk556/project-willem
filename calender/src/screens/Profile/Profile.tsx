@@ -29,19 +29,20 @@ function Profile() {
 
     if (editing) {
         return (
-                    <div className="profile-card">
+          <div className="profile-card">
             <div className="profile-header">
                 <label>
                 <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" onChange={(e) => setPicture(e.target.value)}/>
-                <img className="profile-pic" src={img} />
+                <img id="editpfp" className="profile-pic" src={img} />
             </label>
-              <div>
-                <input value={username} onChange={(e) => setUsername(e.target.value)}></input>
+              <div className="profile-info">
+                Name: <input value={username} onChange={(e) => setUsername(e.target.value)}></input>
                 <p className="profile-role">Student Developer</p>
               </div>
             </div>
             <div className="profile-info">
-              <input value={email} onChange={(e) => setEmail(e.target.value)}></input>
+              Email: <input value={email} onChange={(e) => setEmail(e.target.value)}></input> 
+              Password: <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
               <p>Project: Project Willem</p>
             </div>
             <button
@@ -50,7 +51,6 @@ function Profile() {
             > Submit
             </button>
           </div>
-        
         )
     }
 
