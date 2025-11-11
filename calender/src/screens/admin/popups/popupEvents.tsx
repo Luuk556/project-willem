@@ -22,7 +22,7 @@ const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) 
   })
 
   const changeEvent = () => {
-    if (eventData.id != undefined) saveEventChanges(eventChanges, eventData.id)
+    if (eventData.id !== undefined) saveEventChanges(eventChanges, eventData.id)
   }
 
 

@@ -22,7 +22,7 @@ const PopupRooms: React.FC<popupRoomData> = ({ roomData, saveRoomChanges }) => {
   })
 
   const changeRoom = () => {
-    if (roomData.id != undefined) saveRoomChanges(roomChanges, roomData.id)
+    if (roomData.id !== undefined) saveRoomChanges(roomChanges, roomData.id)
   }
 
 
