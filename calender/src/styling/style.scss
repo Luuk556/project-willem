@@ -4,8 +4,13 @@
     box-sizing: border-box;
 }
 
+.app{
+    min-height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
 @import "variable";
-@import "components/header";
 @import "login/login";
 @import "admin/admin";
 @import "admin/dashboard";

@@ -22,7 +22,7 @@ const PopupRooms: React.FC<popupRoomData> = ({ roomData, saveRoomChanges }) => {
   })
 
   const changeRoom = () => {
-    if (roomData.id != undefined) saveRoomChanges(roomChanges, roomData.id)
+    if (roomData.id !== undefined) saveRoomChanges(roomChanges, roomData.id)
   }
 
 
@@ -32,7 +32,7 @@ const PopupRooms: React.FC<popupRoomData> = ({ roomData, saveRoomChanges }) => {
       <label>Name: </label>
       <input type="text" value={roomChanges.name} onChange={e => {setRoomChanges({...roomChanges, name: e.target.value })}} />
       <br></br>
-      <label>Username: </label>
+      <label>Capasity: </label>
       <input type="text" value={roomChanges.capacity} onChange={e => {setRoomChanges({...roomChanges, capacity: Number(e.target.value) })}}/>
       <br></br>
       <button onClick={changeRoom}>Save</button>

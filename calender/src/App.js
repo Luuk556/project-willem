@@ -10,7 +10,7 @@ import Room from './screens/rooms/room.tsx';
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <BrowserRouter>
         <Navbar></Navbar>
 
