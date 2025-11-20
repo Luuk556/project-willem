@@ -1,10 +1,11 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import Popup from "./popups/popup.tsx";
 import PopupUsers from "./popups/popupUsers.tsx";
 import PopupRooms from "./popups/popupRooms.tsx";
 import PopupEvents from "./popups/popupEvents.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 interface Userdetails {
     id: number;
@@ -71,18 +72,14 @@ const [users, setUsers] = useState<Userdetails[]>([
     },
 ]);
 
-const [rooms, setRooms] = useState<RoomDetails[]>([
-    {
-        id: 1,
-        name: "Room 101",
-        capacity: 40,
-    },
-    {
-        id: 2,
-        name: "Room 102",
-        capacity: 20,
-    }
-]);
+const [rooms, setRooms] = useState<RoomDetails[]>([]);
+useEffect(() => {
+    axios.get("http://localhost:5184/api/Rooms")
+    .then(res => {
+        setRooms(res.data);
+    })
+    .catch(err => console.error(err));
+}, []);
 
 const [events, setEvents] = useState<MeetingDetails[]>([
     {
