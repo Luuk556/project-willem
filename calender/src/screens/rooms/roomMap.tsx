@@ -1,137 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-interface Room {
-    id: number;
-    name: string;
-    posX: number;
-    posY: number;
-    sizeX: number;
-    sizeY: number;
-}
+import { Room } from '../../data/datatypes/roomDatatypes';
+import RoomList from '../../data/RoomData.ts';
+import EventList from '../../data/EventData.ts';
 
 const RoomMap: React.FC = () => {
-    const roomArray: Array<Room> = [
-        {
-            id: 0,
-            name: "Canteen",
-            posX: 65,
-            posY: 10,
-            sizeX: 25,
-            sizeY: 25
-        },
-        {
-            id: 1,
-            name: "Entrance Hall",
-            posX: 35,
-            posY: 10,
-            sizeX: 30,
-            sizeY: 40
-        },
-        {
-            id: 2,
-            name: "Kitchen",
-            posX: 65,
-            posY: 35,
-            sizeX: 25,
-            sizeY: 15
-        },
-        {
-            id: 3,
-            name: "Room 001",
-            posX: 15,
-            posY: 10,
-            sizeX: 20,
-            sizeY: 10
-        },
-        {
-            id: 4,
-            name: "Room 002",
-            posX: 15,
-            posY: 20,
-            sizeX: 5,
-            sizeY: 35
-        },
-        {
-            id: 5,
-            name: "Room 003",
-            posX: 25,
-            posY: 25,
-            sizeX: 10,
-            sizeY: 25
-        },
-        {
-            id: 6,
-            name: "Room 004",
-            posX: 15,
-            posY: 55,
-            sizeX: 25,
-            sizeY: 10
-        },
-        {
-            id: 7,
-            name: "Room 005",
-            posX: 45,
-            posY: 55,
-            sizeX: 30,
-            sizeY: 10
-        },
-        {
-            id: 8,
-            name: "Room 006",
-            posX: 75,
-            posY: 50,
-            sizeX: 15,
-            sizeY: 15
-        },
-        {
-            id: 9,
-            name: "Room 007",
-            posX: 25,
-            posY: 65,
-            sizeX: 15,
-            sizeY: 10
-        },
-        {
-            id: 10,
-            name: "Room 008",
-            posX: 45,
-            posY: 65,
-            sizeX: 15,
-            sizeY: 10
-        },
-        {
-            id: 11,
-            name: "Room 009",
-            posX: 25,
-            posY: 75,
-            sizeX: 35,
-            sizeY: 10
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
+    const roomList = RoomList;
+    const eventData = EventList;
+    const rooms: Array<Room> = roomList.getAllRooms();
+    function getIsAvailable(roomID: number): boolean {
+        let events = eventData.getEventsByRoom(roomID)
+        console.log(selectedDate)
+        console.log(events)
+        for (const event of events) {
+            if (event.roomID === roomID) {
+                if (event.startDate < selectedDate) {
+                    if (new Date(event.startDate.getTime() + event.duration * 60 * 1000) > selectedDate) {
+                        console.log(event)
+                        return false
+                    }
+                }
+            }
         }
-    ]
-
+        return true
+    }
     function placeRoom(room: Room) {
         return (
             <Link to={`/rooms/${room.id}`}>
-            <button
-                key={room.id}
-                className='room-button'
-                style={{
-                    top: `${room.posY}vh`,
-                    left: `${room.posX}vw`,
-                    height: `${room.sizeY}vh`,
-                    width: `${room.sizeX}vw`,                    
-                }}
-            >
-                {room.name || `Room ${room.id}`}
-            </button>
+                <button
+                    key={room.id}
+                    className='room-button'
+                    style={{
+                        top: `${room.posY}vh`,
+                        left: `${room.posX}vw`,
+                        height: `${room.sizeY}vh`,
+                        width: `${room.sizeX}vw`,
+                        backgroundColor: `${getIsAvailable(room.id) ? "green" : "darkred"}`
+                    }}
+                >
+                    {room.name || `Room ${room.id}`}
+                </button>
             </Link>
         );
     }
 
     return (
         <div className='roommap-container'>
-            {roomArray.map(placeRoom)}
+            <input
+                type="datetime-local"
+                onChange={e => {
+                    const selectedDate = e.target.value;
+                    if (selectedDate) {
+                        setSelectedDate(new Date(selectedDate));
+                    }
+                }} />
+            {rooms.map(placeRoom)}
         </div>
     );
 };
