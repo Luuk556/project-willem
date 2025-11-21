@@ -80,14 +80,15 @@ const [users, setUsers] = useState<Userdetails[]>([
 const [filterdUsers, setFilterdUsers] = useState(users);
 
 const [rooms, setRooms] = useState<RoomDetails[]>([]);
+const [filterdRooms, setFilterdRooms] = useState(rooms);
 useEffect(() => {
     axios.get("http://localhost:5184/api/Rooms")
     .then(res => {
         setRooms(res.data);
+        setFilterdRooms(res.data);
     })
     .catch(err => console.error(err));
 }, []);
-const [filterdRooms, setFilterdRooms] = useState(rooms);
 
 const [events, setEvents] = useState<EventDetails[]>([
     {
