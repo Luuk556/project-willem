@@ -22,7 +22,7 @@ const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) 
   })
 
   const changeEvent = () => {
-    if (eventData.id != undefined) saveEventChanges(eventChanges, eventData.id)
+    if (eventData.id !== undefined) saveEventChanges(eventChanges, eventData.id)
   }
 
 
@@ -32,7 +32,7 @@ const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) 
       <label>Name: </label>
       <input type="text" value={eventChanges.name} onChange={e => {setEventChanges({...eventChanges, name: e.target.value })}} />
       <br></br>
-      <label>Username: </label>
+      <label>Date: </label>
       <input type="text" value={eventChanges.date} onChange={e => {setEventChanges({...eventChanges, date: e.target.value })}}/>
       <br></br>
       <button onClick={changeEvent}>Save</button>

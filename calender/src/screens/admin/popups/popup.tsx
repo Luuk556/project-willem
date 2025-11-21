@@ -1,10 +1,10 @@
 interface PopupUsersProps {
     closePopup: () => void;
-    isOpen: boolean;
+    openPopup: Object;
     children: React.ReactNode;
 }
 
-const Popup: React.FC<PopupUsersProps> = ({ closePopup, isOpen, children }) => {
+const Popup: React.FC<PopupUsersProps> = ({ closePopup, openPopup, children }) => {
 
     const clickClosePopup = (e: React.MouseEvent<HTMLElement>) => {
         if(e.target === e.currentTarget){
@@ -12,7 +12,7 @@ const Popup: React.FC<PopupUsersProps> = ({ closePopup, isOpen, children }) => {
         }
     }
 
-    if(isOpen) return(
+    if(Object.keys(openPopup).length) return(
         <div className="popup-background" onClick={(mouseTarget) => clickClosePopup(mouseTarget)}>
             <div className="popup-container">
                 <div className="popup-header">

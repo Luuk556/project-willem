@@ -4,24 +4,10 @@
   box-sizing: border-box;
 }
 
-.header {
-  padding: 2rem 3.7rem;
-  background-color: #0000a6;
-  display: flex;
-  justify-content: space-between;
-}
-.header .home__list--item {
-  color: #ffffff;
-}
-.header .navigation__list {
-  list-style-type: none;
-}
-.header .navigation__list--item {
-  display: inline-block;
-  color: #ffffff;
-}
-.header .navigation__list--item:not(:first-child):not(:last-child) {
-  margin: 0 2rem;
+.app {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
 .background-login {
@@ -98,17 +84,22 @@
 .userlist .dashboard-card {
   display: flex;
   flex-direction: column;
+  row-gap: 0.5rem;
   background-color: #0000a6;
   width: 33%;
   padding: 0.9rem 0.4rem;
 }
-.userlist .dashboard-card .card-h {
-  margin-bottom: 1.5rem;
+.userlist .dashboard-card .card-h__title {
+  margin-bottom: 0.5rem;
 }
 .userlist .dashboard-card .card-h__title--text {
   text-align: center;
   color: #ffffff;
   font-weight: bold;
+}
+.userlist .dashboard-card .card-h__search--input {
+  width: 100%;
+  padding: 0.3rem 0.7rem;
 }
 .userlist .dashboard-card .card-b {
   width: 100%;
