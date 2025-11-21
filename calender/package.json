@@ -12,15 +12,17 @@
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.13.2",
     "npm-run-all": "^4.1.5",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.1",
     "react-scripts": "5.0.1",
+    "scss": "^0.2.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm run --parallel start-react sass-watch",
+    "start": "npm run --parallel start-react",
     "start-react": "react-scripts start",
     "sass-watch": "sass --watch src/styling/style.scss src/styling/style.css",
     "build": "react-scripts build",

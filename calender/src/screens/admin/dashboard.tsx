@@ -1,10 +1,11 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import Popup from "./popups/popup.tsx";
 import PopupUsers from "./popups/popupUsers.tsx";
 import PopupRooms from "./popups/popupRooms.tsx";
 import PopupEvents from "./popups/popupEvents.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 interface Userdetails {
     id: number;
@@ -19,11 +20,17 @@ interface RoomDetails {
     capacity: number;
 }
 
-interface MeetingDetails {
+interface EventDetails {
     id: number;
     name: string;
     date: string;
 }
+
+interface popupDetails {
+    user?: Object;
+    room?: Object;
+    event?: Object;
+};
 
 const AdminDashboard: FC = () => {
 const [users, setUsers] = useState<Userdetails[]>([
@@ -47,9 +54,9 @@ const [users, setUsers] = useState<Userdetails[]>([
     },
     {
         id: 4,
-        name: "Pieter",
-        username: "Works",
-        email: "Pieter@ziggo.com"
+        name: "Jantje",
+        username: "Brakel",
+        email: "jantje@ziggo.com"
     },
     {
         id: 5,
@@ -70,21 +77,20 @@ const [users, setUsers] = useState<Userdetails[]>([
         email: "peter@ziggo.com"
     },
 ]);
+const [filterdUsers, setFilterdUsers] = useState(users);
 
-const [rooms, setRooms] = useState<RoomDetails[]>([
-    {
-        id: 1,
-        name: "Room 101",
-        capacity: 40,
-    },
-    {
-        id: 2,
-        name: "Room 102",
-        capacity: 20,
-    }
-]);
+const [rooms, setRooms] = useState<RoomDetails[]>([]);
+const [filterdRooms, setFilterdRooms] = useState(rooms);
+useEffect(() => {
+    axios.get("http://localhost:5184/api/Rooms")
+    .then(res => {
+        setRooms(res.data);
+        setFilterdRooms(res.data);
+    })
+    .catch(err => console.error(err));
+}, []);
 
-const [events, setEvents] = useState<MeetingDetails[]>([
+const [events, setEvents] = useState<EventDetails[]>([
     {
         id: 1,
         name: "Meeting",
@@ -96,10 +102,9 @@ const [events, setEvents] = useState<MeetingDetails[]>([
         date: "18-10-2025",
     }
 ]);
+const [filterdEvents, setFilterdEvents] = useState(events);
 
-const [popup, setPopup] = useState<boolean>(false);
-const [popupData, setPopupData] = useState<Object>({});
-const [popupType, setPopupType] = useState<String>("")
+const [popup, setPopup] = useState<popupDetails>({});
 
 const userChanges = (userChanges: Object, id: Number) => {
     setUsers(users =>
@@ -107,9 +112,7 @@ const userChanges = (userChanges: Object, id: Number) => {
             (oldUser.id === id) ? { ...oldUser, ...userChanges } : oldUser
         )
     );
-    setPopup(false)
-    setPopupData({})
-    setPopupType("")
+    setPopup({})
 };
 
 const roomChanges = (roomChanges: Object, id: Number) => {
@@ -118,9 +121,7 @@ const roomChanges = (roomChanges: Object, id: Number) => {
             (oldRoom.id === id) ? { ...oldRoom, ...roomChanges } : oldRoom
         )
     );
-    setPopup(false)
-    setPopupData({})
-    setPopupType("")
+    setPopup({})
 };
 
 const eventChanges = (roomChanges: Object, id: Number) => {
@@ -129,113 +130,142 @@ const eventChanges = (roomChanges: Object, id: Number) => {
             (oldEvent.id === id) ? { ...oldEvent, ...roomChanges } : oldEvent
         )
     );
-    setPopup(false)
-    setPopupData({})
-    setPopupType("")
+    setPopup({})
 };
 
+const searchUsers = (input_text: string) => {
+    const filterd_list = users.filter((user: Userdetails) =>
+        user.name.toLowerCase().startsWith(input_text.toLowerCase())
+    )
+    setFilterdUsers((filterd_list.length) ? filterd_list : [])
+}
+
+const searchRooms = (input_text: string) => {
+    const filterd_list = rooms.filter((room: RoomDetails) =>
+        room.name.toLowerCase().startsWith(input_text.toLowerCase())
+    )
+    setFilterdRooms((filterd_list.length) ? filterd_list : [])
+}
+
+const searchEvents = (input_text: string) => {
+    const filterd_list = events.filter((event: EventDetails) =>
+        event.name.toLowerCase().startsWith(input_text.toLowerCase())
+    )
+    setFilterdEvents((filterd_list.length) ? filterd_list : [])
+}
+
 return (
-    <div>
-    <Popup closePopup={() => setPopup(false)} isOpen={popup} >
-    { popupType === "users" ? (
-        <PopupUsers userData={popupData} saveUserChanges={userChanges}  />
-    ) : popupType === "rooms" ? (
-        <PopupRooms roomData={popupData} saveRoomChanges={roomChanges} />
-    ) : popupType === "events" ? (
-        <PopupEvents eventData={popupData} saveEventChanges={eventChanges} />
+<main>
+    <Popup closePopup={() => setPopup({})} openPopup={popup} >
+    { popup.user ? (
+        <PopupUsers userData={popup.user} saveUserChanges={userChanges}  />
+    ) : popup.room ? (
+        <PopupRooms roomData={popup.room} saveRoomChanges={roomChanges} />
+    ) : popup.event ? (
+        <PopupEvents eventData={popup.event} saveEventChanges={eventChanges} />
     ): null}
     </Popup>
-        <header className="header">
-            <section className="home">
-                <div className="home__list">
-                    <p className="home__list--item">Home</p>
+
+    <div className="admin">
+        <div className="userlist">
+            <section className="dashboard-card">
+                <div className="card-h">
+                    <div className="card-h__title">
+                        <p className="card-h__title--text">Users</p>
+                    </div>
+                    <div className="card-h__search">
+                        <input
+                            type="text"
+                            className="card-h__search--input"
+                            placeholder="Search user"
+                            onChange={e => {searchUsers(e.target.value.trim())}}
+                        />
+                    </div>
+                </div>
+                <div className="card-b">
+                    <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 4 }}>
+                        <p className="card-b__header--title">Name</p>
+                        <p className="card-b__header--title">Username</p>
+                        <p className="card-b__header--title">Mail</p>
+                        <p className="card-b__header--title">Edit</p>
+                    </div>
+                    {filterdUsers.map((user) => (
+                        <div key={user.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 4 }}>
+                            <p className="card-b__row--text">{ user.name }</p>
+                            <p className="card-b__row--text">{ user.username }</p>
+                            <p className="card-b__row--text">{ user.email }</p>
+                            <p onClick={() => {setPopup({user: user})}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                        </div>
+                    ))}
                 </div>
             </section>
-            <nav className="navigation">
-                <ul className="navigation__list">
-                    <li className="navigation__list--item">Calendar</li>
-                    <li className="navigation__list--item">Rooms</li>
-                    <li className="navigation__list--item">Logout</li>
-                </ul>
-            </nav>
-        </header>
 
-        <div className="admin">
-            <div className="userlist">
-                <section className="dashboard-card">
-                    <div className="card-h">
-                        <div className="card-h__title">
-                            <p className="card-h__title--text">Users</p>
-                        </div>
+            <section className="dashboard-card">
+                <div className="card-h">
+                    <div className="card-h__title">
+                        <p className="card-h__title--text">Rooms</p>
                     </div>
-                    <div className="card-b">
-                        <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 4 }}>
-                            <p className="card-b__header--title">Name</p>
-                            <p className="card-b__header--title">Username</p>
-                            <p className="card-b__header--title">Mail</p>
-                            <p className="card-b__header--title">Edit</p>
-                        </div>
-                        {users.map((user) => (
-                            <div key={user.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 4 }}>
-                                <p className="card-b__row--text">{ user.name }</p>
-                                <p className="card-b__row--text">{ user.username }</p>
-                                <p className="card-b__row--text">{ user.email }</p>
-                                <p onClick={() => {setPopupType("users"); setPopupData(user); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                    <div className="card-h__search">
+                        <input
+                            type="text"
+                            className="card-h__search--input"
+                            placeholder="Search rooms"
+                            onChange={e => {searchRooms(e.target.value.trim())}}
+                        />
+                    </div>
+                </div>
+                <div className="card-b">
+                    <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
+                        <p className="card-b__header--title">Name</p>
+                        <p className="card-b__header--title">Capacity</p>
+                        <p className="card-b__header--title">Edit</p>
+                    </div>
+                    <div className="scrollbar">
+                        {filterdRooms.map((room) => (
+                            <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
+                                <p className="card-b__row--text">{ room.name }</p>
+                                <p className="card-b__row--text">{ room.capacity }</p>
+                                <p onClick={() => {setPopup({room: room})}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
                             </div>
                         ))}
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <section className="dashboard-card">
-                    <div className="card-h">
-                        <div className="card-h__title">
-                            <p className="card-h__title--text">Rooms</p>
-                        </div>
+            <section className="dashboard-card">
+                <div className="card-h">
+                    <div className="card-h__title">
+                        <p className="card-h__title--text">Events</p>
                     </div>
-                    <div className="card-b">
-                        <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
-                            <p className="card-b__header--title">Name</p>
-                            <p className="card-b__header--title">Capacity</p>
-                            <p className="card-b__header--title">Edit</p>
-                        </div>
-                        <div className="scrollbar">
-                            {rooms.map((room) => (
-                                <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
-                                    <p className="card-b__row--text">{ room.name }</p>
-                                    <p className="card-b__row--text">{ room.capacity }</p>
-                                    <p onClick={() => {setPopupType("rooms"); setPopupData(room); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="card-h__search">
+                        <input
+                            type="text"
+                            className="card-h__search--input"
+                            placeholder="Search events"
+                            onChange={e => {searchEvents(e.target.value.trim())}}
+                        />
                     </div>
-                </section>
-
-                <section className="dashboard-card">
-                    <div className="card-h">
-                        <div className="card-h__title">
-                            <p className="card-h__title--text">Events</p>
-                        </div>
+                </div>
+                <div className="card-b">
+                    <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
+                        <p className="card-b__header--title">Name</p>
+                        <p className="card-b__header--title">Date</p>
+                        <p className="card-b__header--title">Edit</p>
                     </div>
-                    <div className="card-b">
-                        <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
-                            <p className="card-b__header--title">Name</p>
-                            <p className="card-b__header--title">Date</p>
-                            <p className="card-b__header--title">Edit</p>
-                        </div>
-                        <div className="scrollbar">
-                            {events.map((event) => (
-                                <div key={event.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
-                                    <p className="card-b__row--text">{ event.name }</p>
-                                    <p className="card-b__row--text">{ event.date }</p>
-                                    <p  onClick={() => {setPopupType("events"); setPopupData(event); setPopup(true);}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="scrollbar">
+                        {filterdEvents.map((event) => (
+                            <div key={event.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
+                                <p className="card-b__row--text">{ event.name }</p>
+                                <p className="card-b__row--text">{ event.date }</p>
+                                <p  onClick={() => {setPopup({event: event})}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                            </div>
+                        ))}
                     </div>
-                </section>
-            </div>
+                </div>
+            </section>
         </div>
     </div>
+</main>
 );
 };
 
