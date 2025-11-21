@@ -10,22 +10,16 @@ public class EventRepository : Repository<Event>
         
     }
 
-    public EventPreview[] GetPreviewByDateAndUser(DateTime date)
+    public EventPreview[] GetPreviewByDateAndUser(int userId, DateTime dateStart, DateTime dateEnd)
     {
-        DateTime dateStart = date.Date;
-        DateTime dateEnd = dateStart.AddDays(1).AddTicks(-1);
-
         return _dbSet
             .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart)
             .Select(e => new EventPreview{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
             .ToArray();
     }
     
-    public EventPreview[] GetPreviewOpenByDate(DateTime date)
+    public EventPreview[] GetPreviewOpenByDate(DateTime dateStart, DateTime dateEnd)
     {
-        DateTime dateStart = date.Date;
-        DateTime dateEnd = dateStart.AddDays(1).AddTicks(-1);
-
         return _dbSet
             .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart && e.IsOpen)
             .Select(e => new EventPreview{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
@@ -37,10 +31,9 @@ public class EventRepository : Repository<Event>
         return _dbSet.FirstOrDefault(e => e.Id == id);
     }
 
-    public EventPreview[] GetEventByRoomAndDate(int roomId, DateTime date)
+    public EventPreview[] GetEventByRoomAndDate(int roomId, DateTime dateStart, DateTime dateEnd)
     {
-        DateTime dateStart = date.Date;
-        DateTime dateEnd = dateStart.AddDays(1).AddTicks(-1);
+
         return _dbSet
             .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart && e.RoomId == roomId && e.IsOpen)
             .Select(e => new EventPreview{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})

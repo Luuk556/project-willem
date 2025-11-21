@@ -7,12 +7,15 @@ using CalendarBackend.Service;
 AppDbContext context = new AppDbContext();
 EventRepository eventRepository = new EventRepository(context);
 
-//var builder = WebApplication.CreateBuilder(args);
-//var app = builder.Build();
+var builder = WebApplication.CreateBuilder(args);
 
-//app.MapGet("/", () => "Hello World!");
+builder.Services.AddControllers();
 
-//app.MapGet("/events-by-date/{date}",);
+var app = builder.Build();
+
+app.MapControllers();
+
+app.Run();
 
 Console.WriteLine("Creating event");
 Event newEvent = new Event()
@@ -67,11 +70,3 @@ Console.WriteLine("");
 
 DateTime targetDate = new DateTime(2025, 10, 3);
 Console.WriteLine("Retrieving all events on a specific date ( " + targetDate.ToShortDateString() + " ).");
-Event[] events = eventRepository.GetByDate(targetDate);
-Console.WriteLine("Retrieved the following events:");
-foreach (Event @event in events)
-{
-    Console.WriteLine(@event.Title + " begins at: " + @event.StartDate + " ends at: " + @event.EndDate);
-}
-
-//app.Run();
