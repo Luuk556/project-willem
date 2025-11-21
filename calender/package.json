@@ -21,7 +21,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm run --parallel start-react sass-watch",
+    "start": "npm run --parallel start-react",
     "start-react": "react-scripts start",
     "sass-watch": "sass --watch src/styling/style.scss src/styling/style.css",
     "build": "react-scripts build",
