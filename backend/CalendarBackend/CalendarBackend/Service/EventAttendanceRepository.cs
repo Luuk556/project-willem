@@ -1,0 +1,23 @@
+using CalendarBackend.Data;
+using CalendarBackend.Model;
+
+namespace CalendarBackend.Service;
+
+public class EventAttendanceRepository : Repository<EventAttendees>
+{
+    public EventAttendanceRepository(AppDbContext context) : base(context)
+    {
+        
+    }
+
+    public int[] GetUserIdsByEvent(int eventId)
+    {
+        return _dbSet.Where(a => a.EventId == eventId).Select(a => a.UserId).ToArray();
+    }
+    
+    public int[] GetEventsIdsByUser(int userId)
+    {
+        return _dbSet.Where(a => a.UserId == userId).Select(a => a.EventId).ToArray();
+    }
+    
+}

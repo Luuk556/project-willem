@@ -14,7 +14,7 @@ EventRepository eventRepository = new EventRepository(context);
 
 //app.MapGet("/events-by-date/{date}",);
 
-Console.WriteLine("Creating user");
+Console.WriteLine("Creating event");
 Event newEvent = new Event()
 {
     Title = "event title",
@@ -28,7 +28,9 @@ Event newEvent = new Event()
 eventRepository.Create(newEvent);
 eventRepository.SaveChanges();
 Console.WriteLine("Created event");
+Console.WriteLine("");
 
+Console.WriteLine("Retrieving event");
 int eventId = newEvent.Id;
 
 Event? retrievedEvent = eventRepository.Get(eventId);
@@ -38,6 +40,9 @@ if (retrievedEvent == null)
     return;
 }
 Console.WriteLine("retrieved event with the name " + retrievedEvent.Title);
+Console.WriteLine("");
+
+
 Console.WriteLine("Updating the title of the event");
 Console.WriteLine("Current name: " + retrievedEvent.Title);
 retrievedEvent.Title = "New Title";
@@ -52,73 +57,21 @@ if (updatedEvent == null)
 }
 
 Console.WriteLine("Updated name: " + retrievedEvent.Title);
+Console.WriteLine("");
 
 Console.WriteLine("Deleting event. Currently there are " + eventRepository.GetCount() + " events");
 eventRepository.Delete(updatedEvent);
 eventRepository.SaveChanges();
 Console.WriteLine("Deleted event Currently there are " + eventRepository.GetCount() + " events");
+Console.WriteLine("");
 
-
-
-Event event1 = new Event()
+DateTime targetDate = new DateTime(2025, 10, 3);
+Console.WriteLine("Retrieving all events on a specific date ( " + targetDate.ToShortDateString() + " ).");
+Event[] events = eventRepository.GetByDate(targetDate);
+Console.WriteLine("Retrieved the following events:");
+foreach (Event @event in events)
 {
-    Title = "Daily standup",
-    Description = "Long daily standup description so i can test how it would look if the description of this event is long.",
-    RoomId = 9,
-    StartDate = new DateTime(2025, 10, 3, 11, 0, 0),
-    EndDate = new DateTime(2025, 10, 3, 11, 30, 0),
-    OrganizerId = 1,
-    IsOpen = false
-};
-Event event2 = new Event()
-{
-    Title = "P.O. meeting",
-    Description = "Call with product owner",
-    RoomId = 8,
-    StartDate = new DateTime(2025, 10, 3, 15, 0, 0),
-    EndDate = new DateTime(2025, 10, 3, 15, 45, 0),
-    OrganizerId = 1,
-    IsOpen = false
-};
-Event event3 = new Event()
-{
-    Title = "P.O. meeting part 2",
-    Description = "Call with product owner",
-    RoomId = 8,
-    StartDate = new DateTime(2025, 10, 3, 15, 30, 0),
-    EndDate = new DateTime(2025, 10, 3, 16, 30, 0),
-    OrganizerId = 1,
-    IsOpen = false
-};
-Event event4 = new Event()
-{
-    Title = "P.O. meeting part 3",
-    Description = "Call with product owner",
-    RoomId = 8,
-    StartDate = new DateTime(2025, 10, 3, 16, 30, 0),
-    EndDate = new DateTime(2025, 10, 3, 17, 30, 0),
-    OrganizerId = 1,
-    IsOpen = false
-};
-Event event5 = new Event()
-{
-    Title = "Daily standup",
-    Description = "Daily standup description",
-    RoomId = 9,
-    StartDate = new DateTime(2025, 10, 4, 11, 0, 0),
-    EndDate = new DateTime(2025, 10, 4, 11, 30, 0),
-    OrganizerId = 1,
-    IsOpen = false
-};
-Event event6 = new Event()
-{
-    Title = "Lunch",
-    Description = "Lunch in canteen",
-    RoomId = 0,
-    StartDate = new DateTime(2025, 10, 4, 12, 30, 0),
-    EndDate = new DateTime(2025, 10, 4, 13, 15, 0),
-    OrganizerId = 1,
-    IsOpen = true
-};
+    Console.WriteLine(@event.Title + " begins at: " + @event.StartDate + " ends at: " + @event.EndDate);
+}
 
 //app.Run();
