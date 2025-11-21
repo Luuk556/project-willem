@@ -46,7 +46,10 @@ public class Repository<T> where T : class
     public void DeleteById(int id)
     {
         var entity = _dbSet.Find(id);
-        _dbSet.Remove(entity);
+        if (entity != null)
+        {
+            _dbSet.Remove(entity);
+        }
     }
     
     public void SaveChanges()

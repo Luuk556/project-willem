@@ -11,3 +11,11 @@ public class Event
     public int OrganizerId { get; set; }
     public bool IsOpen { get; set; }
 }
+
+public class EventPreview
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = "";
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+}
