@@ -83,7 +83,6 @@ useEffect(() => {
     axios.get("http://localhost:5184/api/Rooms")
     .then(res => {
         setRooms(res.data);
-        console.log(rooms)
     })
     .catch(err => console.error(err));
 }, []);
@@ -163,7 +162,7 @@ return (
                             type="text"
                             className="card-h__search--input"
                             placeholder="Search user"
-                            onChange={e => {setSearch(prev => ({...prev, user: e.target.value.trim()}))}}
+                            onChange={search => {setSearch(user => ({...user, user: search.target.value.trim()}))}}
                         />
                     </div>
                 </div>
@@ -195,7 +194,7 @@ return (
                             type="text"
                             className="card-h__search--input"
                             placeholder="Search Room"
-                            onChange={e => {setSearch(prev => ({...prev, room: e.target.value.trim()}))}}
+                            onChange={search => {setSearch(room => ({...room, room: search.target.value.trim()}))}}
                         />
                     </div>
                 </div>
@@ -227,7 +226,7 @@ return (
                             type="text"
                             className="card-h__search--input"
                             placeholder="Search events"
-                            onChange={e => {setSearch(prev => ({...prev, event: e.target.value.trim()}))}}
+                            onChange={search => {setSearch(event => ({...event, event: search.target.value.trim()}))}}
                         />
                     </div>
                 </div>
