@@ -77,15 +77,12 @@ const [users, setUsers] = useState<Userdetails[]>([
         email: "peter@ziggo.com"
     },
 ]);
-const [filterdUsers, setFilterdUsers] = useState(users);
 
 const [rooms, setRooms] = useState<RoomDetails[]>([]);
-const [filterdRooms, setFilterdRooms] = useState(rooms);
 useEffect(() => {
     axios.get("http://localhost:5184/api/Rooms")
     .then(res => {
         setRooms(res.data);
-        setFilterdRooms(res.data);
     })
     .catch(err => console.error(err));
 }, []);
@@ -102,7 +99,6 @@ const [events, setEvents] = useState<EventDetails[]>([
         date: "18-10-2025",
     }
 ]);
-const [filterdEvents, setFilterdEvents] = useState(events);
 
 const [popup, setPopup] = useState<popupDetails>({});
 
@@ -133,25 +129,13 @@ const eventChanges = (roomChanges: Object, id: Number) => {
     setPopup({})
 };
 
-const searchUsers = (input_text: string) => {
-    const filterd_list = users.filter((user: Userdetails) =>
-        user.name.toLowerCase().startsWith(input_text.toLowerCase())
-    )
-    setFilterdUsers((filterd_list.length) ? filterd_list : [])
-}
-
-const searchRooms = (input_text: string) => {
-    const filterd_list = rooms.filter((room: RoomDetails) =>
+const [search, setSearch] = useState({user: "", room: "", event: ""});
+const filterList = (list: Object, input_text: string) => {
+    if(input_text === "") return list
+    const filterd_list = list.filter((room: RoomDetails) =>
         room.name.toLowerCase().startsWith(input_text.toLowerCase())
     )
-    setFilterdRooms((filterd_list.length) ? filterd_list : [])
-}
-
-const searchEvents = (input_text: string) => {
-    const filterd_list = events.filter((event: EventDetails) =>
-        event.name.toLowerCase().startsWith(input_text.toLowerCase())
-    )
-    setFilterdEvents((filterd_list.length) ? filterd_list : [])
+    return ((filterd_list.length) ? filterd_list : [])
 }
 
 return (
@@ -178,7 +162,7 @@ return (
                             type="text"
                             className="card-h__search--input"
                             placeholder="Search user"
-                            onChange={e => {searchUsers(e.target.value.trim())}}
+                            onChange={search => {setSearch(user => ({...user, user: search.target.value.trim()}))}}
                         />
                     </div>
                 </div>
@@ -189,7 +173,7 @@ return (
                         <p className="card-b__header--title">Mail</p>
                         <p className="card-b__header--title">Edit</p>
                     </div>
-                    {filterdUsers.map((user) => (
+                    {filterList(users, search.user).map((user) => (
                         <div key={user.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 4 }}>
                             <p className="card-b__row--text">{ user.name }</p>
                             <p className="card-b__row--text">{ user.username }</p>
@@ -209,8 +193,8 @@ return (
                         <input
                             type="text"
                             className="card-h__search--input"
-                            placeholder="Search rooms"
-                            onChange={e => {searchRooms(e.target.value.trim())}}
+                            placeholder="Search Room"
+                            onChange={search => {setSearch(room => ({...room, room: search.target.value.trim()}))}}
                         />
                     </div>
                 </div>
@@ -221,7 +205,7 @@ return (
                         <p className="card-b__header--title">Edit</p>
                     </div>
                     <div className="scrollbar">
-                        {filterdRooms.map((room) => (
+                        {filterList(rooms, search.room).map((room) => (
                             <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
                                 <p className="card-b__row--text">{ room.name }</p>
                                 <p className="card-b__row--text">{ room.capacity }</p>
@@ -242,7 +226,7 @@ return (
                             type="text"
                             className="card-h__search--input"
                             placeholder="Search events"
-                            onChange={e => {searchEvents(e.target.value.trim())}}
+                            onChange={search => {setSearch(event => ({...event, event: search.target.value.trim()}))}}
                         />
                     </div>
                 </div>
@@ -253,7 +237,7 @@ return (
                         <p className="card-b__header--title">Edit</p>
                     </div>
                     <div className="scrollbar">
-                        {filterdEvents.map((event) => (
+                        {filterList(events, search.event).map((event) => (
                             <div key={event.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
                                 <p className="card-b__row--text">{ event.name }</p>
                                 <p className="card-b__row--text">{ event.date }</p>
