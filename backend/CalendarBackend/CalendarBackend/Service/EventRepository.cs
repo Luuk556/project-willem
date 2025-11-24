@@ -10,10 +10,10 @@ public class EventRepository : Repository<Event>
         
     }
 
-    public EventPreview[] GetPreviewByDateAndUser(int userId, DateTime dateStart, DateTime dateEnd)
+    public EventPreview[] GetPreviewByDateAndIdList(DateTime dateStart, DateTime dateEnd, int[] includedIds)
     {
         return _dbSet
-            .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart)
+            .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart && includedIds.Contains(e.Id))
             .Select(e => new EventPreview{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
             .ToArray();
     }

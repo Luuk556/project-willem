@@ -10,11 +10,9 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<EventAttendees> EventAttendees { get; set; }
     public DbSet<Attendance> Attendances { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseSqlite(@"Data Source=Database.db");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

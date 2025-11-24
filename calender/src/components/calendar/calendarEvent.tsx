@@ -1,5 +1,5 @@
 import { EventDetails } from "../../data/datatypes/eventDatatypes.ts";
-import EventList from "../../data/EventData.ts"
+import EventList from "../../data/EventService.ts"
 import RoomList from "../../data/RoomData.ts"
 interface CalendarEventProperties {
     eventID: number;
