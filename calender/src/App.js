@@ -1,5 +1,5 @@
 import './App.css';
-import './styling/style.css';
+import './styling/style.scss';
 import Login from './screens/Login/Login.tsx';
 import CalendarScreen from './screens/calendar/calendar-screen.tsx';
 import AdminDashboard from './screens/admin/dashboard.tsx';
@@ -10,7 +10,7 @@ import Room from './screens/rooms/room.tsx';
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <BrowserRouter>
         <Navbar></Navbar>
 

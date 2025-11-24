@@ -53,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
 
 
   return (
-    <div className="navbar-container">
+    <header className="navbar-container">
       {Array.from(navbarCells.entries()).map(([key, cell]) => (
         <div
           key={key}
@@ -71,7 +71,7 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
           />
         </div>
       ))}
-    </div>
+    </header>
   );
 };
 
