@@ -39,7 +39,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
         const fetchAllEvents = async () => {
             try {
                 const response = await axios.get<EventDetails>(
-                    "http://localhost:5000/event/details",
+                    "http://localhost:5184/event/details",
                     {
                         params: {
                             eventId: eventID

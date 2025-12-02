@@ -62,7 +62,7 @@ const Calendar: React.FC<CalendarSettings> = ({
             try {
                 for (const date of dateArray) {
                     const response = await axios.get<EventPreview[]>(
-                        "http://localhost:5000/event/event-previews",
+                        "http://localhost:5184/event/event-previews",
                         {
                             params: {
                                 date: date.toISOString()

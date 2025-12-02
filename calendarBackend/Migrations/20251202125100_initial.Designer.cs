@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CalendarBackend.Migrations
+namespace MyBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251202112717_initial")]
+    [Migration("20251202125100_initial")]
     partial class initial
     {
         /// <inheritdoc />
