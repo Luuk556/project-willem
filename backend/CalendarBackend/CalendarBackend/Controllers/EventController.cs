@@ -19,4 +19,10 @@ public class EventController : Controller
     {
         return _eventService.GetPreviewByDateAndUser(date, 0);
     }
+    
+    [HttpGet("details")]
+    public Event GetDetails([FromQuery]int eventId)
+    {
+        return _eventService.GetEventById(eventId);
+    }
 }

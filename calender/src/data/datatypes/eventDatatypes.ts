@@ -1,9 +1,9 @@
 //An interface that contains the data required for a preview of an event on the calendar
 export interface EventPreview {
-    eventName: string;
+    title: string;
     startDate: Date;
     endDate: Date;
-    eventID: number;
+    id: number;
 }
 
 export interface EventDetails {
@@ -13,6 +13,6 @@ export interface EventDetails {
     startDate: Date;
     endDate: Date;
     roomID: number;
-    isOpenEvent: boolean;
-    userList: number[];
+    isOpen: boolean;
+    OrganizerId: number;
 }
