@@ -1,5 +1,4 @@
 using CalendarBackend.Data;
-using CalendarBackend.Model;
 using CalendarBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using MyBackend.Dtos;
@@ -17,7 +16,7 @@ public class EventController : Controller
     }
     
     [HttpGet("event-previews")]
-    public EventPreview[] GetPreviews([FromQuery]DateTime date)
+    public EventPreviewDto[] GetPreviews([FromQuery]DateTime date)
     {
         return _eventService.GetPreviewByDateAndUser(date, 1);
     }

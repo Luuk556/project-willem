@@ -17,11 +17,3 @@ public class Event
     
     public ICollection<User> Attendees { get; set; }
 }
-
-public class EventPreview
-{
-    public int Id { get; set; }
-    public string Title { get; set; } = "";
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
-}

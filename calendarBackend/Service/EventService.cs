@@ -8,15 +8,13 @@ public class EventService
 {
     private EventRepository _eventRepository;
     private EventAttendanceRepository _eventAttendanceRepository;
-    private RoomRepository _roomRepository;
     public EventService(AppDbContext context)
     {
          _eventRepository = new EventRepository(context);
          _eventAttendanceRepository = new  EventAttendanceRepository(context);
-         _roomRepository = new  RoomRepository(context);
     }
     
-    public EventPreview[] GetPreviewByDateAndUser(DateTime date, int userId)
+    public EventPreviewDto[] GetPreviewByDateAndUser(DateTime date, int userId)
     {
         DateTime dateStart = date.Date;
         DateTime dateEnd = dateStart.AddDays(1).AddTicks(-1);
@@ -24,14 +22,14 @@ public class EventService
         return _eventRepository.GetPreviewByDateAndIdList(dateStart, dateEnd, includedIds);
     }
 
-    public EventPreview[] GetPreviewOpenByDate(DateTime date)
+    public EventPreviewDto[] GetPreviewOpenByDate(DateTime date)
     {
         DateTime dateStart = date.Date;
         DateTime dateEnd = dateStart.AddDays(1).AddTicks(-1);
         return _eventRepository.GetPreviewOpenByDate(dateStart, dateEnd);
     }
 
-    public EventPreview[] GetEventByRoomAndDate(DateTime date, int roomId)
+    public EventPreviewDto[] GetEventByRoomAndDate(DateTime date, int roomId)
     {
         DateTime dateStart = date.Date;
         DateTime dateEnd = dateStart.AddDays(1).AddTicks(-1);
