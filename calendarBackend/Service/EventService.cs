@@ -1,5 +1,6 @@
 using CalendarBackend.Data;
 using CalendarBackend.Model;
+using MyBackend.Dtos;
 
 namespace CalendarBackend.Service;
 
@@ -7,10 +8,12 @@ public class EventService
 {
     private EventRepository _eventRepository;
     private EventAttendanceRepository _eventAttendanceRepository;
+    private RoomRepository _roomRepository;
     public EventService(AppDbContext context)
     {
          _eventRepository = new EventRepository(context);
          _eventAttendanceRepository = new  EventAttendanceRepository(context);
+         _roomRepository = new  RoomRepository(context);
     }
     
     public EventPreview[] GetPreviewByDateAndUser(DateTime date, int userId)
@@ -35,8 +38,32 @@ public class EventService
         return _eventRepository.GetEventByRoomAndDate(roomId,  dateStart, dateEnd);
     }
 
-    public Event GetEventById(int id)
+    public EventDetailsDto GetEventById(int id)
     {
-        return _eventRepository.GetEventById(id);
+        Event evt =  _eventRepository.GetEventById(id);
+        
+        return new EventDetailsDto
+        {
+            Id = evt.Id,
+            Title = evt.Title,
+            Description = evt.Description,
+            StartDate = evt.StartDate,
+            EndDate = evt.EndDate,
+            OrganizerId = evt.OrganizerId,
+            IsOpen = evt.IsOpen,
+            RoomMinimal = new RoomMinimalDto
+            {
+                Id = evt.Room.Id,
+                Name = evt.Room.Name
+            },
+            Attendees = evt.Attendees
+                .Select(u => new UserMinimalDto
+                {
+                    Id = u.Id,
+                    Name = u.Name
+                })
+                .ToList()
+        };
+        
     }
 }

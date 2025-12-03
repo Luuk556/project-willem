@@ -2,6 +2,7 @@ using CalendarBackend.Data;
 using CalendarBackend.Model;
 using CalendarBackend.Service;
 using Microsoft.AspNetCore.Mvc;
+using MyBackend.Dtos;
 
 namespace CalendarBackend.Controllers;
 [ApiController]
@@ -14,15 +15,17 @@ public class EventController : Controller
     {
         _eventService = new EventService(context);
     }
+    
     [HttpGet("event-previews")]
     public EventPreview[] GetPreviews([FromQuery]DateTime date)
     {
-        return _eventService.GetPreviewByDateAndUser(date, 0);
+        return _eventService.GetPreviewByDateAndUser(date, 1);
     }
     
     [HttpGet("details")]
-    public Event GetDetails([FromQuery]int eventId)
+    public EventDetailsDto GetDetails([FromQuery]int eventId)
     {
-        return _eventService.GetEventById(eventId);
+        EventDetailsDto eventDetails = _eventService.GetEventById(eventId);
+        return eventDetails;
     }
 }

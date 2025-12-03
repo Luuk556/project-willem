@@ -13,4 +13,10 @@ public class User
     public string Biography { get; set; }
     public Role Role { get; set; }
     public Byte[]? ProfilePicture { get; set; }
+    
+    public ICollection<Event> OrganizedEvents { get; set; }
+    
+    public ICollection<Event> Events { get; set; }
+
+    public ICollection<Attendance> Attendances { get; set; }
 }

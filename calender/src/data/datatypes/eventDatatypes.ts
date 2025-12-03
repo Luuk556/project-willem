@@ -12,7 +12,25 @@ export interface EventDetails {
     description: string;
     startDate: Date;
     endDate: Date;
-    roomID: number;
+    roomId: number;
     isOpen: boolean;
     OrganizerId: number;
+}
+
+export interface EventDto {
+    ID: number;
+    title: string;
+    description: string;
+    startDate: Date;
+    endDate: Date;
+    isOpen: boolean;
+    OrganizerId: number;
+    roomMinimal: {
+        id: number;
+        name: string;
+    };
+    attendees: {
+        id: number;
+        name: string;
+    }[]
 }

@@ -1,5 +1,6 @@
 using CalendarBackend.Data;
 using CalendarBackend.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace CalendarBackend.Service;
 
@@ -28,7 +29,10 @@ public class EventRepository : Repository<Event>
 
     public Event GetEventById(int id)
     {
-        return _dbSet.FirstOrDefault(e => e.Id == id);
+        return _dbSet
+            .Include(e => e.Room)
+            .Include(e => e.Attendees)
+            .FirstOrDefault(e => e.Id == id);
     }
 
     public EventPreview[] GetEventByRoomAndDate(int roomId, DateTime dateStart, DateTime dateEnd)

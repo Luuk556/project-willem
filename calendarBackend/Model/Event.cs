@@ -10,6 +10,12 @@ public class Event
     public DateTime EndDate { get; set; }
     public int OrganizerId { get; set; }
     public bool IsOpen { get; set; }
+    
+    public Room Room { get; set; }
+    
+    public User Organizer { get; set; }
+    
+    public ICollection<User> Attendees { get; set; }
 }
 
 public class EventPreview

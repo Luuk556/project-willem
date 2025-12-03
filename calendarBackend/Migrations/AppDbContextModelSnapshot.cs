@@ -34,6 +34,10 @@ namespace MyBackend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("Attendances");
                 });
 
@@ -59,6 +63,9 @@ namespace MyBackend.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("RoomId1")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
 
@@ -68,9 +75,26 @@ namespace MyBackend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrganizerId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("RoomId1");
+
                     b.ToTable("Events");
 
                     b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Long daily standup description so i can test how it would look if the description of this event is long.",
+                            EndDate = new DateTime(2025, 10, 5, 15, 30, 0, 0, DateTimeKind.Unspecified),
+                            IsOpen = false,
+                            OrganizerId = 1,
+                            RoomId = 10,
+                            StartDate = new DateTime(2025, 10, 5, 15, 0, 0, 0, DateTimeKind.Unspecified),
+                            Title = "Daily standup"
+                        },
                         new
                         {
                             Id = 2,
@@ -78,7 +102,7 @@ namespace MyBackend.Migrations
                             EndDate = new DateTime(2025, 10, 3, 11, 30, 0, 0, DateTimeKind.Unspecified),
                             IsOpen = false,
                             OrganizerId = 1,
-                            RoomId = 9,
+                            RoomId = 10,
                             StartDate = new DateTime(2025, 10, 3, 11, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Daily standup"
                         },
@@ -89,7 +113,7 @@ namespace MyBackend.Migrations
                             EndDate = new DateTime(2025, 10, 3, 15, 45, 0, 0, DateTimeKind.Unspecified),
                             IsOpen = false,
                             OrganizerId = 1,
-                            RoomId = 8,
+                            RoomId = 9,
                             StartDate = new DateTime(2025, 10, 3, 15, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "P.O. meeting"
                         },
@@ -100,7 +124,7 @@ namespace MyBackend.Migrations
                             EndDate = new DateTime(2025, 10, 3, 16, 30, 0, 0, DateTimeKind.Unspecified),
                             IsOpen = false,
                             OrganizerId = 1,
-                            RoomId = 8,
+                            RoomId = 9,
                             StartDate = new DateTime(2025, 10, 3, 15, 30, 0, 0, DateTimeKind.Unspecified),
                             Title = "P.O. meeting part 2"
                         },
@@ -111,7 +135,7 @@ namespace MyBackend.Migrations
                             EndDate = new DateTime(2025, 10, 3, 17, 30, 0, 0, DateTimeKind.Unspecified),
                             IsOpen = false,
                             OrganizerId = 1,
-                            RoomId = 8,
+                            RoomId = 9,
                             StartDate = new DateTime(2025, 10, 3, 16, 30, 0, 0, DateTimeKind.Unspecified),
                             Title = "P.O. meeting part 3"
                         },
@@ -122,7 +146,7 @@ namespace MyBackend.Migrations
                             EndDate = new DateTime(2025, 10, 4, 11, 30, 0, 0, DateTimeKind.Unspecified),
                             IsOpen = false,
                             OrganizerId = 1,
-                            RoomId = 9,
+                            RoomId = 10,
                             StartDate = new DateTime(2025, 10, 4, 11, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Daily standup"
                         },
@@ -133,7 +157,7 @@ namespace MyBackend.Migrations
                             EndDate = new DateTime(2025, 10, 4, 13, 15, 0, 0, DateTimeKind.Unspecified),
                             IsOpen = true,
                             OrganizerId = 1,
-                            RoomId = 0,
+                            RoomId = 1,
                             StartDate = new DateTime(2025, 10, 4, 12, 30, 0, 0, DateTimeKind.Unspecified),
                             Title = "Lunch"
                         });
@@ -149,13 +173,15 @@ namespace MyBackend.Migrations
 
                     b.HasKey("EventId", "UserId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("EventAttendees");
 
                     b.HasData(
                         new
                         {
                             EventId = 4,
-                            UserId = 0
+                            UserId = 3
                         },
                         new
                         {
@@ -170,7 +196,7 @@ namespace MyBackend.Migrations
                         new
                         {
                             EventId = 5,
-                            UserId = 0
+                            UserId = 3
                         },
                         new
                         {
@@ -190,27 +216,17 @@ namespace MyBackend.Migrations
                         new
                         {
                             EventId = 1,
-                            UserId = 4
+                            UserId = 2
                         },
                         new
                         {
                             EventId = 1,
-                            UserId = 5
+                            UserId = 1
                         },
                         new
                         {
                             EventId = 2,
-                            UserId = 3
-                        },
-                        new
-                        {
-                            EventId = 2,
-                            UserId = 4
-                        },
-                        new
-                        {
-                            EventId = 2,
-                            UserId = 5
+                            UserId = 1
                         },
                         new
                         {
@@ -220,12 +236,7 @@ namespace MyBackend.Migrations
                         new
                         {
                             EventId = 3,
-                            UserId = 4
-                        },
-                        new
-                        {
-                            EventId = 3,
-                            UserId = 5
+                            UserId = 1
                         });
                 });
 
@@ -257,6 +268,128 @@ namespace MyBackend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Capacity = 10,
+                            Name = "Canteen",
+                            PositionX = 65,
+                            PositionY = 10,
+                            SizeX = 25,
+                            SizeY = 25
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Capacity = 10,
+                            Name = "Entrance Hall",
+                            PositionX = 35,
+                            PositionY = 10,
+                            SizeX = 30,
+                            SizeY = 40
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Capacity = 10,
+                            Name = "Kitchen",
+                            PositionX = 65,
+                            PositionY = 35,
+                            SizeX = 25,
+                            SizeY = 15
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Capacity = 10,
+                            Name = "Room 001",
+                            PositionX = 15,
+                            PositionY = 10,
+                            SizeX = 20,
+                            SizeY = 10
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Capacity = 10,
+                            Name = "Room 002",
+                            PositionX = 15,
+                            PositionY = 20,
+                            SizeX = 5,
+                            SizeY = 35
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Capacity = 10,
+                            Name = "Room 003",
+                            PositionX = 25,
+                            PositionY = 25,
+                            SizeX = 10,
+                            SizeY = 25
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Capacity = 10,
+                            Name = "Room 004",
+                            PositionX = 15,
+                            PositionY = 55,
+                            SizeX = 25,
+                            SizeY = 10
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Capacity = 10,
+                            Name = "Room 005",
+                            PositionX = 45,
+                            PositionY = 55,
+                            SizeX = 30,
+                            SizeY = 10
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Capacity = 10,
+                            Name = "Room 006",
+                            PositionX = 75,
+                            PositionY = 50,
+                            SizeX = 15,
+                            SizeY = 15
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Capacity = 10,
+                            Name = "Room 007",
+                            PositionX = 25,
+                            PositionY = 65,
+                            SizeX = 15,
+                            SizeY = 10
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Capacity = 10,
+                            Name = "Room 008",
+                            PositionX = 45,
+                            PositionY = 65,
+                            SizeX = 15,
+                            SizeY = 10
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Capacity = 10,
+                            Name = "Room 009",
+                            PositionX = 25,
+                            PositionY = 75,
+                            SizeX = 35,
+                            SizeY = 10
+                        });
                 });
 
             modelBuilder.Entity("CalendarBackend.Model.User", b =>
@@ -300,7 +433,100 @@ namespace MyBackend.Migrations
                             Name = "John",
                             Password = "password",
                             Role = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Biography = "biography",
+                            Email = "Kees@gmail.com",
+                            Name = "Kees",
+                            Password = "password",
+                            Role = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Biography = "biography",
+                            Email = "Jan@gmail.com",
+                            Name = "Jan",
+                            Password = "password",
+                            Role = 0
                         });
+                });
+
+            modelBuilder.Entity("CalendarBackend.Model.Attendance", b =>
+                {
+                    b.HasOne("CalendarBackend.Model.Room", "Room")
+                        .WithMany("Attendances")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CalendarBackend.Model.User", "User")
+                        .WithMany("Attendances")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CalendarBackend.Model.Event", b =>
+                {
+                    b.HasOne("CalendarBackend.Model.User", "Organizer")
+                        .WithMany("OrganizedEvents")
+                        .HasForeignKey("OrganizerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CalendarBackend.Model.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CalendarBackend.Model.Room", null)
+                        .WithMany("Events")
+                        .HasForeignKey("RoomId1");
+
+                    b.Navigation("Organizer");
+
+                    b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("CalendarBackend.Model.EventAttendees", b =>
+                {
+                    b.HasOne("CalendarBackend.Model.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CalendarBackend.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CalendarBackend.Model.Room", b =>
+                {
+                    b.Navigation("Attendances");
+
+                    b.Navigation("Events");
+                });
+
+            modelBuilder.Entity("CalendarBackend.Model.User", b =>
+                {
+                    b.Navigation("Attendances");
+
+                    b.Navigation("OrganizedEvents");
                 });
 #pragma warning restore 612, 618
         }

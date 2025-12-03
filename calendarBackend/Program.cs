@@ -12,6 +12,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<EventRepository>();
 builder.Services.AddScoped<EventAttendanceRepository>();
+builder.Services.AddScoped<RoomRepository>();
 
 builder.Services.AddControllers();
 
