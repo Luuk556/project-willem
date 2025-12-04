@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=Database.db"));
 
+builder.Services.AddScoped<AttendanceRepository>();
+builder.Services.AddScoped<AttendanceService>();
 builder.Services.AddScoped<EventRepository>();
 builder.Services.AddScoped<EventAttendanceRepository>();
 builder.Services.AddScoped<RoomRepository>();
