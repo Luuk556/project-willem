@@ -9,4 +9,10 @@ public class UserRepository : Repository<User>
     {
         
     }
+    
+    public User GetById(int id)
+    {
+        return _dbSet.FirstOrDefault(e => e.Id == id);
+    }
+    
 }
