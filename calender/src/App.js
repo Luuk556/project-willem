@@ -7,6 +7,7 @@ import Navbar from './components/navbar/navbar.tsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import RoomMap from './screens/rooms/roomMap.tsx';
 import Room from './screens/rooms/room.tsx';
+import Home from './screens/Home/Home.tsx';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Navbar></Navbar>
 
         <Routes>
+          <Route path="/Home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path='/calendar' element={<CalendarScreen />} />
           <Route path="/" element={<Login />} />
