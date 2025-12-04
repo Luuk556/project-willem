@@ -15,4 +15,9 @@ public class RoomService
     {
         return _roomRepository.GetById(id);
     }
+
+    public Room[] GetAllRooms()
+    {
+        return _roomRepository.GetAllRooms();
+    }
 }

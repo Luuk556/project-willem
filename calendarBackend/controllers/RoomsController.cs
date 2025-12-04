@@ -48,13 +48,7 @@ namespace MyBackend.Controllers;
     [HttpGet("all")]
     public IActionResult GetAllRooms()
     {
-        var rooms = _context.Rooms
-            .Select(r => new
-            {
-                r.Id,
-                r.Name
-            })
-            .ToList();
+        var rooms = _roomService.GetAllRooms();
 
         return Ok(rooms);
     }
