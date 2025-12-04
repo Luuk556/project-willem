@@ -7,6 +7,7 @@ import Navbar from './components/navbar/navbar.tsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import RoomMap from './screens/rooms/roomMap.tsx';
 import Room from './screens/rooms/room.tsx';
+import Profile from './components/profile/Profile.tsx';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/rooms" element={<RoomMap />} />
           <Route path="/rooms/:id" element={<Room />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>
     </div>

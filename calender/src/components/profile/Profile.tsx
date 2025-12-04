@@ -1,89 +1,157 @@
-import React, { ProfilerProps, useState } from "react"
-import "./Profile.css"
+import React, { useState, useEffect } from "react";
+import "./Profile.css";
 
+const Profile: React.FC = () => {
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [imgUrl, setImgUrl] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
-const handleSubmit = (e: any, profileData: {}) => {
-    e.preventDefault()
+  // Fetch profile and profile picture
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-    fetch('http://localhost:8000/profile', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profileData)
-    }).then(() => {
-        console.log("Profile data updated")
+    // Fetch user data
+    fetch("http://localhost:5184/api/profile/me", {
+      headers: { Authorization: `Bearer ${token}` },
     })
-}
+      .then((res) => res.json())
+      .then((data) => {
+        setName(data.name || "");
+        setEmail(data.email || "");
+        setPassword(""); // password not returned for security
+      })
+      .catch((err) => console.error("Failed to fetch profile:", err));
 
-function Profile() {
+    // Fetch profile picture securely
+    fetch("http://localhost:5184/api/profile/me/picture", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch profile picture");
+        return res.blob();
+      })
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        setImgUrl(url);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
-    const mockdata = ["kai", "kai@email", "secret", "https://media.gettyimages.com/id/1473893794/nl/foto/smiling-businessman-gesturing-against-blue-background.jpg?s=612x612&w=gi&k=20&c=yfxs87VpKNVd8MDJ8cXNt1k6jGjkMt1gKVtXNoUwn6o=", "blabalabalabiboibo"]
+  // Handle file input
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0] || null;
+    setFile(selectedFile);
 
-    const [editing, setEditing] = useState(false)
-    const [username, setUsername] = useState(mockdata[0])
-    const [email, setEmail] = useState(mockdata[1])
-    const [password, setPassword] = useState(mockdata[2])
-    const [img, setPicture] = useState(mockdata[3])
-    const [bio, setBio] = useState(mockdata[4])
-
-    const profileData = {username, email, password, img, bio}
-
-    if (editing) {
-        return (
-          <div className="profile-card">
-            <div className="profile-header">
-                <label>
-                <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" onChange={(e) => setPicture(e.target.value)}/>
-                <img id="editpfp" className="profile-pic" src={img} />
-            </label>
-              <div className="profile-info">
-                Name: <input value={username} onChange={(e) => setUsername(e.target.value)}></input>
-                <p className="profile-role">Student Developer</p>
-              </div>
-            </div>
-            <div className="profile-info">
-              Email: <input value={email} onChange={(e) => setEmail(e.target.value)}></input> 
-              Password: <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
-              <p>Project: Project Willem</p>
-            </div>
-            <button
-              onClick={(e) => handleSubmit(e, profileData)}
-              className="btn-green"
-            > Submit
-            </button>
-          </div>
-        )
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImgUrl(reader.result as string);
+      reader.readAsDataURL(selectedFile);
     }
+  };
 
+  // Submit updated profile
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const formData = new FormData();
+    formData.append("Name", name);
+    formData.append("Email", email);
+    if (password) formData.append("Password", password);
+    if (file) formData.append("ProfilePicture", file);
+
+    try {
+      const res = await fetch("http://localhost:5184/api/profile/me", {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error("Failed to update profile:", errText);
+        return;
+      }
+
+      const updatedUser = await res.json();
+      setName(updatedUser.name);
+      setEmail(updatedUser.email);
+      setPassword("");
+      setEditing(false);
+
+      // Refresh profile picture
+      if (updatedUser.profilePictureUrl) {
+        const pictureRes = await fetch(
+          "http://localhost:5184" + updatedUser.profilePictureUrl,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const blob = await pictureRes.blob();
+        setImgUrl(URL.createObjectURL(blob));
+      }
+    } catch (err) {
+      console.error("Error updating profile:", err);
+    }
+  };
+
+  if (editing) {
     return (
-        <div className="profile-card">
-            <div className="profile-header">
-              <img
-                src={img}
-                alt="Profile image"
-                className="profile-pic"
-              />
-              <div>
-                <h3 className="profile-name">{username}</h3>
-                <p className="profile-role">Student Developer</p>
-              </div>
-            </div>
-            <div className="profile-info">
-              <p>{email}</p>
-              <p>Project: Project Willem</p>
-            </div>
-            <button
-              onClick={() => setEditing(true)}
-              className="btn-green"
-            > Edit
-            </button>
+      <div className="profile-card">
+        <div className="profile-header">
+          <label>
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={handleFileChange}
+            />
+            <img className="profile-pic" src={imgUrl || ""} alt="Profile" />
+          </label>
+          <div className="profile-info">
+            Name:{" "}
+            <input value={name} onChange={(e) => setName(e.target.value)} />
+            <p className="profile-role">Student Developer</p>
           </div>
-    )
-}
-
-export default function() {
-    return (
-        <div>
-            <Profile></Profile>
         </div>
-    )
+        <div className="profile-info">
+          Email: <input value={email} onChange={(e) => setEmail(e.target.value)} />
+          Password:{" "}
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button type="button" onClick={handleSubmit} className="btn-green">
+          Submit
+        </button>
+        <button type="button" onClick={() => setEditing(false)} className="btn-red">
+          Cancel
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="profile-card">
+      <div className="profile-header">
+        <img src={imgUrl || ""} alt="Profile" className="profile-pic" />
+        <div>
+          <h3 className="profile-name">{name}</h3>
+          <p className="profile-role">Student Developer</p>
+        </div>
+      </div>
+      <div className="profile-info">
+        <p>{email}</p>
+      </div>
+      <button type="button" onClick={() => setEditing(true)} className="btn-green">
+        Edit
+      </button>
+    </div>
+  );
 };
+
+export default Profile;

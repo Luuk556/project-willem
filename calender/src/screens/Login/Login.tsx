@@ -1,48 +1,69 @@
-import ExamplePopup from "../../components/popup/examplePopup.tsx";
-import ExamplePopup2 from "../../components/popup/examplePopup2.tsx";
-import PopupComponent from "../../components/popup/popup.tsx";
-import loginIcon from "../../images/user-interface.png"
-import { useState } from 'react';
-function Login() {
-    const [openPopup, setOpenPopup] = useState(false)
-    const [openSecondPopup, setOpenSecondPopup] = useState(false)
-    return (
-        <div className="background-login">
-            <div className="login-container">
-                <img src={loginIcon} alt="" className="login-icon" />
-                <p>Sign in</p>
-                <input type="text" placeholder="Username" className="login-input" />
-                <br />
-                <input type="text" placeholder="Password" className="login-input" />
-                <br />
-                <br />
-                <button className="login-button">Login</button>
-                <br />
-                <p className="login-register">Don't have an account? <button className="login-register-button">Register here</button></p>
-            </div>
-            <button
-                onClick={() => setOpenPopup(true)}
-            >
-                open example popup
-            </button>
-            <button
-                onClick={() => setOpenSecondPopup(true)}
-            >
-                open second example popup
-            </button>
-            <PopupComponent
-                closePopup={() => setOpenPopup(false)}
-                isOpen={openPopup}>
-                <ExamplePopup />
-            </PopupComponent>
-            <PopupComponent
-                closePopup={() => setOpenSecondPopup(false)}
-                isOpen={openSecondPopup}>
-                <ExamplePopup2 id={1} />
-            </PopupComponent>
-        </div>
-    );
-}
+import loginIcon from "../../images/user-interface.png";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+const Login: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-export default Login
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const res = await fetch("http://localhost:5184/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || "Login failed");
+      }
+
+      const data = await res.json();
+      localStorage.setItem("token", data.token); // store only token
+      navigate("/profile");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Login failed");
+    }
+  };
+
+  return (
+    <div className="background-login">
+      <div className="login-container">
+        <img src={loginIcon} alt="Login" className="login-icon" />
+        <p>Sign in</p>
+        <form onSubmit={handleLogin}>
+          <input
+            type="text"
+            placeholder="Email"
+            className="login-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <br />
+          <input
+            type="password"
+            placeholder="Password"
+            className="login-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <br />
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <br />
+          <button type="submit" className="login-button">
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
