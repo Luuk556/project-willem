@@ -10,12 +10,10 @@ public class Event
     public DateTime EndDate { get; set; }
     public int OrganizerId { get; set; }
     public bool IsOpen { get; set; }
-}
-
-public class EventPreview
-{
-    public int Id { get; set; }
-    public string Title { get; set; } = "";
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
+    
+    public Room Room { get; set; }
+    
+    public User Organizer { get; set; }
+    
+    public ICollection<User> Attendees { get; set; }
 }

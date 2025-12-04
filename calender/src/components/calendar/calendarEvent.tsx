@@ -1,6 +1,6 @@
-import { EventDetails } from "../../data/datatypes/eventDatatypes.ts";
-import EventList from "../../data/EventData.ts"
-import RoomList from "../../data/RoomData.ts"
+import axios from "axios";
+import { EventDto } from "../../data/datatypes/eventDatatypes.ts";
+import { useEffect, useState } from "react";
 interface CalendarEventProperties {
     eventID: number;
 }
@@ -10,9 +10,21 @@ interface CalendarEventProperties {
  * @param eventID The id of an event 
  */
 const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
+    const [eventDetails, setEventDetails] = useState<EventDto>({
+        ID: eventID,
+        title: "Fetching event data",
+        description: "",
+        startDate: new Date(Date.now()),
+        endDate: new Date(Date.now()),
+        isOpen: false,
+        OrganizerId: -1,
+        roomMinimal: {
+            id: -1,
+            name: ""
+        },
+        attendees: []
+    });
 
-    const eventList = EventList
-    const roomList = RoomList
 
     //Gets the name of the current day of the week
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']
@@ -22,13 +34,50 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
         return inputDate.getMinutes() + inputDate.getHours() * 60
     }
 
-    //Temporary list. Will be removed when there is a backend.
-    const users = ["Piet", "Klaas", "Jan", "Kees", "johan", "Pieter"]
+    useEffect(() => {
+        const fetchEventDetails = async () => {
+            try {
+                const response = await axios.get<EventDto>(
+                    "http://localhost:5184/event/details",
+                    {
+                        params: {
+                            eventId: eventID
+                        }
+                    }
+                );
 
-    const eventDetails: EventDetails = eventList.getEventById(eventID);
+                const newEvent = response.data;
+                newEvent.startDate = new Date(newEvent.startDate);
+                newEvent.endDate = new Date(newEvent.endDate);
+
+                setEventDetails(newEvent);
+            } catch (err) {
+                console.error("Failed to fetch event:", err);
+
+                const errorPlaceholderEvent: EventDto = {
+                    ID: -1,
+                    title: "No event found",
+                    description: "",
+                    startDate: new Date(Date.now()),
+                    endDate: new Date(Date.now()),
+                    isOpen: false,
+                    OrganizerId: -1,
+                    roomMinimal: {
+                        id: -1,
+                        name: "No room found"
+                    },
+                    attendees: []
+                }
+
+                setEventDetails(errorPlaceholderEvent)
+            }
+        };
+
+        fetchEventDetails();
+    }, [eventID]);
+
     const date: string = `${days[eventDetails.startDate.getDay()]} ${eventDetails.startDate.getDate()} ${months[eventDetails.startDate.getMonth()]}`;
     const eventDuration: string = `${eventDetails.startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${eventDetails.endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} (${getMinute(eventDetails.endDate) - getMinute(eventDetails.startDate)} minutes)`;
-    const room: string = roomList.getRoomById(eventDetails.roomID).toString();
 
     function getTimeUntilEvent(): string {
         const currentDate: Date = new Date(Date.now());
@@ -39,14 +88,14 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
             let totalMinutes = getMinute(eventDetails.startDate) - getMinute(currentDate);
             const hours = Math.floor(totalMinutes / 60);
             const minutes = totalMinutes % 60;
-            return   "starts in " + (hours > 0 ? `${hours} hour${hours > 1 ? "s" : ""} and ` : "") + `${minutes} minute${minutes === 1 ? "" : "s"}`;
+            return "starts in " + (hours > 0 ? `${hours} hour${hours > 1 ? "s" : ""} and ` : "") + `${minutes} minute${minutes === 1 ? "" : "s"}`;
         }
         return "";
     };
 
     function getJoinEvent() {
-        if (eventDetails.isOpenEvent) return <button>Join event</button>
-    }    
+        if (eventDetails.isOpen) return <button>Join event</button>
+    }
 
     return (
         <div className="event-container">
@@ -62,7 +111,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
                         <p>{getTimeUntilEvent()}</p>
                     </div>
                     <div className="room-information">
-                        <p>In {room}</p>
+                        <p>In {eventDetails.roomMinimal.name}</p>
                         {getJoinEvent()}
                     </div>
                 </div>
@@ -70,8 +119,8 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
             <div className="right-panel">
                 other people in this meeting:
                 {
-                    eventDetails.userList.map((userID) => {
-                        return <button key={userID}>{users[userID]}</button>
+                    eventDetails.attendees.map((user) => {
+                        return <button key={user.id}>{user.name}</button>
                     })
                 }
             </div>

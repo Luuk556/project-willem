@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CalendarEvent from "./calendarEvent.tsx";
 import PopupComponent from "../popup/popup.tsx";
 import { EventPreview } from "../../data/datatypes/eventDatatypes.ts";
-import EventList from "../../data/EventData.ts"
 import EventButton from "./EventButton.tsx";
+import axios from "axios";
 
 
 //An interface that contains the settings of the calendar
@@ -24,13 +24,12 @@ const Calendar: React.FC<CalendarSettings> = ({
     dateAmount = 5,
     isCompact = false,
 }) => {
-    const dateArray = new Array<Date>;
     const [selectedEvent, setSelectedEvent] = useState(-1)
     const [openEventPopup, setOpenEventPopup] = useState(false)
-
-    const eventList = EventList
+    const [eventMap, setEventMap] = useState<Map<string, Map<number, EventPreview[]>>>(new Map());
 
     //gets the start date given to the calendar, and adds dates based on the amount of days shown
+    const dateArray = new Array<Date>;
     for (let i = 0; i < dateAmount; i++) {
         let date: Date = new Date(selectedDate);
         date.setDate(selectedDate.getDate() + i)
@@ -56,37 +55,61 @@ const Calendar: React.FC<CalendarSettings> = ({
         return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
     }
 
-    // a map with the date of an event as the key. the second map has the time of the event as the key.
-    // this map stores when an event is to take place.
-    let eventMap: Map<string, Map<number, EventPreview[]>> = new Map()
-    dateArray.forEach(date => {
-        const hourMap: Map<number, EventPreview[]> = new Map();
-        const events = eventList.getEventPreviewByDate(date);
-        events.forEach(event => {
-            const hour = event.startDate.getHours();
-            if ( !hourMap.has(hour) ) {
-                hourMap.set(hour, []);
-            }
-            hourMap.get(hour)!.push(event);
-        })
 
-        if (hourMap.size > 0) {
-            eventMap.set(getDateKey(date), hourMap);
-        }
-    });
+    useEffect(() => {
+        const fetchAllEvents = async () => {
+            const newEvents = new Map<string, Map<number, EventPreview[]>>();
+            try {
+                for (const date of dateArray) {
+                    const response = await axios.get<EventPreview[]>(
+                        "http://localhost:5184/event/event-previews",
+                        {
+                            params: {
+                                date: date.toISOString()
+                            }
+                        }
+                    );
+
+                    const events: EventPreview[] = response.data;
+                    const hourMap = new Map<number, EventPreview[]>();
+
+                    for (const event of events) {
+                        event.startDate = new Date(event.startDate);
+                        event.endDate = new Date(event.endDate);
+                        const hour = event.startDate.getHours();
+                        if (!hourMap.has(hour)) {
+                            hourMap.set(hour, []);
+                        }
+                        hourMap.get(hour)!.push(event);
+                    }
+
+                    if (hourMap.size > 0) {
+                        newEvents.set(getDateKey(date), hourMap);
+                    }
+                }
+
+                setEventMap(newEvents);
+            } catch (err) {
+                console.error("Failed to fetch events:", err);
+                setEventMap(new Map());
+            }
+        };
+
+        fetchAllEvents();
+    }, [selectedDate, dateAmount]);
 
     const displayCell = (date: Date, time: number) => {
         const hourMap = eventMap.get(getDateKey(date));
         const events: EventPreview[] = hourMap?.get(time) ?? [];
-            
+
         return (
             <td className="calendar-table-cell" style={{ height: isCompact ? "40px" : "80px" }}>
                 <div className="calendar-table-cell-half"></div>
                 <div className="calendar-cell-content">
                     {
                         events.map((eventData) => (
-                            <div onClick={() => { setSelectedEvent(eventData.eventID); setOpenEventPopup(true) }}>
-                                <EventButton data =  {eventData}/>
+                            <div onClick={() => { setSelectedEvent(eventData.id); setOpenEventPopup(true) }}>
+                                <EventButton data={eventData} />
                             </div>
                         ))
                     }

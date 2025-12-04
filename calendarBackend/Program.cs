@@ -1,40 +1,36 @@
+
+// See https://aka.ms/new-console-template for more information
+using CalendarBackend.Data;
+using CalendarBackend.Model;
+using CalendarBackend.Service;
 using Microsoft.EntityFrameworkCore;
-using calendarBackend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite("Data Source=Database.db"));
 
-// Add Controllers
+builder.Services.AddScoped<EventRepository>();
+builder.Services.AddScoped<EventAttendanceRepository>();
+builder.Services.AddScoped<RoomRepository>();
+
 builder.Services.AddControllers();
 
-// Configure CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        policy => policy
-            .WithOrigins("http://localhost:3000") // React frontend URL
+    options.AddPolicy("ReactPolicy", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
-            .AllowAnyMethod()
-    );
+            .AllowAnyMethod();
+    });
 });
-
-// Add OpenAPI
-builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.UseCors("ReactPolicy");
 
-// Enable CORS
-app.UseCors("AllowReactApp");
-
-app.UseHttpsRedirection();
 app.MapControllers();
+
 app.Run();

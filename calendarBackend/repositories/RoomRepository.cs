@@ -10,9 +10,9 @@ public class RoomRepository : Repository<Room>
         
     }
 
-    public Room[] GetById(int id)
+    public Room GetById(int id)
     {
-        return _dbSet.Where(room => room.Id == id).ToArray();
+        return _dbSet.FirstOrDefault(e => e.Id == id);
     }
 
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Room } from '../../data/datatypes/roomDatatypes';
 import RoomList from '../../data/RoomData.ts';
-import EventList from '../../data/EventData.ts';
+import EventList from '../../data/EventService.ts';
 
 const RoomMap: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
