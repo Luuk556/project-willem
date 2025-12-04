@@ -1,5 +1,6 @@
 using CalendarBackend.Service;
 using Microsoft.AspNetCore.Mvc;
+using MyBackend.Dtos;
 
 namespace CalendarBackend.Controllers;
 
@@ -47,22 +48,4 @@ public class AttendanceController : ControllerBase
 
         return Ok(attendance);
     }
-}
-
-// DTOs is only used to send data from the backend to the frontend can als be frontend to backend
-public class AddAttendanceDto
-{
-    public int UserId { get; set; }
-    public int RoomId { get; set; }
-}
-
-public class UpdateAttendanceDto
-{
-    public int UserId { get; set; }
-    public int RoomId { get; set; }
-}
-
-public class UserDto
-{
-    public int UserId { get; set; }
 }

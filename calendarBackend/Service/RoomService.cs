@@ -1,5 +1,6 @@
 using CalendarBackend.Data;
 using CalendarBackend.Model;
+using MyBackend.Dtos;
 
 namespace CalendarBackend.Service;
 
@@ -16,7 +17,7 @@ public class RoomService
         return _roomRepository.GetById(id);
     }
 
-    public Room[] GetAllRooms()
+    public RoomMinimalDto[] GetAllRooms()
     {
         return _roomRepository.GetAllRooms();
     }
