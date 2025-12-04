@@ -15,4 +15,13 @@ public class RoomRepository : Repository<Room>
         return _dbSet.FirstOrDefault(e => e.Id == id);
     }
 
+    public Room[] GetAllRooms()
+    {
+        return _dbSet.Select(room => new Room
+        {
+            Id = room.Id,
+            Name = room.Name
+        }).ToArray();
+    }
+
 }
