@@ -54,6 +54,11 @@ public class RoomService
 
         return result.ToArray();
     }
+
+    public Room[] GetAll()
+    {
+        return _roomRepository.GetAll();
+    }
     
 
 }

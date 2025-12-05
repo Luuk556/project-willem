@@ -54,6 +54,14 @@ namespace MyBackend.Controllers;
         return Ok(rooms);
     }
     
+    [HttpGet("all-full")]
+    public IActionResult GetAllRoomsFull()
+    {
+        var rooms = _roomService.GetAll();
+
+        return Ok(rooms);
+    }
+    
     [HttpGet("map")]
     public IActionResult GetAllRoomsForMap([FromQuery]DateTime date)
     {
