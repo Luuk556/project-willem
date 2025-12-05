@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import NavbarCell from "./navbar-cell/navbar-cell.tsx";
 import "./navbar.css"
+import { Link } from 'react-router-dom';
 
 interface Cell {
   linkTo: string | undefined;
   title: string;
   isHovering: boolean;
   isActive: boolean;
+  subNavs?: {
+    name: string;
+    link: string;
+  }[];
 }
 
 interface NavbarProps {
@@ -22,7 +27,13 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
       [2, { title: "Calendar", isHovering: false, isActive: false, linkTo: "/calendar" }],
       [3, { title: "Rooms", isHovering: false, isActive: false, linkTo: "/rooms" }],
       [4, { title: "Login", isHovering: false, isActive: false, linkTo: "/login" }],
-      [5, { title: "Admin", isHovering: false, isActive: false, linkTo: "/admin" }],
+      [5, { title: "Admin", isHovering: false, isActive: false, linkTo: "#",
+        subNavs: [
+          {name: "Users", link: "/Admin/user-dashboard"},
+          {name: "Rooms", link: "/Admin/room-dashboard"},
+          {name: "Events", link: "/Admin/event-dashboard"},
+        ]
+      }],
     ])
   );
   const setHover = (index: number, state: boolean) => {
@@ -69,6 +80,13 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
             linkTo={cell.linkTo}
 
           />
+          {cell.subNavs && (
+            <div className="subNav" style={{display: cell.isHovering ? "flex" : "none"}}>
+              {cell.subNavs.map((subNav, subIndex) => (
+                <Link key={subIndex} to={subNav.link} className="subNav-link">{subNav.name}</Link>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </header>
