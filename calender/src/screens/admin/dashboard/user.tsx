@@ -139,11 +139,9 @@ const filterList = (list: Object, input_text: string) => {
 return (
 <main>
     <Popup closePopup={() => setPopup({})} openPopup={popup} >
-    <Popup closePopup={() => setPopup({})} openPopup={popup} >
     { popup.room ? (
         <PopupUsers roomData={popup.room} saveRoomChanges={roomChanges} />
     ): null}
-    </Popup>
     </Popup>
 
     <div className="admin">
