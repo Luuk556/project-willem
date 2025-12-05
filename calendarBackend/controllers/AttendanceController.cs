@@ -25,7 +25,7 @@ public class AttendanceController : ControllerBase
 
     // update attendance
     [HttpPut]
-    public IActionResult Update(UpdateAttendanceDto dto)
+    public IActionResult Update([FromBody]UpdateAttendanceDto dto)
     {
         _attendanceService.UpdateAttendance(dto.UserId, dto.RoomId);
         return Ok();

@@ -47,6 +47,7 @@ const CalendarScreen = () => {
                     selectedDate={new Date(2025, 9, 3)}
                     dateAmount={dayAmount}
                     isCompact={isCompact}
+                    onlyOpenEvents={false}
                 />
             </div>
 

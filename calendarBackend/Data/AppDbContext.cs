@@ -165,6 +165,17 @@ public class AppDbContext : DbContext
                 EndDate = DateTime.Parse("2025-10-04 13:15:00"),
                 OrganizerId = 1,
                 IsOpen = true
+            },
+            new Event
+            {
+                Id = 8,
+                Title = "Ping pong",
+                Description = "",
+                RoomId = 9,
+                StartDate = DateTime.Parse("2025-10-03 19:30:00"),
+                EndDate = DateTime.Parse("2025-10-03 20:30:00"),
+                OrganizerId = 1,
+                IsOpen = true
             }
         );
 

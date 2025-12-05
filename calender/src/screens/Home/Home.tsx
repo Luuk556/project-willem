@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Calendar from "../../components/calendar/calendar.tsx";
 
 interface Room {
   id: number;
@@ -20,16 +21,30 @@ const Home: React.FC = () => {
 
   const handleAttendance = () => {
     if (!selectedRoomId) return alert("Select a room first");
-    axios.post('/user', {
-    firstName: 'Fred',
-    lastName: 'Flintstone'
-  })
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+    if (!isPresent) {
+      axios.put('http://localhost:5184/api/attendance', {
+        userId: 1,
+        roomId: selectedRoomId
+      })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+    else {
+      axios.post('http://localhost:5184/api/attendance/end', {
+        userId: 1
+      })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
 
     // TODO: Hier kun je POST/PUT request naar AttendanceController toevoegen
     setIsPresent(!isPresent);
@@ -61,25 +76,26 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <div className="right-column">
-          <div className="calendar-card">
-            <h2>Event calender (this week)</h2>
-            <ul>
-              <li>Monday - Team meeting</li>
-              <li>Tuesday - Workshop React</li>
-              <li>Wednesday - Day off</li>
-              <li>Thursday - Sprint planning</li>
-              <li>Friday - Demo</li>
-            </ul>
+        <div className="calendars">
+          <div className="homescreen-calendar">
+            <p>My events today</p>
+            <Calendar
+              isCompact={true}
+              dateAmount={1}
+              selectedDate={new Date(2025, 9, 4)}
+              onlyOpenEvents={false}
+            />
           </div>
 
-          <div className="open-events-card">
-            <h2>Open events today</h2>
-            <ul>
-              <li>React Meetup</li>
-              <li>Design session</li>
-              <li>Code review</li>
-            </ul>
+
+          <div className="homescreen-calendar">
+            <p>Open events today</p>
+            <Calendar
+              isCompact={true}
+              dateAmount={1}
+              selectedDate={new Date(2025, 9, 4)}
+              onlyOpenEvents={true}
+            />
           </div>
         </div>
       </div>
