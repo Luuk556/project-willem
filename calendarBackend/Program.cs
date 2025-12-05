@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AttendanceRepository>();
+builder.Services.AddScoped<AttendanceService>();
 builder.Services.AddScoped<EventRepository>();
 builder.Services.AddScoped<EventAttendanceRepository>();
 builder.Services.AddScoped<RoomRepository>();

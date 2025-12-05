@@ -43,7 +43,15 @@ namespace MyBackend.Controllers;
 
         return room;
     }
+    
+    // GET: /room/all to get all rooms
+    [HttpGet("all")]
+    public IActionResult GetAllRooms()
+    {
+        var rooms = _roomService.GetAllRooms();
 
+        return Ok(rooms);
+    }
     // PUT: api/Rooms/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")] public async Task<IActionResult> PutRoom(int id, Room room)
