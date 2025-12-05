@@ -1,8 +1,12 @@
-home-container {
-  max-width: 1000px;
+.home-container {
+  width: 80%;
   margin: 40px auto;
   padding: 20px;
   font-family: "Inter", sans-serif;
+}
+
+.homescreen-calendar {
+  width: 50%;
 }
 
 .columns {
@@ -10,6 +14,7 @@ home-container {
   justify-content: space-between;
   align-items: flex-start;
   gap: 30px;
+  width: 100%
 }
 
 .left-column,
@@ -18,6 +23,15 @@ home-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 50%;
+}
+
+.calendars {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 60%;
 }
 
 .profile-card,
@@ -83,8 +97,17 @@ h2 {
   font-weight: 500;
 }
 
+/* ✅ ATTENDANCE STYLING */
 .attendance-card {
   text-align: center;
+
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
 
   .btn {
     margin-top: 10px;

@@ -11,6 +11,7 @@ interface CalendarSettings {
     selectedDate: Date;
     dateAmount: number;
     isCompact: boolean;
+    onlyOpenEvents: boolean | null;
 }
 
 /**
@@ -23,6 +24,7 @@ const Calendar: React.FC<CalendarSettings> = ({
     selectedDate = new Date(Date.now()),
     dateAmount = 5,
     isCompact = false,
+    onlyOpenEvents = false
 }) => {
     const [selectedEvent, setSelectedEvent] = useState(-1)
     const [openEventPopup, setOpenEventPopup] = useState(false)
@@ -60,9 +62,10 @@ const Calendar: React.FC<CalendarSettings> = ({
         const fetchAllEvents = async () => {
             const newEvents = new Map<string, Map<number, EventPreview[]>>();
             try {
+                let url = onlyOpenEvents ? "http://localhost:5184/event/open" : "http://localhost:5184/event/event-previews"
                 for (const date of dateArray) {
                     const response = await axios.get<EventPreview[]>(
-                        "http://localhost:5184/event/event-previews",
+                        url,
                         {
                             params: {
                                 date: date.toISOString()

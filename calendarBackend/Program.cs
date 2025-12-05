@@ -1,3 +1,5 @@
+
+// See https://aka.ms/new-console-template for more information
 using CalendarBackend.Data;
 using CalendarBackend.Model;
 using CalendarBackend.Service;
@@ -13,7 +15,7 @@ var jwtSecret = jwtConfig["Secret"];
 var jwtExpiryHours = int.Parse(jwtConfig["ExpiryHours"] ?? "2");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite("Data Source=Database.db"));
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AttendanceRepository>();
@@ -21,6 +23,7 @@ builder.Services.AddScoped<AttendanceService>();
 builder.Services.AddScoped<EventRepository>();
 builder.Services.AddScoped<EventAttendanceRepository>();
 builder.Services.AddScoped<RoomRepository>();
+builder.Services.AddScoped<RoomService>();
 
 builder.Services.AddControllers();
 
@@ -64,4 +67,5 @@ app.UseCors("ReactPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();

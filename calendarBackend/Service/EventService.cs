@@ -64,4 +64,9 @@ public class EventService
         };
         
     }
+
+    public bool GetHasEventOnDate(DateTime date, int roomId)
+    {
+        return _eventRepository.getRoomHasEventOnDate(date, roomId);
+    }
 }

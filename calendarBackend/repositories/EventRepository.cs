@@ -23,7 +23,7 @@ public class EventRepository : Repository<Event>
     public EventPreviewDto[] GetPreviewOpenByDate(DateTime dateStart, DateTime dateEnd)
     {
         return _dbSet
-            .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart && e.IsOpen)
+            .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart && e.IsOpen == true)
             .Select(e => new EventPreviewDto{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
             .ToArray();
     }
@@ -51,5 +51,14 @@ public class EventRepository : Repository<Event>
             .Where(e => ids.Contains(e.Id))
             .Select(e => new EventPreviewDto{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
             .ToArray();
+    }
+
+    public bool getRoomHasEventOnDate(DateTime date, int roomId)
+    {
+        var events = _dbSet
+            .Where(e => e.RoomId == roomId && e.EndDate <= date && e.StartDate >= date)
+            .Select(e => e.Id)
+            .ToArray();
+        return events.Length > 0;
     }
 }

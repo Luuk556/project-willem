@@ -15,7 +15,7 @@ public class AttendanceRepository: Repository<Attendance>
         var end = start.AddDays(1);
 
         return _dbSet
-        .Where(attendance => attendance.UserId == userId && attendance.StartDate >= start && attendance.StartDate < end)
+        .Where(attendance => attendance.UserId == userId && attendance.StartDate >= start && attendance.StartDate < end && attendance.EndDate == null)
         .OrderByDescending(attendance => attendance.StartDate)
         .FirstOrDefault();
     }

@@ -25,7 +25,7 @@ public class AttendanceController : ControllerBase
 
     // update attendance
     [HttpPut]
-    public IActionResult Update(UpdateAttendanceDto dto)
+    public IActionResult Update([FromBody]UpdateAttendanceDto dto)
     {
         _attendanceService.UpdateAttendance(dto.UserId, dto.RoomId);
         return Ok();
@@ -39,13 +39,12 @@ public class AttendanceController : ControllerBase
         return Ok();
     }
 
-    // get today's attendance
+        // get today's attendance
     [HttpGet("today/{userId}")]
     public IActionResult GetToday(int userId)
     {
         var attendance = _attendanceService.GetTodayAttendance(userId);
-        if (attendance == null) return NotFound();
-
-        return Ok(attendance);
+        if (attendance == null) return NotFound(new { success = false, message = "No data records" });
+        return Ok(new { success = true, attendance });
     }
 }

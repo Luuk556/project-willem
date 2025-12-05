@@ -27,4 +27,11 @@ public class EventController : Controller
         EventDetailsDto eventDetails = _eventService.GetEventById(eventId);
         return eventDetails;
     }
+    
+    [HttpGet("open")]
+    public EventPreviewDto[] GetOpenEventsByDate([FromQuery]DateTime date)
+    {
+        return _eventService.GetPreviewOpenByDate(date);
+    }
+    
 }
