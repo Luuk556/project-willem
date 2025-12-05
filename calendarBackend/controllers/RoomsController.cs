@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CalendarBackend.Data;
 using CalendarBackend.Model;
 using CalendarBackend.Service;
+using MyBackend.Dtos;
 
 namespace MyBackend.Controllers;
     [Route("room")]
@@ -48,7 +49,16 @@ namespace MyBackend.Controllers;
     [HttpGet("all")]
     public IActionResult GetAllRooms()
     {
-        var rooms = _roomService.GetAllRooms();
+        var rooms = _roomService.GetAllRoomMinimal();
+
+        return Ok(rooms);
+    }
+    
+    [HttpGet("map")]
+    public IActionResult GetAllRoomsForMap([FromQuery]DateTime date)
+    {
+        
+        RoomMapDto[] rooms = _roomService.GetAllRoomsForMap(date);
 
         return Ok(rooms);
     }

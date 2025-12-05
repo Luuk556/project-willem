@@ -3,6 +3,7 @@ using System;
 using CalendarBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251204213650_UserModelUpdates")]
+    partial class UserModelUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -23,14 +26,11 @@ namespace MyBackend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
@@ -163,17 +163,6 @@ namespace MyBackend.Migrations
                             RoomId = 1,
                             StartDate = new DateTime(2025, 10, 4, 12, 30, 0, 0, DateTimeKind.Unspecified),
                             Title = "Lunch"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Description = "",
-                            EndDate = new DateTime(2025, 10, 3, 20, 30, 0, 0, DateTimeKind.Unspecified),
-                            IsOpen = true,
-                            OrganizerId = 1,
-                            RoomId = 9,
-                            StartDate = new DateTime(2025, 10, 3, 19, 30, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Ping pong"
                         });
                 });
 

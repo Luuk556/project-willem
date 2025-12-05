@@ -1,42 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Room } from '../../data/datatypes/roomDatatypes';
-import RoomList from '../../data/RoomData.ts';
-import EventList from '../../data/EventService.ts';
+import axios from 'axios';
+
+interface RoomMap extends Room {
+    isAvailable: boolean;
+}
 
 const RoomMap: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
-    const roomList = RoomList;
-    const eventData = EventList;
-    const rooms: Array<Room> = roomList.getAllRooms();
-    function getIsAvailable(roomID: number): boolean {
-        let events = eventData.getEventsByRoom(roomID)
-        console.log(selectedDate)
-        console.log(events)
-        for (const event of events) {
-            if (event.roomID === roomID) {
-                if (event.startDate < selectedDate) {
-                    if (new Date(event.startDate.getTime() + event.duration * 60 * 1000) > selectedDate) {
-                        console.log(event)
-                        return false
+    const [rooms, setRooms] = useState<RoomMap[]>([])
+
+    useEffect(() => {
+        const fetchRooms = async () => {
+            try {
+                const response = await axios.get<RoomMap[]>("http://localhost:5184/room/map", {
+                    params: {
+                        date: selectedDate
                     }
-                }
+                });
+
+                setRooms(response.data);
+            } catch (err) {
+                console.error("Failed to fetch rooms:", err);
             }
-        }
-        return true
-    }
-    function placeRoom(room: Room) {
+        };
+
+        fetchRooms();
+    }, [selectedDate]);
+
+    function placeRoom(room: RoomMap) {
         return (
             <Link to={`/rooms/${room.id}`}>
                 <button
                     key={room.id}
                     className='room-button'
                     style={{
-                        top: `${room.posY}vh`,
-                        left: `${room.posX}vw`,
+                        top: `${room.positionY}vh`,
+                        left: `${room.positionX}vw`,
                         height: `${room.sizeY}vh`,
                         width: `${room.sizeX}vw`,
-                        backgroundColor: `${getIsAvailable(room.id) ? "green" : "darkred"}`
+                        backgroundColor: `${room.isAvailable ? "green" : "darkred"}`
                     }}
                 >
                     {room.name || `Room ${room.id}`}

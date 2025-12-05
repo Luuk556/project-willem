@@ -52,4 +52,13 @@ public class EventRepository : Repository<Event>
             .Select(e => new EventPreviewDto{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
             .ToArray();
     }
+
+    public bool getRoomHasEventOnDate(DateTime date, int roomId)
+    {
+        var events = _dbSet
+            .Where(e => e.RoomId == roomId && e.EndDate <= date && e.StartDate >= date)
+            .Select(e => e.Id)
+            .ToArray();
+        return events.Length > 0;
+    }
 }

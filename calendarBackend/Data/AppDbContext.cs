@@ -44,6 +44,9 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(e => e.RoomId)
             .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
         
         Seed(modelBuilder);
     }

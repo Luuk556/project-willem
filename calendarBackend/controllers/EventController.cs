@@ -33,4 +33,5 @@ public class EventController : Controller
     {
         return _eventService.GetPreviewOpenByDate(date);
     }
+    
 }
