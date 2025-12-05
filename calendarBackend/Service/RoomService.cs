@@ -19,6 +19,14 @@ public class RoomService
 
     public RoomMinimalDto[] GetAllRooms()
     {
-        return _roomRepository.GetAllRooms();
+        // haalt alle rooms uit DB en mapt naar DTO
+        return _roomRepository.GetAll()
+            .Select(r => new RoomMinimalDto
+            {
+                Id = r.Id,
+                Name = r.Name
+            })
+            .ToArray();
     }
+
 }

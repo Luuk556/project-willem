@@ -1,4 +1,4 @@
-home-container {
+.home-container {
   max-width: 1000px;
   margin: 40px auto;
   padding: 20px;
@@ -83,8 +83,17 @@ h2 {
   font-weight: 500;
 }
 
+/* ✅ ATTENDANCE STYLING */
 .attendance-card {
   text-align: center;
+
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
 
   .btn {
     margin-top: 10px;

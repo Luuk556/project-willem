@@ -1,57 +1,57 @@
-import React, { useState } from "react";
-import "../Home/Home.scss";
-import Calendar from "../../components/calendar/calendar.tsx";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+interface Room {
+  id: number;
+  name: string;
+}
 
 const Home: React.FC = () => {
-  const [attendees, setAttendees] = useState(5);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [selectedRoomId, setSelectedRoomId] = useState<number | "">("");
   const [isPresent, setIsPresent] = useState(false);
 
+  useEffect(() => {
+    fetch("http://localhost:5184/room/all")
+      .then((res) => res.json())
+      .then((data) => setRooms(data))
+      .catch((err) => console.error("Rooms fout:", err));
+  }, []);
+
   const handleAttendance = () => {
-    if (isPresent) {
-      setAttendees(attendees - 1);
-    } else {
-      setAttendees(attendees + 1);
-    }
+    if (!selectedRoomId) return alert("Select a room first");
+    axios.post('/user', {
+    firstName: 'Fred',
+    lastName: 'Flintstone'
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+    // TODO: Hier kun je POST/PUT request naar AttendanceController toevoegen
     setIsPresent(!isPresent);
   };
-
-  const weekEvents = [
-    { day: "Monday", event: "Team meeting" },
-    { day: "Tuesday", event: "Workshop React" },
-    { day: "Wednesday", event: "Day off" },
-    { day: "Thursday", event: "Sprint planning" },
-    { day: "Friday", event: "Demo" },
-  ];
-
-  const openEvents = ["React Meetup", "Design session", "Code review"];
 
   return (
     <div className="home-container">
       <div className="columns">
         <div className="left-column">
-          <div className="profile-card">
-            <div className="profile-header">
-              <img
-                src="https://via.placeholder.com/60"
-                alt="Profile image"
-                className="profile-pic"
-              />
-              <Calendar selectedDate={new Date(Date.now())} dateAmount={1} isCompact={true}></Calendar>
-              <div>
-                  <Calendar selectedDate={new Date(Date.now())} dateAmount={1} isCompact={true}></Calendar>
-                <h3 className="profile-name">Redwan Ettalby</h3>
-                <p className="profile-role">Student Developer</p>
-              </div>
-            </div>
-            <div className="profile-info">
-              <p>Email: 1036282@hr.nl</p>
-              <p>Project: Project Willem</p>
-            </div>
-          </div>
-
           <div className="attendance-card">
             <h2>Attendance</h2>
-            <p>Amount present: {attendees}</p>
+            <select
+              value={selectedRoomId}
+              onChange={(e) => setSelectedRoomId(Number(e.target.value))}
+            >
+              <option value="">-- Choose a room --</option>
+              {rooms.map((room) => (
+                <option key={room.id} value={room.id}>
+                  {room.name}
+                </option>
+              ))}
+            </select>
             <button
               onClick={handleAttendance}
               className={isPresent ? "btn red" : "btn green"}
@@ -65,21 +65,20 @@ const Home: React.FC = () => {
           <div className="calendar-card">
             <h2>Event calender (this week)</h2>
             <ul>
-              {weekEvents.map((e) => (
-                <li key={e.day}>
-                  <p>{e.day}</p>
-                  <p className="event-name">{e.event}</p>
-                </li>
-              ))}
+              <li>Monday - Team meeting</li>
+              <li>Tuesday - Workshop React</li>
+              <li>Wednesday - Day off</li>
+              <li>Thursday - Sprint planning</li>
+              <li>Friday - Demo</li>
             </ul>
           </div>
 
           <div className="open-events-card">
             <h2>Open events today</h2>
             <ul>
-              {openEvents.map((event, i) => (
-                <li key={i}>{event}</li>
-              ))}
+              <li>React Meetup</li>
+              <li>Design session</li>
+              <li>Code review</li>
             </ul>
           </div>
         </div>

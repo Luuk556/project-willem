@@ -1,5 +1,3 @@
-
-// See https://aka.ms/new-console-template for more information
 using CalendarBackend.Data;
 using CalendarBackend.Model;
 using CalendarBackend.Service;
@@ -15,6 +13,7 @@ builder.Services.AddScoped<AttendanceService>();
 builder.Services.AddScoped<EventRepository>();
 builder.Services.AddScoped<EventAttendanceRepository>();
 builder.Services.AddScoped<RoomRepository>();
+builder.Services.AddScoped<RoomService>();
 
 builder.Services.AddControllers();
 
