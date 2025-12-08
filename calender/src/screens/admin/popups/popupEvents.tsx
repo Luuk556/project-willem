@@ -3,21 +3,21 @@ import { useState } from "react";
 interface popupEventData {
     eventData: {
         id?: number;
-        name?: string;
+        title?: string;
         date?: string;
     };
     saveEventChanges: (changedData: { name: string, date: string }, id: Number) => void;
 }
 
 interface changeEventData {
-  name: string;
+  title: string;
   date: string;
 }
 
 const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) => {
 
   const [eventChanges, setEventChanges] = useState<changeEventData>({
-    name: eventData.name || "",
+    title: eventData.title || "",
     date: eventData.date || "",
   })
 
@@ -30,7 +30,7 @@ const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) 
     <div>
       <p>ID: {eventData.id}</p>
       <label>Name: </label>
-      <input type="text" value={eventChanges.name} onChange={e => {setEventChanges({...eventChanges, name: e.target.value })}} />
+      <input type="text" value={eventChanges.title} onChange={e => {setEventChanges({...eventChanges, title: e.target.value })}} />
       <br></br>
       <label>Date: </label>
       <input type="text" value={eventChanges.date} onChange={e => {setEventChanges({...eventChanges, date: e.target.value })}}/>

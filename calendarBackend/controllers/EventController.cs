@@ -14,6 +14,15 @@ public class EventController : Controller
     {
         _eventService = new EventService(context);
     }
+
+    [HttpGet("all")]
+    public IActionResult GetAllEvents()
+    {
+        var events = _eventService.GetAll();
+
+        return Ok(events);
+    }
+    
     
     [HttpGet("event-previews")]
     public EventPreviewDto[] GetPreviews([FromQuery]DateTime date)

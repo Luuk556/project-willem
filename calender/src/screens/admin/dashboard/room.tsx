@@ -13,9 +13,7 @@ interface RoomDetails {
 }
 
 interface popupDetails {
-    user?: Object;
     room?: Object;
-    event?: Object;
 };
 
 const AdminRoomDashboard: FC = () => {
