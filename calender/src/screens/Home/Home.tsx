@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Calendar from "../../components/calendar/calendar.tsx";
+import Profile from "../../components/profile/Profile.tsx";
 
 interface Room {
   id: number;
@@ -32,8 +33,7 @@ const Home: React.FC = () => {
         .catch(function (error) {
           console.log(error);
         });
-    }
-    else {
+    } else {
       axios.post('http://localhost:5184/api/attendance/end', {
         userId: 1
       })
@@ -45,8 +45,6 @@ const Home: React.FC = () => {
         });
     }
 
-
-    // TODO: Hier kun je POST/PUT request naar AttendanceController toevoegen
     setIsPresent(!isPresent);
   };
 
@@ -54,7 +52,8 @@ const Home: React.FC = () => {
     <div className="home-container">
       <div className="columns">
         <div className="left-column">
-          <div className="attendance-card">
+          <Profile />
+          <div className="attendance-card" style={{ marginTop: "20px" }}>
             <h2>Attendance</h2>
             <select
               value={selectedRoomId}
@@ -86,7 +85,6 @@ const Home: React.FC = () => {
               onlyOpenEvents={false}
             />
           </div>
-
 
           <div className="homescreen-calendar">
             <p>Open events today</p>
