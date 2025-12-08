@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Room } from '../../data/datatypes/roomDatatypes';
 import axios from 'axios';
+import CustomInput from '../inputs/CustomInput.tsx';
 
 interface RoomMap extends Room {
     isAvailable: boolean;
@@ -51,14 +52,12 @@ const RoomMap: React.FC = () => {
 
     return (
         <div className='roommap-container'>
-            <input
+            <CustomInput
                 type="datetime-local"
-                onChange={e => {
-                    const selectedDate = e.target.value;
-                    if (selectedDate) {
-                        setSelectedDate(new Date(selectedDate));
-                    }
-                }} />
+                label="Select date:"
+                onChange={selectedDate => { setSelectedDate(new Date(selectedDate)); }}
+                defaultValue={""}
+            />
             {rooms.map(placeRoom)}
         </div>
     );

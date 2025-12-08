@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Calendar from "../../components/calendar/calendar.tsx";
+import Calendar from "../calendar/calendar.tsx";
 
 interface Room {
   id: number;

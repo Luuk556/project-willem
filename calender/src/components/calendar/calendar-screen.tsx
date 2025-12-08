@@ -1,4 +1,5 @@
-import Calendar from "../../components/calendar/calendar.tsx"
+import CustomInput from "../inputs/CustomInput.tsx";
+import Calendar from "./calendar.tsx"
 import { useState } from "react";
 const CalendarScreen = () => {
 
@@ -9,14 +10,11 @@ const CalendarScreen = () => {
         <div className="calendar">
             <div className="calendar-sidemenu">
                 <button className="calendar-newevent">New event</button>
-                <input
+                <CustomInput
                     type="date"
-                    onChange={e => {
-                        const selectedDate = e.target.value;
-                        if (selectedDate) {
-                            setDate(new Date(selectedDate));
-                        }
-                    }}
+                    label="Select date:"
+                    onChange={selectedDate => { setDate(new Date(selectedDate)); }}
+                    defaultValue={""}
                 />
                 <select
                     defaultValue={5}
