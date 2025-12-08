@@ -13,6 +13,11 @@ public class EventService
          _eventRepository = new EventRepository(context);
          _eventAttendanceRepository = new  EventAttendanceRepository(context);
     }
+
+    public Event[] GetAll()
+    {
+        return _eventRepository.GetAll();
+    }
     
     public EventPreviewDto[] GetPreviewByDateAndUser(DateTime date, int userId)
     {
