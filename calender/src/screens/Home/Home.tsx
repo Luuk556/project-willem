@@ -20,9 +20,10 @@ const Home: React.FC = () => {
       .catch((err) => console.error("Rooms fout:", err));
   }, []);
 
+  useEffect(() => {
   const handleAttendance = () => {
     if (!selectedRoomId) return alert("Select a room first");
-    if (!isPresent) {
+    if (isPresent) {
       axios.put('http://localhost:5184/api/attendance', {
         userId: 1,
         roomId: selectedRoomId
@@ -44,9 +45,10 @@ const Home: React.FC = () => {
           console.log(error);
         });
     }
-
-    setIsPresent(!isPresent);
   };
+
+    handleAttendance();
+  }, [isPresent]);
 
   return (
     <div className="home-container">
@@ -67,7 +69,7 @@ const Home: React.FC = () => {
               ))}
             </select>
             <button
-              onClick={handleAttendance}
+              onClick= {() => setIsPresent(!isPresent) }
               className={isPresent ? "btn red" : "btn green"}
             >
               {isPresent ? "Sign off" : "Sign in"}
