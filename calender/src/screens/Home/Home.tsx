@@ -21,34 +21,39 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const updateAttendance = () => {
+
+      if (isPresent) {
+        axios.put('http://localhost:5184/api/attendance', {
+          userId: 1,
+          roomId: selectedRoomId
+        })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        axios.post('http://localhost:5184/api/attendance/end', {
+          userId: 1
+        })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    };
+
+    updateAttendance();
+  }, [isPresent]);
+
   const handleAttendance = () => {
     if (!selectedRoomId) return alert("Select a room first");
-    if (isPresent) {
-      axios.put('http://localhost:5184/api/attendance', {
-        userId: 1,
-        roomId: selectedRoomId
-      })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    } else {
-      axios.post('http://localhost:5184/api/attendance/end', {
-        userId: 1
-      })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
-  };
-
-    handleAttendance();
-  }, [isPresent]);
+    setIsPresent(!isPresent);
+  }
 
   return (
     <div className="home-container">
@@ -69,7 +74,7 @@ const Home: React.FC = () => {
               ))}
             </select>
             <button
-              onClick= {() => setIsPresent(!isPresent) }
+              onClick={() => handleAttendance()}
               className={isPresent ? "btn red" : "btn green"}
             >
               {isPresent ? "Sign off" : "Sign in"}
