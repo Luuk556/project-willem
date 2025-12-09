@@ -1,11 +1,10 @@
 import { FC, useState, useEffect } from "react";
 import Popup from "../popups/popup.tsx";
-import PopupRooms from "../popups/popupEvents.tsx";
+import PopupEvents from "../popups/popupEvents.tsx";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import PopupEvents from "../popups/popupEvents.tsx";
 
 interface EventsDetails {
     id: number;
@@ -17,7 +16,7 @@ interface popupDetails {
     event?: Object;
 };
 
-const AdminDashboard: FC = () => {
+const AdminEventDashboard: FC = () => {
     const [events, setEvents] = useState<EventsDetails[]>([]);
     const [popup, setPopup] = useState<popupDetails>({});
     const [search, setSearch] = useState({ event: "" });
@@ -89,4 +88,4 @@ return (
 );
 };
 
-export default AdminDashboard
+export default AdminEventDashboard
