@@ -15,7 +15,7 @@ interface popupDetails {
     event?: Object;
 };
 
-const AdminRoomDashboard: FC = () => {
+const AdminCard: FC = () => {
 const [rooms, setRooms] = useState<RoomDetails[]>([]);
 const [popup, setPopup] = useState<popupDetails>({});
 const [search, setSearch] = useState({room: ""});

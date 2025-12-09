@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Calendar from "../../components/calendar/calendar.tsx";
 import Profile from "../../components/profile/Profile.tsx";
-
-interface Room {
-  id: number;
-  name: string;
-}
+import { Room } from "../../data/datatypes/roomDatatypes";
 
 const Home: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -66,7 +62,7 @@ const Home: React.FC = () => {
               value={selectedRoomId}
               onChange={(e) => setSelectedRoomId(Number(e.target.value))}
             >
-              <option value="">-- Choose a room --</option>
+              <option value="">Choose a room</option>
               {rooms.map((room) => (
                 <option key={room.id} value={room.id}>
                   {room.name}
