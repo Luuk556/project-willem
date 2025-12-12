@@ -26,7 +26,7 @@ const Login: React.FC = () => {
 
       const data = await res.json();
       localStorage.setItem("token", data.token); // store only token
-      navigate("/profile");
+      navigate("/home");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Login failed");

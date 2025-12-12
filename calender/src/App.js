@@ -10,6 +10,7 @@ import RoomMap from './screens/rooms/roomMap.tsx';
 import Room from './screens/rooms/room.tsx';
 import Profile from './components/profile/Profile.tsx';
 import Home from './screens/Home/Home.tsx';
+import Register from './screens/register/register.tsx';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/rooms" element={<RoomMap />} />
           <Route path="/rooms/:id" element={<Room />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>
     </div>
