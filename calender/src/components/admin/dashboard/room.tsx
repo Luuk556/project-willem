@@ -5,6 +5,7 @@ import PopupRooms from "../popups/popupRooms.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import CustomInput from "../../inputs/CustomInput.tsx";
 
 interface RoomDetails {
     id: number;
@@ -21,7 +22,7 @@ interface popupDetails {
 const AdminRoomDashboard: FC = () => {
     const [rooms, setRooms] = useState<RoomDetails[]>([]);
     const [popup, setPopup] = useState<popupDetails>({});
-    const [search, setSearch] = useState({ room: "" });
+    const [search, setSearch] = useState<string>("");
 
     useEffect(() => {
         axios.get("http://localhost:5184/room/all-full")
@@ -41,12 +42,12 @@ const AdminRoomDashboard: FC = () => {
         setPopup({})
     };
 
-    const filterList = (list: Array<RoomDetails>, input_text: string) => {
-        if (input_text === "") return list
-        const filterd_list = list.filter((room) =>
-            room.name.toLowerCase().startsWith(input_text.toLowerCase())
+    const filterList = () => {
+        if (search === "") return rooms
+        const filterd_list = rooms.filter((room) =>
+            room.name.toLowerCase().includes(search.toLowerCase())
         )
-        return ((filterd_list.length) ? filterd_list : [])
+        return (filterd_list)
     }
 
     return (
@@ -59,17 +60,13 @@ const AdminRoomDashboard: FC = () => {
 
             <section className="dashboard-card">
                 <div className="card-h">
-                    <div className="card-h__title">
-                        <p className="card-h__title--text">Rooms</p>
-                    </div>
-                    <div className="card-h__search">
-                        <input
-                            type="text"
-                            className="card-h__search--input"
-                            placeholder="Search Room"
-                            onChange={search => { setSearch(room => ({ ...room, room: search.target.value.trim() })) }}
-                        />
-                    </div>
+                    <p className="card-h__title">Rooms</p>
+                    <CustomInput
+                        type="text"
+                        label="Search rooms"
+                        defaultValue={search}
+                        onChange={result => { setSearch(result) }}
+                    />
                 </div>
                 <div className="card-b">
                     <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
@@ -78,11 +75,11 @@ const AdminRoomDashboard: FC = () => {
                         <p className="card-b__header--title">Edit</p>
                     </div>
                     <div className="scrollbar">
-                        {filterList(rooms, search.room).map((room) => (
+                        {filterList().map((room) => (
                             <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
                                 <p className="card-b__row--text">{room.name}</p>
                                 <p className="card-b__row--text">{room.capacity}</p>
-                                <p onClick={() => { setPopup({ room: room }) }} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
+                                <button onClick={() => { setPopup({ room: room }) }} className="card-b__row--edit"><FontAwesomeIcon icon={faPenToSquare} /></button>
                             </div>
                         ))}
                     </div>

@@ -176,3 +176,5 @@ backend/CalendarBackend/CalendarBackend/appsettings.json
 backend/CalendarBackend/CalendarBackend/Properties/launchSettings.json
 backend/CalendarBackend/CalendarBackend/appsettings.Development.json
 calendarBackend/node_modules/
+calendarBackend/Database.db-shm
+calendarBackend/Database.db-wal

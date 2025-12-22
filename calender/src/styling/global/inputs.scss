@@ -5,7 +5,7 @@
     margin: 5px;
 
     label {
-        background-color: rgb(182, 182, 182);
+        background-color: #d5dde3;
         box-shadow: 0px 0px 2px inset rgb(78, 85, 90);
     }
 
@@ -13,7 +13,17 @@
     input {
         border: none;
         box-shadow: 0px 0px 2px inset rgb(99, 118, 129);
-        background-color: rgb(240, 240, 240);
+        background-color: #fafdff;
+        transition: 0.2s;
+    }
+
+    select:hover,
+    input:hover {
+        border: none;
+        box-shadow: 0px 0px 5px inset rgb(99, 118, 129);
+        background-color: #fafdff;
+        transition: 0.2s;
+
     }
 
     select,

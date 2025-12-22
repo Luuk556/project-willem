@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Calendar from "../calendar/calendar.tsx";
+import CustomDropdown from "../inputs/CustomDropdown.tsx";
 
 interface Room {
   id: number;
@@ -56,17 +57,21 @@ const Home: React.FC = () => {
         <div className="left-column">
           <div className="attendance-card">
             <h2>Attendance</h2>
-            <select
-              value={selectedRoomId}
-              onChange={(e) => setSelectedRoomId(Number(e.target.value))}
-            >
-              <option value="">-- Choose a room --</option>
-              {rooms.map((room) => (
-                <option key={room.id} value={room.id}>
-                  {room.name}
-                </option>
-              ))}
-            </select>
+
+            <div className="custom-dropdown">
+              <label className="dropdown-width">Select a room</label>
+              <select
+                defaultValue={selectedRoomId}
+                onChange={(e) => setSelectedRoomId(Number(e.target.value))}
+              >
+                {rooms.map((room) => (
+                  <option key={room.id} value={room.id}>
+                    {room.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <button
               onClick={handleAttendance}
               className={isPresent ? "btn red" : "btn green"}

@@ -41,7 +41,7 @@ const RoomMap: React.FC = () => {
                         left: `${room.positionX}vw`,
                         height: `${room.sizeY}vh`,
                         width: `${room.sizeX}vw`,
-                        backgroundColor: `${room.isAvailable ? "green" : "darkred"}`
+                        backgroundColor: `${room.isAvailable ? "rgb(136, 229, 128)" : "rgb(252, 125, 109)"}`
                     }}
                 >
                     {room.name || `Room ${room.id}`}

@@ -9,18 +9,11 @@
         float: left;
         display: flex;
         flex-direction: column;
+        box-shadow: 0px 0px 2px inset rgb(99, 118, 129);
     }
 
     .calendar-newevent {
-        background: transparent;
-        color: black;
-        font-size: 18px;
-        box-sizing: border-box;
-        padding: 10px;
         margin: 20px;
-        border-radius: 2px;
-        border: 2px solid gray;
-        cursor: pointer;
     }
 
     .calendar-window {
@@ -34,4 +27,3 @@
         transform: scale(2);
     }
 }
-
