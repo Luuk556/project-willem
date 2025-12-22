@@ -26,6 +26,10 @@
   width: 50%;
 }
 
+.dropdown-width {
+  width: 30%;
+}
+
 .calendars {
   flex: 1;
   display: flex;
@@ -73,87 +77,20 @@
   font-size: 0.9rem;
 }
 
-h2 {
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-  color: #333;
-}
 
-.calendar-card ul,
-.open-events-card ul {
-  list-style: none;
-  padding: 0;
-}
 
-.calendar-card li {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #eee;
-  padding: 6px 0;
-}
-
-.event-name {
-  color: #007bff;
-  font-weight: 500;
-}
-
-/* ✅ ATTENDANCE STYLING */
 .attendance-card {
   text-align: center;
 
-  select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-  }
-
-  .btn {
-    margin-top: 10px;
-    padding: 8px 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    color: white;
-    transition: 0.2s ease;
-  }
-
   .btn.green {
-    background: #28a745;
-
-    &:hover {
-      background: #218838;
-    }
+    background: rgb(136, 229, 128);
   }
 
   .btn.red {
-    background: #dc3545;
-
-    &:hover {
-      background: #c82333;
-    }
+    background: rgb(252, 125, 109);
   }
 }
 
-.open-events-card ul {
-  margin-top: 10px;
-  color: #555;
-
-  li {
-    margin-bottom: 5px;
-    padding-left: 10px;
-    position: relative;
-
-    &::before {
-      content: "•";
-      color: #007bff;
-      position: absolute;
-      left: 0;
-    }
-  }
-}
 
 @media (max-width: 768px) {
   .columns {

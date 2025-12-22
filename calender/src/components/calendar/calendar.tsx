@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CalendarEvent from "./calendarEvent.tsx";
+import CalendarEvent from "../events/calendarEvent.tsx";
 import PopupComponent from "../popup/popup.tsx";
 import { EventPreview } from "../../data/datatypes/eventDatatypes.ts";
 import EventButton from "./EventButton.tsx";

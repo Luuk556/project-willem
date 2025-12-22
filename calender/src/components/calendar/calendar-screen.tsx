@@ -1,4 +1,6 @@
-import Calendar from "../../components/calendar/calendar.tsx"
+import CustomDropdown from "../inputs/CustomDropdown.tsx";
+import CustomInput from "../inputs/CustomInput.tsx";
+import Calendar from "./calendar.tsx"
 import { useState } from "react";
 const CalendarScreen = () => {
 
@@ -9,31 +11,19 @@ const CalendarScreen = () => {
         <div className="calendar">
             <div className="calendar-sidemenu">
                 <button className="calendar-newevent">New event</button>
-                <input
+                <CustomInput
                     type="date"
-                    onChange={e => {
-                        const selectedDate = e.target.value;
-                        if (selectedDate) {
-                            setDate(new Date(selectedDate));
-                        }
-                    }}
+                    label="Select date:"
+                    onChange={selectedDate => { setDate(new Date(selectedDate)); }}
+                    defaultValue={date}
                 />
-                <select
-                    defaultValue={5}
-                    onChange={e => {
-                        const selectedAmount = e.target.value;
-                        if (selectedAmount) {
-                            setDayAmount(Number(selectedAmount));
-                        }
-                    }}>
-                    <option value="1">1 day</option>
-                    <option value="2">2 days</option>
-                    <option value="3">3 days</option>
-                    <option value="4">4 days</option>
-                    <option value="5">5 days</option>
-                    <option value="6">6 days</option>
-                    <option value="7">7 days</option>
-                </select>
+                <CustomDropdown
+                    onChange={selectedAmount => { setDayAmount(Number(selectedAmount)); }}
+                    label="Amount of days:"
+                    defaultValue={dayAmount}
+                    values={[1, 2, 3, 4, 5, 6, 7]}
+                />
+
                 <p>compact view</p>
                 <input type="checkbox" className="calendar-screen-is-compact"
                     onChange={e => {
