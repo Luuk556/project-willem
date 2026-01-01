@@ -46,7 +46,7 @@ const Login: React.FC = () => {
           onChange={setEmail}
         />
         <CustomInput
-          type="text"
+          type="password"
           label="password"
           defaultValue={password}
           onChange={setPassword}

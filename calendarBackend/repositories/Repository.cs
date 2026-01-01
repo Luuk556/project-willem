@@ -56,4 +56,9 @@ public class Repository<T> where T : class
     {
         _context.SaveChanges();
     }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
 }

@@ -1,13 +1,14 @@
+using System.Security.Claims;
 using CalendarBackend.Data;
 using CalendarBackend.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyBackend.Dtos;
 
 namespace CalendarBackend.Controllers;
 [ApiController]
 [Route("event")]
-
-public class EventController : Controller
+public class EventController : ControllerBase
 {
     private EventService _eventService;
     public EventController(AppDbContext context)
@@ -23,11 +24,14 @@ public class EventController : Controller
         return Ok(events);
     }
     
-    
+    [Authorize]
     [HttpGet("event-previews")]
     public EventPreviewDto[] GetPreviews([FromQuery]DateTime date)
     {
-        return _eventService.GetPreviewByDateAndUser(date, 1);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return [];
+        return _eventService.GetPreviewByDateAndUser(date, userId);
     }
     
     [HttpGet("details")]
