@@ -19,5 +19,10 @@ public class EventAttendanceRepository : Repository<EventAttendees>
     {
         return _dbSet.Where(a => a.UserId == userId).Select(a => a.EventId).ToArray();
     }
+
+    public EventAttendees GetByUserAndEvent(int userId, int eventId)
+    {
+        return _dbSet.Where(a => a.UserId == userId && a.EventId == eventId).SingleOrDefault();
+    }
     
 }

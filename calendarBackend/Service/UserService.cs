@@ -48,6 +48,7 @@ public class UserService
     public string HashPassword(string password) => Argon2.Hash(password);
 
     public bool VerifyPassword(string hash, string password) => Argon2.Verify(hash, password);
+    //public bool VerifyPassword(string hash, string password) => hash == password;
 
     public string GenerateJwtToken(User user)
     {

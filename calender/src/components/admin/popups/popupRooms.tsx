@@ -1,12 +1,13 @@
 import { useState } from "react";
+import CustomInput from "../../inputs/CustomInput.tsx";
 
 interface popupRoomData {
-    roomData: {
-        id?: number;
-        name?: string;
-        capacity?: number;
-    };
-    saveRoomChanges: (changedData: { name: string, capacity: number }, id: Number) => void;
+  roomData: {
+    id?: number;
+    name?: string;
+    capacity?: number;
+  };
+  saveRoomChanges: (changedData: { name: string, capacity: number }, id: Number) => void;
 }
 
 interface changeRoomData {
@@ -29,11 +30,20 @@ const PopupRooms: React.FC<popupRoomData> = ({ roomData, saveRoomChanges }) => {
   return (
     <div>
       <p>ID: {roomData.id}</p>
-      <label>Name: </label>
-      <input type="text" value={roomChanges.name} onChange={e => {setRoomChanges({...roomChanges, name: e.target.value })}} />
+      <CustomInput
+        label="Name:"
+        type="text"
+        onChange={e => { setRoomChanges({ ...roomChanges, name: e }) }}
+        defaultValue={roomChanges.name}
+      />
+
       <br></br>
-      <label>Capasity: </label>
-      <input type="text" value={roomChanges.capacity} onChange={e => {setRoomChanges({...roomChanges, capacity: Number(e.target.value) })}}/>
+      <CustomInput
+        label="Capacity:"
+        type="text"
+        onChange={e => { setRoomChanges({ ...roomChanges, capacity: Number(e) }) }}
+        defaultValue={roomChanges.capacity}
+      />
       <br></br>
       <button onClick={changeRoom}>Save</button>
     </div>
