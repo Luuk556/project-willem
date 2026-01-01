@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Profile.css";
 
 const Profile: React.FC = () => {
+  // change to interface
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,7 +23,7 @@ const Profile: React.FC = () => {
       .then((data) => {
         setName(data.name || "");
         setEmail(data.email || "");
-        setPassword(""); // password not returned for security
+        setPassword("");
       })
       .catch((err) => console.error("Failed to fetch profile:", err));
 
