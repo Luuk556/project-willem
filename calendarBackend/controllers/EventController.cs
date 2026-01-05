@@ -42,5 +42,20 @@ public class EventController : Controller
     {
         return _eventService.GetPreviewOpenByDate(date);
     }
+
+    [HttpPut("edit/{id}")]
+    public EventPreviewDto[] PutEvent([FromQuery]DateTime date)
+    {
+            var affected = await _context.Event
+                .Where(r => r.Id == id)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(r => r.Name, room.Name)
+                    .SetProperty(r => r.Capacity, room.Capacity)
+                    .SetProperty(r => r.SizeX, room.SizeX)
+                    .SetProperty(r => r.SizeY, room.SizeY)
+                    .SetProperty(r => r.PositionX, room.PositionX)
+                    .SetProperty(r => r.PositionY, room.PositionY)
+                );
+    }
     
 }

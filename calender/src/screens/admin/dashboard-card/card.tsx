@@ -1,42 +1,19 @@
 import { FC, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 
 interface RoomDetails {
     id: number;
     name: string;
     capacity: number;
+    sizeX: number;
+    sizeY: number;
+    positionX: number;
+    positionY: number;
 }
 
-interface popupDetails {
-    user?: Object;
-    room?: Object;
-    event?: Object;
-};
-
-const AdminCard: FC = () => {
-const [rooms, setRooms] = useState<RoomDetails[]>([]);
-const [popup, setPopup] = useState<popupDetails>({});
-const [search, setSearch] = useState({room: ""});
-
-useEffect(() => {
-    axios.get("http://localhost:5184/api/Rooms")
-    .then(req => {
-        setRooms(req.data);
-    })
-    .catch(err => console.error(err));
-}, []);
-
-
-const roomChanges = (roomChanges: Object, id: Number) => {
-    setRooms(rooms =>
-        rooms.map(oldRoom =>
-            (oldRoom.id === id) ? { ...oldRoom, ...roomChanges } : oldRoom
-        )
-    );
-    setPopup({})
-};
+const CardDashboard: FC = ({ cardHeads, cardData, openPopup }) => {
+const [search, setSearch] = useState({searchData: ""});
 
 const filterList = (list: Array<RoomDetails>, input_text: string) => {
     if(input_text === "") return list
@@ -47,38 +24,31 @@ const filterList = (list: Array<RoomDetails>, input_text: string) => {
 }
 
 return (
-<main className="admin">
     <section className="dashboard-card">
-        <div className="card-h">
-            <div className="card-h__title">
-                <p className="card-h__title--text">Rooms</p>
-            </div>
-            <div className="card-h__search">
-                <input
-                    type="text"
-                    className="card-h__search--input"
-                    placeholder="Search Room"
-                    onChange={search => {setSearch(room => ({...room, room: search.target.value.trim()}))}}
-                />
-            </div>
-        </div>
-        <div className="card-b">
-            <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
-                <p className="card-b__header--title">Name</p>
-                <p className="card-b__header--title">Capacity</p>
-                <p className="card-b__header--title">Edit</p>
-            </div>
-            <div className="scrollbar">
-                {filterList(rooms, search.room).map((room) => (
-                    <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
-                        <p className="card-b__row--text">{ room.name }</p>
-                        <p className="card-b__row--text">{ room.capacity }</p>
-                        <p onClick={() => {setPopup({room: room})}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
-                    </div>
+        <p className="dashboard-card__title">Rooms</p>
+        <input
+            type="text"
+            className="dashboard-card__search"
+            placeholder="Search Room"
+            onChange={search => {setSearch(searchData => ({...cardData, searchData: search.target.value.trim()}))}}
+        />
+        <div className="dashboard-card__table">
+            <div className="dashboard-card__table-row dashboard-card__table-row--header" style={{ ["--row-count" as any]: cardHeads.length+1 }}>
+                {cardHeads.map((head: String) => (
+                    <p>{head}</p>
                 ))}
+                    <p>Edit</p>
             </div>
+            {filterList(cardData, search.searchData).map((data) => (
+                <div key={data.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: cardHeads.length+1 }}>
+                    <p>{ data.name }</p>
+                    <p>{ data.capacity }</p>
+                    <p onClick={() => {openPopup(data)}}><FontAwesomeIcon icon={faPenToSquare} /></p>
+                </div>
+            ))}
         </div>
     </section>
-</main>
 )
 };
+
+export default CardDashboard

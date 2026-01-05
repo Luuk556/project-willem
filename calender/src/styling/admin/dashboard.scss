@@ -1,73 +1,45 @@
+.dashboard-card{
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+    background-color: $blue;
+    padding: 0.9rem 0.4rem;
+    height: 100%;
 
-
-    .dashboard-card{
-        display: flex;
-        flex-direction: column;
-        row-gap: 0.5rem;
-        background-color: $blue;
-        padding: 0.9rem 0.4rem;
-        height: 100%;
-
-        .card-h{
-
-            &__title{
-                margin-bottom: 0.5rem;
-
-                &--text{
-                    text-align: center;
-                    color: $white;
-                    font-weight: bold;
-                }
-            }
-
-            &__search{
-
-                &--input{
-                    width: 100%;
-                    padding: 0.3rem 0.7rem;
-                    
-                }
-            }
-        }
-
-        .card-b{
-            width: 100%;
-            flex: 1;
-            overflow-y: auto;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-
-            &__col{
-                display: grid;
-                grid-template-columns: repeat(var(--row-count), 1fr);
-                width: 100%;
-                border-bottom: 1px solid $white;
-                padding: 0.4rem 0;
-            }
-
-            &__header{
-                position: sticky;
-                top: 0;
-                background-color: $blue;
-                text-align: center;
-
-                &--title{
-                    color: $white;
-                    font-weight: bold;
-                }
-            }
-
-            &__row{
-                text-align: center;
-
-                &--text{
-                    color: $white;
-                }
-            }
-        }
+    &__title{
+        color: $white;
+        text-align: center;
+        font-weight: bold;
     }
 
+    &__search{
+        border: solid $black 1px;
+        width: 100%;
+        padding: 0.3rem 0.7rem;        
+    }
 
-.scroll{
-    width: 100%;
+    &__table{
+        width: 100%;
+        flex: 1;
+        overflow-y: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    &__table-row{
+        display: grid;
+        grid-template-columns: repeat(var(--row-count), 1fr);
+        color: $white;
+        width: 100%;
+        border-bottom: 1px solid $white;
+        padding: 0.4rem 0;
+        justify-items: center;
+
+        &--header{
+            position: sticky;
+            top: 0;
+            background-color: $blue;
+            font-weight: bold;
+        }
+    }
 }
