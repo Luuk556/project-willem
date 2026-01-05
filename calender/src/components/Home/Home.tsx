@@ -11,10 +11,13 @@ const Home: React.FC = () => {
   const [isPresent, setIsPresent] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5184/room/all")
-      .then((res) => res.json())
-      .then((data) => setRooms(data))
-      .catch((err) => console.error("Rooms fout:", err));
+    axios.get("http://localhost:5184/room/all")
+      .then((res) => {
+        setRooms(res.data);
+      })
+      .catch((err) => {
+        console.error("Rooms fout:", err);
+      });
   }, []);
 
   useEffect(() => {

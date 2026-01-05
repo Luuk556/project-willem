@@ -21,7 +21,6 @@ public class RoomService
 
     public RoomMinimalDto[] GetAllRoomMinimal()
     {
-        // haalt alle rooms uit DB en mapt naar DTO
         return _roomRepository.GetAll()
             .Select(r => new RoomMinimalDto
             {
@@ -59,6 +58,4 @@ public class RoomService
     {
         return _roomRepository.GetAll();
     }
-    
-
 }

@@ -28,4 +28,13 @@ public class AttendanceRepository: Repository<Attendance>
         .OrderByDescending(attendance => attendance.StartDate)
         .FirstOrDefault();
     }
+
+    // Get all attendances in a room
+    public List<User> GetActiveUsersByRoom(int roomId)
+    {
+        return _dbSet
+            .Where(a => a.RoomId == roomId && a.EndDate == null)
+            .Select(a => a.User)
+            .ToList();
+    }
 }
