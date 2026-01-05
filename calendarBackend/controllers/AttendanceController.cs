@@ -39,12 +39,20 @@ public class AttendanceController : ControllerBase
         return Ok();
     }
 
-        // get today's attendance
+    // get today's attendance
     [HttpGet("today/{userId}")]
     public IActionResult GetToday(int userId)
     {
         var attendance = _attendanceService.GetTodayAttendance(userId);
         if (attendance == null) return NotFound(new { success = false, message = "No data records" });
         return Ok(new { success = true, attendance });
+    }
+
+    // get active users in a room
+    [HttpGet("/api/rooms/{roomId}/active-users")]
+    public IActionResult GetActiveUsers(int roomId)
+    {
+        var users = _attendanceService.GetActiveUsersInRoom(roomId);
+        return Ok(users.Select(u => new { userId = u.Id, name = u.Name }));
     }
 }
