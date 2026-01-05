@@ -35,7 +35,7 @@ const PopupRooms: React.FC<popupRoomData> = ({ roomData, saveRoomChanges }) => {
       <label>Name: </label>
       <input type="text" value={roomChanges.name} onChange={e => {setRoomChanges({...roomChanges, name: e.target.value })}} />
       <br></br>
-      <label>Capasity: </label>
+      <label>Capacity: </label>
       <input type="number" value={roomChanges.capacity} onChange={e => {setRoomChanges({...roomChanges, capacity: Number(e.target.value) })}}/>
       <br></br>
       <label>Position X: </label>
