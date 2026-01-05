@@ -35,6 +35,8 @@ const Login: React.FC = () => {
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Login failed");
+    } finally {
+      window.location.reload()
     }
   };
 
