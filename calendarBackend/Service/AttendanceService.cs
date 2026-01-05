@@ -62,4 +62,10 @@ public class AttendanceService
     {
         return _attendanceRepository.GetAttendanceByUserAndDate(userId, DateTime.Now.Date);
     }
+
+    // get active users in a room
+    public List<User> GetActiveUsersInRoom(int roomId)
+    {
+        return _attendanceRepository.GetActiveUsersByRoom(roomId);
+    }
 }

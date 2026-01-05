@@ -1,5 +1,5 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import CustomInput from "../../inputs/CustomInput.tsx";
 
 interface popupEventData {
   eventData: {
@@ -12,11 +12,6 @@ interface popupEventData {
   saveEventChanges: (changedData: { name: string, date: string, id: Number }) => void;
 }
 
-interface roomData {
-  id: number;
-  name: string;
-}
-
 const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) => {
   const [eventChanges, setEventChanges] = useState<popupEventData["eventData"]>({
     id: eventData.id,
@@ -25,13 +20,6 @@ const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) 
     roomId: eventData.roomId,
     date: eventData.date,
   })
-  const [rooms, setRooms] = useState<roomData[]>([])
-  useEffect(() => {
-    axios.get("http://localhost:5184/room/all")
-    .then(req => {
-      setRooms(req.data);
-    })
-  }, []);
 
   const changeEvent = () => {
     saveEventChanges(eventChanges)
@@ -40,11 +28,21 @@ const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) 
   return (
     <div>
       <p>ID: {eventData.id}</p>
-      <label>Title: </label>
-      <input type="text" value={eventChanges.title} onChange={e => {setEventChanges({...eventChanges, title: e.target.value })}}/>
-      <br></br>
-      <label>Description: </label>
-      <input type="text" value={eventChanges.description} onChange={e => {setEventChanges({...eventChanges, description: e.target.value })}}/>
+
+      <CustomInput
+        label="Title:"
+        type="text"
+        onChange={e => { setEventChanges({ ...eventChanges, title: e }) }}
+        defaultValue={eventChanges.title}
+      />
+
+      <CustomInput
+        label="Description:"
+        type="text"
+        onChange={e => { setEventChanges({ ...eventChanges, description: e }) }}
+        defaultValue={eventChanges.description}
+      />
+
       <br></br>
       <button onClick={changeEvent}>Save</button>
     </div>

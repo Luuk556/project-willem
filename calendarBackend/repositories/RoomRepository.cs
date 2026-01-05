@@ -24,5 +24,4 @@ public class RoomRepository : Repository<Room>
             Name = room.Name
         }).ToArray();
     }
-
 }

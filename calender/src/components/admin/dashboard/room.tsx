@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Popup from "../popups/popup.tsx";
 import PopupRooms from "../popups/popupRooms.tsx";
+import CustomInput from "../../inputs/CustomInput.tsx";
 
 interface RoomDetails {
     id: number;
@@ -15,14 +16,10 @@ interface RoomDetails {
     positionY: number;
 }
 
-interface popupDetails {
-    room?: Object;
-};
-
 const AdminRoomDashboard: FC = () => {
     const [rooms, setRooms] = useState<RoomDetails[]>([]);
-    const [popup, setPopup] = useState<popupDetails>({});
-    const [search, setSearch] = useState({room: ""});
+    const [popup, setPopup] = useState({});
+    const [search, setSearch] = useState<String>("");
 
     useEffect(() => {
         axios.get("http://localhost:5184/room/all-full")
@@ -32,13 +29,15 @@ const AdminRoomDashboard: FC = () => {
             .catch(err => console.error(err));
     }, []);
 
-    const filterList = (list: RoomDetails, input_text: string) => {
-        if(input_text === "") return list
-        const filterd_list = list.filter((room: RoomDetails) =>
-            room.name.toLowerCase().startsWith(input_text.toLowerCase())
+
+    const filterList = () => {
+        if (search === "") return rooms
+        const filterd_list = rooms.filter((room) =>
+            room.name.toLowerCase().startsWith(search.toLowerCase())
         )
-        return ((filterd_list.length) ? filterd_list : [])
+        return (filterd_list)
     }
+
 
     const roomChanges = (roomChanges: RoomDetails) => {
         axios.put(`http://localhost:5184/room/edit/${roomChanges.id}`, roomChanges)
@@ -61,11 +60,11 @@ const AdminRoomDashboard: FC = () => {
         </Popup>
         <section className="dashboard-card">
             <p className="dashboard-card__title">Rooms</p>
-            <input
+            <CustomInput
                 type="text"
-                className="dashboard-card__search"
-                placeholder="Search Room"
-                onChange={search => {setSearch(room => ({...room, room: search.target.value.trim()}))}}
+                label="Search rooms"
+                defaultValue={search}
+                onChange={result => { setSearch(result) }}
             />
             <div className="dashboard-card__table">
                 <div className="dashboard-card__table-row dashboard-card__table-row--header" style={{ ["--row-count" as any]: 3 }}>
@@ -73,7 +72,7 @@ const AdminRoomDashboard: FC = () => {
                     <p>Capacity</p>
                     <p>Edit</p>
                 </div>
-                {filterList(rooms, search.room).map((room: RoomDetails) => (
+                {filterList().map((room: RoomDetails) => (
                     <div key={room.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: 3 }}>
                         <p>{ room.name }</p>
                         <p>{ room.capacity }</p>

@@ -2,20 +2,17 @@
     display: flex;
     flex-direction: column;
     row-gap: 0.5rem;
-    background-color: $blue;
+    background-color: #ffffff;
     padding: 0.9rem 0.4rem;
     height: 100%;
+    box-shadow: 0px 0px 2px inset rgb(78, 85, 90);
+    border-radius: 5px;
 
     &__title{
-        color: $white;
+        margin-bottom: 0.5rem;
         text-align: center;
+        color: black;
         font-weight: bold;
-    }
-
-    &__search{
-        border: solid $black 1px;
-        width: 100%;
-        padding: 0.3rem 0.7rem;        
     }
 
     &__table{
@@ -29,7 +26,7 @@
     &__table-row{
         display: grid;
         grid-template-columns: repeat(var(--row-count), 1fr);
-        color: $white;
+        color: $black;
         width: 100%;
         border-bottom: 1px solid $white;
         padding: 0.4rem 0;
@@ -38,8 +35,17 @@
         &--header{
             position: sticky;
             top: 0;
-            background-color: $blue;
+            background-color: $backgound;
+            text-align: center;
             font-weight: bold;
         }
     }
+
+        &__table-row:nth-child(odd) {
+            background-color: white;
+        }
+
+        &__table-row:nth-child(even) {
+            background-color: $backgound;
+        }
 }

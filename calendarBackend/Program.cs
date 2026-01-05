@@ -21,6 +21,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AttendanceRepository>();
 builder.Services.AddScoped<AttendanceService>();
 builder.Services.AddScoped<EventRepository>();
+builder.Services.AddScoped<EventAttendanceService>();
 builder.Services.AddScoped<EventAttendanceRepository>();
 builder.Services.AddScoped<RoomRepository>();
 builder.Services.AddScoped<RoomService>();

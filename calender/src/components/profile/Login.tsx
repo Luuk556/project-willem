@@ -1,6 +1,7 @@
 import loginIcon from "../../images/user-interface.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CustomInput from "../inputs/CustomInput.tsx";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -34,34 +35,28 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="background-login">
-      <div className="login-container">
-        <img src={loginIcon} alt="Login" className="login-icon" />
-        <p>Sign in</p>
-        <form onSubmit={handleLogin}>
-          <input
-            type="text"
-            placeholder="Email"
-            className="login-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <br />
-          <input
-            type="password"
-            placeholder="Password"
-            className="login-input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <br />
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <br />
-          <button type="submit" className="login-button">
-            Login
-          </button>
-        </form>
-      </div>
+    <div className="login-container">
+      <img src={loginIcon} alt="Login" className="login-icon" />
+      <p>Sign in</p>
+      <form onSubmit={handleLogin}>
+        <CustomInput
+          type="text"
+          label="Email"
+          defaultValue={email}
+          onChange={setEmail}
+        />
+        <CustomInput
+          type="password"
+          label="password"
+          defaultValue={password}
+          onChange={setPassword}
+        />
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <br />
+        <button type="submit">
+          Login
+        </button>
+      </form>
     </div>
   );
 };

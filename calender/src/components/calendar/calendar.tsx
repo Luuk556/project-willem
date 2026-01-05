@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CalendarEvent from "./calendarEvent.tsx";
+import CalendarEvent from "../events/calendarEvent.tsx";
 import PopupComponent from "../popup/popup.tsx";
 import { EventPreview } from "../../data/datatypes/eventDatatypes.ts";
 import EventButton from "./EventButton.tsx";
@@ -62,6 +62,8 @@ const Calendar: React.FC<CalendarSettings> = ({
         const fetchAllEvents = async () => {
             const newEvents = new Map<string, Map<number, EventPreview[]>>();
             try {
+                const token = localStorage.getItem("token");
+                if (!token) return;
                 let url = onlyOpenEvents ? "http://localhost:5184/event/open" : "http://localhost:5184/event/event-previews"
                 for (const date of dateArray) {
                     const response = await axios.get<EventPreview[]>(
@@ -69,7 +71,10 @@ const Calendar: React.FC<CalendarSettings> = ({
                         {
                             params: {
                                 date: date.toISOString()
-                            }
+                            },
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
                         }
                     );
 
