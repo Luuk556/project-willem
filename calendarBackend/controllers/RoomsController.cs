@@ -9,6 +9,7 @@ using CalendarBackend.Data;
 using CalendarBackend.Model;
 using CalendarBackend.Service;
 using MyBackend.Dtos;
+using CalendarBackend.Dtos;
 
 namespace MyBackend.Controllers;
     [Route("room")]
@@ -70,35 +71,6 @@ namespace MyBackend.Controllers;
 
         return Ok(rooms);
     }
-    // PUT: api/Rooms/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")] public async Task<IActionResult> PutRoom(int id, Room room)
-    {
-        if (id != room.Id)
-        {
-            return BadRequest();
-        }
-
-        _context.Entry(room).State = EntityState.Modified;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!RoomExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
-
-        return NoContent();
-    }
 
     // POST: api/Rooms
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -108,6 +80,33 @@ namespace MyBackend.Controllers;
         await _context.SaveChangesAsync();
         return CreatedAtAction("GetRoom", new { id = room.Id }, room);
     }
+
+        // PUT: room/edit/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("edit/{id}")]
+        public async Task<IActionResult> PutRoom(int id, [FromBody] UpdateRoomDto room)
+        {
+            if (id != room.Id)
+            {
+                return BadRequest();
+            }
+
+            var affected = await _context.Rooms
+                .Where(r => r.Id == id)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(r => r.Name, room.Name)
+                    .SetProperty(r => r.Capacity, room.Capacity)
+                    .SetProperty(r => r.SizeX, room.SizeX)
+                    .SetProperty(r => r.SizeY, room.SizeY)
+                    .SetProperty(r => r.PositionX, room.PositionX)
+                    .SetProperty(r => r.PositionY, room.PositionY)
+                );
+
+            if (affected == 0)
+                return NotFound();
+
+            return NoContent();
+        }
 
     // DELETE: api/Rooms/5
     [HttpDelete("{id}")] public async Task<IActionResult> DeleteRoom(int id)

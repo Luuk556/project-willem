@@ -1,10 +1,10 @@
 import { FC, useState, useEffect } from "react";
-import Popup from "../popups/popup.tsx";
-import PopupEvents from "../popups/popupEvents.tsx";
-
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import Popup from "../popups/popup.tsx";
+import PopupEvents from "../popups/popupEvents.tsx";
+import CustomInput from "../../inputs/CustomInput.tsx";
 
 interface EventsDetails {
     id: number;
@@ -12,80 +12,69 @@ interface EventsDetails {
     date: string;
 }
 
-interface popupDetails {
-    event?: Object;
-};
-
 const AdminEventDashboard: FC = () => {
     const [events, setEvents] = useState<EventsDetails[]>([]);
-    const [popup, setPopup] = useState<popupDetails>({});
-    const [search, setSearch] = useState({ event: "" });
+    const [popup, setPopup] = useState({});
+    const [search, setSearch] = useState<String>("");
 
     useEffect(() => {
         axios.get("http://localhost:5184/event/all")
             .then(req => {
-                console.log(req.data)
                 setEvents(req.data);
             })
             .catch(err => console.error(err));
     }, []);
 
-    const eventChanges = (roomChanges: Object, id: Number) => {
-        setEvents(events =>
-            events.map(oldEvent =>
-                (oldEvent.id === id) ? { ...oldEvent, ...roomChanges } : oldEvent
-            )
-        );
+    const filterList = () => {
+        if (search === "") return events
+        const filterd_list = events.filter((event) =>
+            event.title.toLowerCase().startsWith(search.toLowerCase())
+        )
+        return (filterd_list)
+    }
+
+    const eventChanges = (eventChanges: EventsDetails) => {
+        axios.put(`http://localhost:5184/event/edit/${eventChanges.id}`, eventChanges)
+        .then(() => {
+            setEvents(events =>
+                events.map(oldEvent =>
+                    (oldEvent.id === eventChanges.id) ? { ...oldEvent, ...eventChanges } : oldEvent
+                )
+            );
+        })
         setPopup({})
     };
 
-    const filterList = (list: Array<EventsDetails>, input_text: string) => {
-        if (input_text === "") return list
-        const filterd_list = list.filter((event) =>
-            event.title.toLowerCase().startsWith(input_text.toLowerCase())
-        )
-        return ((filterd_list.length) ? filterd_list : [])
-    }
-
-return (
-<main className="admin">
-    <Popup closePopup={() => setPopup({})} openPopup={popup} >
-        {popup.event ? (
-            <PopupEvents eventData={popup.event} saveEventChanges={eventChanges} />
-        ) : null}
-    </Popup>
-
+    return (
+        <main className="admin">
+            <Popup closePopup={() => setPopup({})} openPopup={popup} >
+                {popup ? (
+                    <PopupEvents eventData={popup} saveEventChanges={eventChanges} />
+                ) : null}
+            </Popup>
             <section className="dashboard-card">
-                <div className="card-h">
-                    <div className="card-h__title">
-                        <p className="card-h__title--text">Events</p>
+                <p className="dashboard-card__title">Events</p>
+                <CustomInput
+                    type="text"
+                    label="Search Events"
+                    defaultValue={search}
+                    onChange={result => { setSearch(result) }}
+                />
+                <div className="dashboard-card__table">
+                    <div className="dashboard-card__table-row dashboard-card__table-row--header" style={{ ["--row-count" as any]: 2 }}>
+                        <p>Name</p>
+                        <p>Edit</p>
                     </div>
-                    <div className="card-h__search">
-                        <input
-                            type="text"
-                            className="card-h__search--input"
-                            placeholder="Search events"
-                            onChange={search => {setSearch(event => ({...event, event: search.target.value.trim()}))}}
-                        />
-                    </div>
-                </div>
-                <div className="card-b">
-                    <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 2 }}>
-                        <p className="card-b__header--title">Title</p>
-                        <p className="card-b__header--title">Edit</p>
-                    </div>
-                    <div className="scrollbar">
-                        {filterList(events, search.event).map((event) => (
-                            <div key={event.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 2 }}>
-                                <p className="card-b__row--text">{ event.title }</p>
-                                <p  onClick={() => {setPopup({event: event})}} className="card-b__row--text"><FontAwesomeIcon icon={faPenToSquare} /></p>
-                            </div>
-                        ))}
-                    </div>
+                    {filterList().map((event: EventsDetails) => (
+                        <div key={event.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: 2 }}>
+                            <p>{ event.title }</p>
+                            <p onClick={() => {setPopup(event)}}><FontAwesomeIcon icon={faPenToSquare} /></p>
+                        </div>
+                    ))}
                 </div>
             </section>
-</main>
-);
+        </main>
+    )
 };
 
 export default AdminEventDashboard

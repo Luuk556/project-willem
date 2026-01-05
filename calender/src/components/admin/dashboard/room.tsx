@@ -1,26 +1,25 @@
 import { FC, useState, useEffect } from "react";
-import Popup from "../popups/popup.tsx";
-import PopupRooms from "../popups/popupRooms.tsx";
-
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import Popup from "../popups/popup.tsx";
+import PopupRooms from "../popups/popupRooms.tsx";
 import CustomInput from "../../inputs/CustomInput.tsx";
 
 interface RoomDetails {
     id: number;
     name: string;
     capacity: number;
+    sizeX: number;
+    sizeY: number;
+    positionX: number;
+    positionY: number;
 }
-
-interface popupDetails {
-    room?: Object;
-};
 
 const AdminRoomDashboard: FC = () => {
     const [rooms, setRooms] = useState<RoomDetails[]>([]);
-    const [popup, setPopup] = useState<popupDetails>({});
-    const [search, setSearch] = useState<string>("");
+    const [popup, setPopup] = useState({});
+    const [search, setSearch] = useState<String>("");
 
     useEffect(() => {
         axios.get("http://localhost:5184/room/all-full")
@@ -31,60 +30,59 @@ const AdminRoomDashboard: FC = () => {
     }, []);
 
 
-    const roomChanges = (roomChanges: Object, id: Number) => {
-        setRooms(rooms =>
-            rooms.map(oldRoom =>
-                (oldRoom.id === id) ? { ...oldRoom, ...roomChanges } : oldRoom
-            )
-        );
-        setPopup({})
-    };
-
     const filterList = () => {
         if (search === "") return rooms
         const filterd_list = rooms.filter((room) =>
-            room.name.toLowerCase().includes(search.toLowerCase())
+            room.name.toLowerCase().startsWith(search.toLowerCase())
         )
         return (filterd_list)
     }
 
-    return (
-        <main className="admin">
-            <Popup closePopup={() => setPopup({})} openPopup={popup} >
-                {popup.room ? (
-                    <PopupRooms roomData={popup.room} saveRoomChanges={roomChanges} />
-                ) : null}
-            </Popup>
 
-            <section className="dashboard-card">
-                <div className="card-h">
-                    <p className="card-h__title">Rooms</p>
-                    <CustomInput
-                        type="text"
-                        label="Search rooms"
-                        defaultValue={search}
-                        onChange={result => { setSearch(result) }}
-                    />
+    const roomChanges = (roomChanges: RoomDetails) => {
+        axios.put(`http://localhost:5184/room/edit/${roomChanges.id}`, roomChanges)
+        .then(() => {
+            setRooms(rooms =>
+                rooms.map(oldRoom =>
+                    (oldRoom.id === roomChanges.id) ? { ...oldRoom, ...roomChanges } : oldRoom
+                )
+            );
+        })
+        setPopup({})
+    }
+
+    return (
+    <main className="admin">
+        <Popup closePopup={() => setPopup({})} openPopup={popup} >
+        { popup ? (
+            <PopupRooms roomData={popup} saveRoomChanges={roomChanges} />
+        ): null}
+        </Popup>
+        <section className="dashboard-card">
+            <p className="dashboard-card__title">Rooms</p>
+            <CustomInput
+                type="text"
+                label="Search rooms"
+                defaultValue={search}
+                onChange={result => { setSearch(result) }}
+            />
+            <div className="dashboard-card__table">
+                <div className="dashboard-card__table-row dashboard-card__table-row--header" style={{ ["--row-count" as any]: 3 }}>
+                    <p>Name</p>
+                    <p>Capacity</p>
+                    <p>Edit</p>
                 </div>
-                <div className="card-b">
-                    <div className="card-b__col card-b__header" style={{ ["--row-count" as any]: 3 }}>
-                        <p className="card-b__header--title">Name</p>
-                        <p className="card-b__header--title">Capacity</p>
-                        <p className="card-b__header--title">Edit</p>
+                {filterList().map((room: RoomDetails) => (
+                    <div key={room.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: 3 }}>
+                        <p>{ room.name }</p>
+                        <p>{ room.capacity }</p>
+                        <p onClick={() => {setPopup(room)}}><FontAwesomeIcon icon={faPenToSquare} /></p>
                     </div>
-                    <div className="scrollbar">
-                        {filterList().map((room) => (
-                            <div key={room.id} className="card-b__col card-b__row" style={{ ["--row-count" as any]: 3 }}>
-                                <p className="card-b__row--text">{room.name}</p>
-                                <p className="card-b__row--text">{room.capacity}</p>
-                                <button onClick={() => { setPopup({ room: room }) }} className="card-b__row--edit"><FontAwesomeIcon icon={faPenToSquare} /></button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-        </main>
+                ))}
+            </div>
+        </section>
+    </main>
     )
-};
+}
 
 export default AdminRoomDashboard

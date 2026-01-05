@@ -2,17 +2,21 @@ using System.Security.Claims;
 using CalendarBackend.Data;
 using CalendarBackend.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using MyBackend.Dtos;
+using CalendarBackend.Dtos;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CalendarBackend.Controllers;
 [ApiController]
 [Route("event")]
 public class EventController : ControllerBase
 {
-    private EventService _eventService;
+    private readonly AppDbContext _context;
+    private readonly EventService _eventService;
     public EventController(AppDbContext context)
     {
+        _context = context;
         _eventService = new EventService(context);
     }
 
@@ -46,5 +50,22 @@ public class EventController : ControllerBase
     {
         return _eventService.GetPreviewOpenByDate(date);
     }
-    
+
+    [HttpPut("edit/{id}")]
+    public async Task<IActionResult> PutEvent(int id, [FromBody] UpdateEventDto event_u)
+    {
+        var affected = await _context.Events
+            .Where(e => e.Id == id)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(e => e.Title, event_u.Title)
+                .SetProperty(e => e.Description, event_u.Description)
+            );
+
+        if (affected == 0)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
 }

@@ -1,4 +1,4 @@
-.dashboard-card {
+.dashboard-card{
     display: flex;
     flex-direction: column;
     row-gap: 0.5rem;
@@ -8,68 +8,44 @@
     box-shadow: 0px 0px 2px inset rgb(78, 85, 90);
     border-radius: 5px;
 
-    .card-h {
-
-        &__title {
-            margin-bottom: 0.5rem;
-            text-align: center;
-            color: black;
-            font-weight: bold;
-        }
-
+    &__title{
+        margin-bottom: 0.5rem;
+        text-align: center;
+        color: black;
+        font-weight: bold;
     }
 
-    .card-b {
+    &__table{
         width: 100%;
         flex: 1;
         overflow-y: auto;
         -ms-overflow-style: none;
         scrollbar-width: none;
+    }
 
-        &__col {
-            display: grid;
-            grid-template-columns: repeat(var(--row-count), 1fr);
-            width: 100%;
-            border-bottom: 1px solid $white;
-            padding: 0.4rem 0;
-        }
+    &__table-row{
+        display: grid;
+        grid-template-columns: repeat(var(--row-count), 1fr);
+        color: $black;
+        width: 100%;
+        border-bottom: 1px solid $white;
+        padding: 0.4rem 0;
+        justify-items: center;
 
-        &__header {
+        &--header{
             position: sticky;
             top: 0;
             background-color: $backgound;
             text-align: center;
-
-            &--title {
-                color: black;
-                font-weight: bold;
-            }
+            font-weight: bold;
         }
+    }
 
-        &__row:nth-child(odd) {
+        &__table-row:nth-child(odd) {
             background-color: white;
         }
 
-        &__row:nth-child(even) {
+        &__table-row:nth-child(even) {
             background-color: $backgound;
         }
-
-        &__row {
-            text-align: center;
-
-            &--text {
-                color: black;
-            }
-
-            &--edit {
-                justify-self: center;
-                width: 4em;
-            }
-        }
-    }
-}
-
-
-.scroll {
-    width: 100%;
 }
