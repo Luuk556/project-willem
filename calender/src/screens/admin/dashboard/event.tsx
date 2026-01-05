@@ -37,6 +37,7 @@ const AdminEventDashboard: FC = () => {
     }
 
     const eventChanges = (eventChanges: EventsDetails) => {
+        console.log(eventChanges)
         axios.put(`http://localhost:5184/event/edit/${eventChanges.id}`, eventChanges)
         .then(() => {
             setEvents(events =>

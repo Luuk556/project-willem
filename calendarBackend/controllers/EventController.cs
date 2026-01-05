@@ -2,6 +2,7 @@ using CalendarBackend.Data;
 using CalendarBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using MyBackend.Dtos;
+using CalendarBackend.Dtos;
 
 namespace CalendarBackend.Controllers;
 [ApiController]
@@ -46,7 +47,7 @@ public class EventController : Controller
     [HttpPut("edit/{id}")]
     public async Task<IActionResult> PutEvent(int id, [FromBody] UpdateEventDto event_u)
     {
-            var affected = await _context.Event
+            var affected = await _context.Events
                 .Where(e => e.Id == id)
                 .ExecuteUpdateAsync(setters => setters
                     .SetProperty(e => e.Title, event_u.Title)

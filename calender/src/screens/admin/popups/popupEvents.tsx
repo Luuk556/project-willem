@@ -40,7 +40,7 @@ const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) 
   return (
     <div>
       <p>ID: {eventData.id}</p>
-      <label>Name: </label>
+      <label>Title: </label>
       <input type="text" value={eventChanges.title} onChange={e => {setEventChanges({...eventChanges, title: e.target.value })}}/>
       <br></br>
       <label>Description: </label>
