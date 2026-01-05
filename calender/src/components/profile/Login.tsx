@@ -58,10 +58,13 @@ const Login: React.FC = () => {
           onChange={setPassword}
         />
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <br />
         <button type="submit">
           Login
         </button>
+        <br />
+        <br />
+        Dont have an account?
+        <button onClick={() => window.location.href = "/register"}>Make account</button>
       </form>
     </div>
   );

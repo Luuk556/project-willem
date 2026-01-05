@@ -22,7 +22,10 @@ function isLoggedIn() {
 function App() {
   const token = localStorage.getItem("token")
   if (!token) {
-    return <BrowserRouter><Routes><Route path="/login" element={<Login />} /></Routes></BrowserRouter>
+    return <BrowserRouter><Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      </Routes></BrowserRouter>
   }
   
   return (
