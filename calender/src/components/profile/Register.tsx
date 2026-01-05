@@ -1,6 +1,6 @@
 import loginIcon from "../../images/user-interface.png";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomInput from "../inputs/CustomInput.tsx";
 
 const Register: React.FC = () => {
@@ -34,7 +34,7 @@ const Register: React.FC = () => {
 
       if (res.ok) {
         setMessage("User created")
-        navigate("/home")
+        navigate("/login")
       }
 
       const data = await res.json();
@@ -73,6 +73,7 @@ const Register: React.FC = () => {
         <button type="submit">
           Register
         </button>
+        <button><Link to={"/login"}>Login</Link></button>
       </form>
     </div>
   );

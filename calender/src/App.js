@@ -22,7 +22,12 @@ function isLoggedIn() {
 function App() {
   const token = localStorage.getItem("token")
   if (!token) {
-    return <BrowserRouter><Routes><Route path="/login" element={<Login />} /></Routes></BrowserRouter>
+    return <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   }
   
   return (
@@ -40,7 +45,6 @@ function App() {
           <Route path="/rooms" element={<RoomMap />} />
           <Route path="/rooms/:id" element={<Room />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/event/create" element={<CreateEvent />} />
           <Route path="/logout" element={<Logout />} />
         </Routes>
