@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import "./Profile.css";
 
 const Profile: React.FC = () => {
@@ -9,12 +10,11 @@ const Profile: React.FC = () => {
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
-  // Fetch profile and profile picture
+  // get profile data
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    // Fetch user data
     fetch("http://localhost:5184/api/profile/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -26,7 +26,6 @@ const Profile: React.FC = () => {
       })
       .catch((err) => console.error("Failed to fetch profile:", err));
 
-    // Fetch profile picture securely
     fetch("http://localhost:5184/api/profile/me/picture", {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -41,7 +40,7 @@ const Profile: React.FC = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  // Handle file input
+  // file input handler
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
     setFile(selectedFile);
@@ -53,7 +52,7 @@ const Profile: React.FC = () => {
     }
   };
 
-  // Submit updated profile
+  // submit new (updated) profile
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -84,7 +83,7 @@ const Profile: React.FC = () => {
       setPassword("");
       setEditing(false);
 
-      // Refresh profile picture
+      // update (refresh) profile picture
       if (updatedUser.profilePictureUrl) {
         const pictureRes = await fetch(
           "http://localhost:5184" + updatedUser.profilePictureUrl,
@@ -97,6 +96,10 @@ const Profile: React.FC = () => {
       console.error("Error updating profile:", err);
     }
   };
+
+  if (!localStorage.getItem("token")) {
+    return <Navigate to="/login" replace />
+  }
 
   if (editing) {
     return (

@@ -3,48 +3,58 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../inputs/CustomInput.tsx";
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-      if (localStorage.getItem("token")) { navigate("/home") }
+    if (localStorage.getItem("token")) {navigate("/home")}
   }, [])
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setMessage("");
 
     try {
-      const res = await fetch("http://localhost:5184/api/login", {
+      const res = await fetch("http://localhost:5184/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({name, email, password }),
       });
 
       if (!res.ok) {
         const errText = await res.text();
-        throw new Error(errText || "Login failed");
+        setError(errText || "Login failed");
+      }
+
+      if (res.ok) {
+        setMessage("User created")
+        navigate("/home")
       }
 
       const data = await res.json();
       localStorage.setItem("token", data.token); // store only token
-      navigate("/home");
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Login failed");
-    } finally {
-      window.location.reload()
     }
   };
 
   return (
     <div className="login-container">
       <img src={loginIcon} alt="Login" className="login-icon" />
-      <p>Sign in</p>
-      <form onSubmit={handleLogin}>
+      <p>Create your account</p>
+      <form onSubmit={handleRegister}>
+        <CustomInput
+          type="text"
+          label="Name"
+          defaultValue={name}
+          onChange={setName}
+        />
         <CustomInput
           type="text"
           label="Email"
@@ -58,13 +68,14 @@ const Login: React.FC = () => {
           onChange={setPassword}
         />
         {error && <p style={{ color: "red" }}>{error}</p>}
+        {message && <p style={{ color: "green" }}>{message}</p>}
         <br />
         <button type="submit">
-          Login
+          Register
         </button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;
