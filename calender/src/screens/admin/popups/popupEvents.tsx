@@ -46,16 +46,6 @@ const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) 
       <label>Description: </label>
       <input type="text" value={eventChanges.description} onChange={e => {setEventChanges({...eventChanges, description: e.target.value })}}/>
       <br></br>
-      <label>Room: </label>
-      <select value={eventData.roomId} onChange={e => setEventChanges({...eventChanges, roomId: Number(e.target.value)})}>
-        {rooms.map((room) => (
-          <option value={room.id}>{room.name}</option>
-        ))}
-      </select>
-      <br></br>
-      <label>Date: </label>
-      <input type="text" value={eventChanges.date} onChange={e => {setEventChanges({...eventChanges, date: e.target.value })}}/>
-      <br></br>
       <button onClick={changeEvent}>Save</button>
     </div>
   );

@@ -44,17 +44,13 @@ public class EventController : Controller
     }
 
     [HttpPut("edit/{id}")]
-    public EventPreviewDto[] PutEvent([FromQuery]DateTime date)
+    public async Task<IActionResult> PutEvent(int id, [FromBody] UpdateEventDto event_u)
     {
             var affected = await _context.Event
-                .Where(r => r.Id == id)
+                .Where(e => e.Id == id)
                 .ExecuteUpdateAsync(setters => setters
-                    .SetProperty(r => r.Name, room.Name)
-                    .SetProperty(r => r.Capacity, room.Capacity)
-                    .SetProperty(r => r.SizeX, room.SizeX)
-                    .SetProperty(r => r.SizeY, room.SizeY)
-                    .SetProperty(r => r.PositionX, room.PositionX)
-                    .SetProperty(r => r.PositionY, room.PositionY)
+                    .SetProperty(e => e.Title, event_u.Title)
+                    .SetProperty(e => e.Description, event_u.Description)
                 );
     }
     
