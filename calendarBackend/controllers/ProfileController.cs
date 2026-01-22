@@ -35,6 +35,7 @@ public class ProfileController : ControllerBase
         {
             name = user.Name,
             email = user.Email,
+            role = user.Role,
             profilePictureUrl = "/api/profile/me/picture"
         });
     }
