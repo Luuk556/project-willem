@@ -1,0 +1,15 @@
+Luuk Weeda - 1057276:
+I made the calendar displaying events, the event popup, the popup component, navbar and room map. I also made the options for the calendar (amount of days, start date and compact mode) and some of the styling across the frontend. On the backend I made the AppDbContext, the standard repository, and some repositories than inherit from the standard repository (mainly event, eventAttendance and room). I also made some services and controllers (also mainly the event, eventAttendance and rooms). In the Program.cs i made the react cors policy. 
+
+Redwan Ettalby - 1036282:
+I made the home screen. Users can select in what room they are present. Whenever a room gets selected on the room map, it displays all the users currently present in that room. I also reused the calendar component to display the events of today for a user, and all open events for today. I did the styling on the homepage as well. On the backend I made the attendance repository, service and controllers. I also made the DTOs related to attendance. In the Program.cs i added the scopes and appjson paths. 
+
+Kai Tholen - 1100303:
+i made the user flow: register, login, logout. (with JWT token) i made the profile component where you can edit all your details. I made the frontend pages for register and login, a component for profile. and the backend for register, login, logout and profile. I also made the front and backend for the create new event page. It all works correctly and hashes the password and you can upload a profile picture. all data is also correctly handled
+
+Airto van Vugt - 1080444:
+I made the Admin pages + sub nav bar. Admins have there own tab and if you hover over it then a sub nav is showing up. This sub nav is for:
+Events
+Users
+Rooms
+When you come up on one of those pages it shows you everything of this subject. You can also use a navbar to search for a specific row in the table. If you push the edit button then you can change the things of this specific subject. 
