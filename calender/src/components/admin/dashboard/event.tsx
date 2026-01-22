@@ -35,13 +35,13 @@ const AdminEventDashboard: FC = () => {
 
     const eventChanges = (eventChanges: EventsDetails) => {
         axios.put(`http://localhost:5184/event/edit/${eventChanges.id}`, eventChanges)
-        .then(() => {
-            setEvents(events =>
-                events.map(oldEvent =>
-                    (oldEvent.id === eventChanges.id) ? { ...oldEvent, ...eventChanges } : oldEvent
-                )
-            );
-        })
+            .then(() => {
+                setEvents(events =>
+                    events.map(oldEvent =>
+                        (oldEvent.id === eventChanges.id) ? { ...oldEvent, ...eventChanges } : oldEvent
+                    )
+                );
+            })
         setPopup({})
     };
 
@@ -67,8 +67,8 @@ const AdminEventDashboard: FC = () => {
                     </div>
                     {filterList().map((event: EventsDetails) => (
                         <div key={event.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: 2 }}>
-                            <p>{ event.title }</p>
-                            <p onClick={() => {setPopup(event)}}><FontAwesomeIcon icon={faPenToSquare} /></p>
+                            <p>{event.title}</p>
+                            <p onClick={() => { setPopup(event) }}><FontAwesomeIcon icon={faPenToSquare} /></p>
                         </div>
                     ))}
                 </div>

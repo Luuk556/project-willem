@@ -15,10 +15,12 @@ public class EventController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly EventService _eventService;
+    private readonly EventAttendanceService _eventAttendanceService;
     public EventController(AppDbContext context)
     {
         _context = context;
         _eventService = new EventService(context);
+        _eventAttendanceService = new EventAttendanceService(context);
     }
 
     [HttpGet("all")]
@@ -39,13 +41,13 @@ public class EventController : ControllerBase
         return _eventService.GetPreviewByDateAndUser(date, userId);
     }
 
-    [HttpGet("My-events")]
+    [HttpGet("my-events")]
     public IActionResult GetMyEvents()
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
             return NotFound();
-        return Ok(new { message = "Event created", eventId = _eventService.GetMyEvents(userId) });
+        return Ok(new { message = "Events found", events = _eventService.GetMyEvents(userId) });
     }
 
     [HttpGet("details")]
@@ -65,6 +67,10 @@ public class EventController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto dto)
     {
+        // get organizer id from json web token
+        var organizerIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (organizerIdClaim == null || !int.TryParse(organizerIdClaim, out int organizerId))
+            return Unauthorized();
         // parse datetimes
         if (!DateTime.TryParse($"{dto.StartDate} {dto.StartTime}", out var start) ||
             !DateTime.TryParse($"{dto.EndDate} {dto.EndTime}", out var end))
@@ -72,11 +78,6 @@ public class EventController : ControllerBase
 
         if (end <= start)
             return BadRequest("End datetime must be after start datetime");
-
-        // get organizer id from json web token
-        var organizerIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (organizerIdClaim == null || !int.TryParse(organizerIdClaim, out int organizerId))
-            return Unauthorized();
 
         var newEvent = new Event
         {
@@ -88,9 +89,9 @@ public class EventController : ControllerBase
             OrganizerId = organizerId,
             IsOpen = true
         };
-
         await _context.Events.AddAsync(newEvent);
         await _context.SaveChangesAsync();
+        await _eventAttendanceService.CreateAttendance(organizerId, newEvent.Id);
 
         return Ok(new { message = "Event created", eventId = newEvent.Id });
     }
@@ -103,6 +104,10 @@ public class EventController : ControllerBase
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(e => e.Title, event_u.Title)
                 .SetProperty(e => e.Description, event_u.Description)
+                .SetProperty(e => e.RoomId, event_u.RoomId)
+                .SetProperty(e => e.StartDate, event_u.StartDate)
+                .SetProperty(e => e.EndDate, event_u.EndDate)
+                .SetProperty(e => e.IsOpen, event_u.IsOpen)
             );
 
         if (affected == 0)

@@ -2,8 +2,8 @@ import React from "react";
 
 interface CustomInputProps {
     label: string;
-    type: "date" | "datetime-local" | "text" | "password";
-    defaultValue: any;
+    type: "date" | "datetime-local" | "text" | "password" | "checkbox";
+    defaultValue: string;
     onChange: (value: string) => void;
 }
 

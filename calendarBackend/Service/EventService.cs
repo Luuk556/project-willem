@@ -78,7 +78,11 @@ public class EventService
 
     public EventPreviewDto[] GetMyEvents(int userId)
     {
-        int[] eventIds = _eventAttendanceRepository.GetEventsIdsByUser(userId);
-        return _eventRepository.GetMultipleById(eventIds);
+        return _eventRepository.GetEventByOrganizer(userId);
+    }
+
+    public void Update(Event eventData)
+    {
+        _eventRepository.Update(eventData);
     }
 }

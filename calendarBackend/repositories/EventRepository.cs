@@ -36,6 +36,14 @@ public class EventRepository : Repository<Event>
             .FirstOrDefault(e => e.Id == id);
     }
 
+    public EventPreviewDto[] GetEventByOrganizer(int userId)
+    {
+        return _dbSet
+            .Where(e => e.OrganizerId == userId)
+            .Select(e => new EventPreviewDto{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
+            .ToArray();
+    }
+    
     public EventPreviewDto[] GetEventByRoomAndDate(int roomId, DateTime dateStart, DateTime dateEnd)
     {
 
