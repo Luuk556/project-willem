@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CalendarBackend.Data;
 using CalendarBackend.Model;
 using MyBackend.Dtos;
@@ -73,5 +74,11 @@ public class EventService
     public bool GetHasEventOnDate(DateTime date, int roomId)
     {
         return _eventRepository.getRoomHasEventOnDate(date, roomId);
+    }
+
+    public EventPreviewDto[] GetMyEvents(int userId)
+    {
+        int[] eventIds = _eventAttendanceRepository.GetEventsIdsByUser(userId);
+        return _eventRepository.GetMultipleById(eventIds);
     }
 }

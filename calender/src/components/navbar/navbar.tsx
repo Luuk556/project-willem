@@ -25,14 +25,16 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
     new Map([
       [1, { title: "Home", isHovering: false, isActive: true, linkTo: "/home" }],
       [2, { title: "Calendar", isHovering: false, isActive: false, linkTo: "/calendar" }],
-      [3, { title: "Rooms", isHovering: false, isActive: false, linkTo: "/rooms" }],
-      [4, { title: "Register", isHovering: false, isActive: false, linkTo: "/register" }],
-      [5, { title: "Logout", isHovering: false, isActive: false, linkTo: "/logout" }],
-      [6, { title: "Admin", isHovering: false, isActive: false, linkTo: "#",
+      [3, { title: "My events", isHovering: false, isActive: false, linkTo: "/my-events" }],
+      [4, { title: "Rooms", isHovering: false, isActive: false, linkTo: "/rooms" }],
+      [5, { title: "Register", isHovering: false, isActive: false, linkTo: "/register" }],
+      [6, { title: "Logout", isHovering: false, isActive: false, linkTo: "/logout" }],
+      [7, {
+        title: "Admin", isHovering: false, isActive: false, linkTo: "#",
         subNavs: [
-          {name: "Users", link: "/Admin/user-dashboard"},
-          {name: "Rooms", link: "/Admin/room-dashboard"},
-          {name: "Events", link: "/Admin/event-dashboard"},
+          { name: "Users", link: "/Admin/user-dashboard" },
+          { name: "Rooms", link: "/Admin/room-dashboard" },
+          { name: "Events", link: "/Admin/event-dashboard" },
         ]
       }],
     ])
@@ -82,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
 
           />
           {cell.subNavs && (
-            <div className="subNav" style={{display: cell.isHovering ? "flex" : "none"}}>
+            <div className="subNav" style={{ display: cell.isHovering ? "flex" : "none" }}>
               {cell.subNavs.map((subNav, subIndex) => (
                 <Link key={subIndex} to={subNav.link} className="subNav-link">{subNav.name}</Link>
               ))}

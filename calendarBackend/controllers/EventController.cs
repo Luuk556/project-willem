@@ -39,6 +39,15 @@ public class EventController : ControllerBase
         return _eventService.GetPreviewByDateAndUser(date, userId);
     }
 
+    [HttpGet("My-events")]
+    public IActionResult GetMyEvents()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return NotFound();
+        return Ok(new { message = "Event created", eventId = _eventService.GetMyEvents(userId) });
+    }
+
     [HttpGet("details")]
     public EventDetailsDto GetDetails([FromQuery] int eventId)
     {
