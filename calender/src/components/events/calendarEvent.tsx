@@ -13,7 +13,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
     const token = localStorage.getItem("token");
     const [hasAttendance, setHasAttendance] = useState<Boolean | null>(null)
     const [eventDetails, setEventDetails] = useState<EventDto>({
-        ID: eventID,
+        id: eventID,
         title: "Fetching event data",
         description: "",
         startDate: new Date(Date.now()),
@@ -57,7 +57,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
                 console.error("Failed to fetch event:", err);
 
                 const errorPlaceholderEvent: EventDto = {
-                    ID: -1,
+                    id: -1,
                     title: "No event found",
                     description: "",
                     startDate: new Date(Date.now()),
@@ -140,7 +140,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
         }
         try {
             const response = await axios.post(
-                "http://localhost:5184/event-attendance/remove",
+                "http://localhost:5184/event-attendance/leave",
                 null, {
                 params: {
                     eventId: eventID

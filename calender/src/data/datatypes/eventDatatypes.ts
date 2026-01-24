@@ -18,7 +18,7 @@ export interface EventDetails {
 }
 
 export interface EventDto {
-    ID: number;
+    id: number;
     title: string;
     description: string;
     startDate: Date;
@@ -32,5 +32,6 @@ export interface EventDto {
     attendees: {
         id: number;
         name: string;
+        acceptedInvite: boolean;
     }[]
 }

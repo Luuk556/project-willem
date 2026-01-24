@@ -91,7 +91,7 @@ public class EventController : ControllerBase
         };
         await _context.Events.AddAsync(newEvent);
         await _context.SaveChangesAsync();
-        await _eventAttendanceService.CreateAttendance(organizerId, newEvent.Id);
+        await _eventAttendanceService.CreateAttendance(organizerId, newEvent.Id, true);
 
         return Ok(new { message = "Event created", eventId = newEvent.Id });
     }

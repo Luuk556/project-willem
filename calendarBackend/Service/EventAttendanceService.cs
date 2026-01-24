@@ -11,9 +11,9 @@ public class EventAttendanceService
         _eventAttendanceRepository = new  EventAttendanceRepository(context);
     }
 
-    public async Task CreateAttendance(int userId, int eventId)
+    public async Task CreateAttendance(int userId, int eventId, bool acceptedInvite)
     {
-        EventAttendees attendee = new EventAttendees { EventId = eventId, UserId = userId };
+        EventAttendees attendee = new EventAttendees { EventId = eventId, UserId = userId, AcceptedInvite = acceptedInvite};
         _eventAttendanceRepository.Create(attendee);
         await _eventAttendanceRepository.SaveChangesAsync();
     }

@@ -1,65 +1,44 @@
 import { useEffect, useState } from "react"
 import ManageEventCard from "./ManageEventCard.tsx"
-import { EventDetails, EventPreview } from "../../data/datatypes/eventDatatypes.ts"
-import axios, { AxiosError } from "axios"
+import { EventDto, EventPreview } from "../../data/datatypes/eventDatatypes.ts"
 import EventDetailsPanel from "./EventDetailsPanel.tsx"
+import { getEventDetails, getMyEvents } from "../../backendCall.ts"
 
 const EventManagementScreen: React.FC = () => {
     const [myEvents, setMyEvents] = useState<EventPreview[]>([]);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
-    const [eventData, setEventData] = useState<EventDetails | null>(null)
+    const [eventData, setEventData] = useState<EventDto | null>(null)
+
+    const fetchAllMyEvents = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            const events = await getMyEvents(token);
+            setMyEvents(events);
+        } catch (err) {
+            console.error("Failed to fetch events:", err);
+        }
+    };
+    useEffect(() => {
+        fetchAllMyEvents();
+    }, []);
+
+    const fetchDetails = async () => {
+        if (!selectedEventId) return;
+
+        try {
+            const details = await getEventDetails(selectedEventId);
+            setEventData(details);
+        } catch (err) {
+            console.error("error fetching event data:", err);
+        }
+    };
 
     useEffect(() => {
-        const fetchAllMyEvents = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                if (!token) throw new AxiosError;
+        fetchDetails();
+    }, [selectedEventId]);
 
-                const response = await axios.get(
-                    "http://localhost:5184/event/my-events",
-                    {
-                        headers: { Authorization: `Bearer ${token}` },
-                    }
-                );
-                const mappedEvents = response.data.events.map((e: any) => ({
-                    ...e,
-                    startDate: new Date(e.startDate),
-                    endDate: new Date(e.endDate),
-                }));
-
-                setMyEvents(mappedEvents);
-
-            } catch (err) {
-                console.error("Failed to fetch events:", err);
-            }
-        }
-        fetchAllMyEvents()
-    }, [])
-
-    useEffect(() => {
-        const fetchEventDetails = async () => {
-            try {
-                const response = await axios.get(
-                    "http://localhost:5184/event/details",
-                    {
-                        params: {
-                            eventId: selectedEventId
-                        }
-                    }
-                )
-
-                setEventData(response.data)
-            }
-
-            catch (err) {
-                console.error("error fetching event data:", err)
-            }
-        }
-
-        if (selectedEventId) {
-            fetchEventDetails()
-        }
-    }, [selectedEventId])
     return (
         <div className="event-management-screen">
             <div className="event-management-card-list">
@@ -74,9 +53,11 @@ const EventManagementScreen: React.FC = () => {
             </div>
 
             <div className="event-details-panel">
-                <h1>Edit event</h1>
                 {eventData ? (
-                    <EventDetailsPanel data={eventData} />
+                    <EventDetailsPanel
+                        data={eventData}
+                        requestRefresh={fetchDetails}
+                    />
                 ) : (
                     <p>Select an event to see details</p>
                 )}

@@ -1,85 +1,187 @@
 import { useEffect, useState } from "react";
-import { EventDetails } from "../../data/datatypes/eventDatatypes"
+import { EventDto } from "../../data/datatypes/eventDatatypes"
 import CustomInput from "../inputs/CustomInput.tsx";
 import CustomCheckbox from "../inputs/CustomCheckbox.tsx";
 import CustomSearchBox from "../inputs/CustomSearchBox.tsx";
-import axios from "axios";
+import { getAllRooms, getInvitableUsers, inviteUserToEvent, RevokeEventAttendance, updateEvent } from "../../backendCall.ts";
 
 interface EventDetailsPanelProps {
-    data: EventDetails;
+    data: EventDto;
+    requestRefresh: () => void;
 }
-const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data }) => {
-    const [eventData, setEventData] = useState<EventDetails>(data)
-    const [rooms, setRooms] = useState<Map<number, string>>(new Map())
+const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefresh }) => {
+    useEffect(() => {
+        setEventData(data);
+    }, [data]);
+    const [eventData, setEventData] = useState<EventDto>(data);
+    const [rooms, setRooms] = useState<Map<number, string>>(new Map());
+    const [allUsers, setAllUsers] = useState<Map<number, string>>(new Map());
+    const [userToInvite, setUserToInvite] = useState<number>(-1);
+
+
 
     useEffect(() => {
-        axios.get("http://localhost:5184/room/all")
-            .then((res) => {
-                let result: Map<number, string> = new Map;
-                res.data.map((data: { id: number; name: string }) => {
-                    result.set(data.id, data.name)
-                })
-                setRooms(result)
-            })
-            .catch((err) => {
-                console.error("Could not retrieve rooms:", err);
-            });
+        const loadUsers = async () => {
+            try {
+                const users = await getInvitableUsers(
+                    data.attendees.map(a => a.id)
+                );
+                setAllUsers(users);
+            } catch (err) {
+                console.error("Failed to fetch users:", err);
+            }
+        };
+
+        loadUsers();
+    }, [data.attendees]);
+
+    useEffect(() => {
+        const loadRooms = async () => {
+            try {
+                const rooms = await getAllRooms();
+                setRooms(rooms);
+            } catch (err) {
+                console.error("Failed to fetch rooms:", err);
+            }
+        };
+
+        loadRooms();
     }, []);
 
     const saveChanges = async () => {
-        await axios.put(
-            `http://localhost:5184/event/edit/${eventData.ID}`,
-            {
-                Id: eventData.ID,
-                Title: eventData.title,
-                Description: eventData.description,
-                RoomId: eventData.roomId,
-                StartDate: new Date(eventData.startDate),
-                EndDate: new Date(eventData.endDate),
-                IsOpen: eventData.isOpen
-            },
+        try {
+            await updateEvent(eventData);
+            requestRefresh();
+        } catch (err) {
+            console.error("Failed to save event edits:", err);
+        }
+    };
+
+    const inviteUser = async () => {
+        try {
+            await inviteUserToEvent(userToInvite, eventData.id);
+
+            setAllUsers(prev => {
+                const map = new Map(prev);
+                map.delete(userToInvite);
+                return map;
+            });
+
+            requestRefresh();
+        } catch (err) {
+            console.error("Failed to invite user:", err);
+        }
+    };
+
+    const revokeAttendance = async (userId: number) => {
+        try {
+            await RevokeEventAttendance(userId, eventData.id)
+            requestRefresh();
+        } catch (err) {
+            console.log("Failed to revoke attendance of event:", err)
+        }
+    }
+
+
+
+    function displayUsersInEvent() {
+        let accepted: any[] = [];
+        let invited: any[] = [];
+        eventData.attendees.forEach(a => {
+            if (a.id === eventData.OrganizerId) {
+                return;
+            }
+            if (a.acceptedInvite) {
+                accepted.push(a)
+            }
+            else {
+                invited.push(a);
+            }
+
+        })
+        return (
+            <div>
+                <h1>People in this event</h1>
+                <p>Accepted invite:</p>
+                {accepted.map(a => {
+                    return displayuser(a.id, a.name);
+                })}
+                <p>Invited, but hasnt accepted yet:</p>
+                {invited.map(i => {
+                    return displayuser(i.id, i.name);
+                })}
+            </div>
         )
     }
+
+    function displayuser(userId: number, userName: string) {
+        return (
+            <div className="edit-event-user">
+                <p>{userName}</p>
+                <button onClick={() => revokeAttendance(userId)}>Remove</button>
+            </div>
+        )
+    }
+
     return (
-        <div>
-            <CustomInput
-                type="text"
-                label="Title"
-                defaultValue={eventData.title}
-                onChange={(e) => setEventData(prev => ({ ...prev, title: e }))}
-            />
-            <CustomInput
-                type="text"
-                label="Description"
-                defaultValue={eventData.description}
-                onChange={(e) => setEventData(prev => ({ ...prev, description: e }))}
-            />
+        <div className="event-details-panel-container">
+            <div>
+                <h1>Edit event</h1>
+                <CustomInput
+                    type="text"
+                    label="Title"
+                    defaultValue={eventData.title}
+                    onChange={(e) => setEventData(prev => ({ ...prev, title: e }))}
+                />
+                <CustomInput
+                    type="text"
+                    label="Description"
+                    defaultValue={eventData.description}
+                    onChange={(e) => setEventData(prev => ({ ...prev, description: e }))}
+                />
 
-            <CustomSearchBox
-                items={rooms}
-                defaultValueId={eventData.roomId}
-                label="Select room"
-                onSelect={(id) => setEventData(prev => ({ ...prev, roomId: id }))}
-            />
-            <CustomInput
-                type="date"
-                label="Start Date"
-                defaultValue={eventData.startDate.toString().substring(0, 10)}
-                onChange={(e) => setEventData(prev => ({ ...prev, startDate: new Date(e) }))}
-            />
-            <CustomInput
-                type="date"
-                label="End Date"
-                defaultValue={eventData.endDate.toString().substring(0, 10)}
-                onChange={(e) => setEventData(prev => ({ ...prev, endDate: new Date(e) }))}
-            />
-            <CustomCheckbox
-                label="Everyone can join"
-                defaultValue={eventData.isOpen.toString()}
-                onChange={(e) => setEventData(prev => ({ ...prev, isOpen: e }))}
-            />
+                <CustomSearchBox
+                    items={rooms}
+                    defaultValueId={eventData.roomMinimal.id}
+                    label="Select room"
+                    onSelect={(id) => setEventData(prev => ({ ...prev, roomId: id }))}
+                />
+                <CustomInput
+                    type="date"
+                    label="Start Date"
+                    defaultValue={eventData.startDate.toString().substring(0, 10)}
+                    onChange={(e) => setEventData(prev => ({ ...prev, startDate: new Date(e) }))}
+                />
+                <CustomInput
+                    type="date"
+                    label="End Date"
+                    defaultValue={eventData.endDate.toString().substring(0, 10)}
+                    onChange={(e) => setEventData(prev => ({ ...prev, endDate: new Date(e) }))}
+                />
+                <CustomCheckbox
+                    label="Everyone can join"
+                    defaultValue={eventData.isOpen.toString()}
+                    onChange={(e) => setEventData(prev => ({ ...prev, isOpen: e }))}
+                />
 
-            <button onClick={saveChanges}>Save changes</button>
+                <button onClick={saveChanges}>Save changes</button>
+            </div>
+
+            {displayUsersInEvent()}
+
+            <div>
+                <h1>Invite people</h1>
+                <CustomSearchBox
+                    items={allUsers}
+                    label="Search users"
+                    defaultValueId={0}
+                    onSelect={(id) => setUserToInvite(id)}
+                />
+                <button
+                    onClick={inviteUser}>
+                    Invite user
+                </button>
+            </div>
 
         </div>
     )
