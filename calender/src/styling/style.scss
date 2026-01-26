@@ -30,6 +30,10 @@ button:hover {
     transition: 0.2s;
 }
 
+.error {
+    color: "red";
+}
+
 
 @import "login/login";
 @import "admin/admin";

@@ -42,13 +42,16 @@ export const inviteUserToEvent = async (userId: number, eventId: number) => {
 
 // Updates an event
 export const updateEvent = async (event: EventDto) => {
+    const adjustedStartDate = new Date(event.startDate.getTime() - (event.startDate.getTimezoneOffset() * 60000));
+    const adjustedEndDate = new Date(event.endDate.getTime() - (event.endDate.getTimezoneOffset() * 60000));
+
     await axios.put(`${API_BASE}/event/edit/${event.id}`, {
         Id: event.id,
         Title: event.title,
         Description: event.description,
         RoomId: event.roomMinimal.id,
-        StartDate: new Date(event.startDate),
-        EndDate: new Date(event.endDate),
+        StartDate: adjustedStartDate.toISOString(),
+        EndDate: adjustedEndDate.toISOString(),
         IsOpen: event.isOpen,
     });
 };

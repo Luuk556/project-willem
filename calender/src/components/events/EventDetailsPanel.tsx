@@ -4,6 +4,7 @@ import CustomInput from "../inputs/CustomInput.tsx";
 import CustomCheckbox from "../inputs/CustomCheckbox.tsx";
 import CustomSearchBox from "../inputs/CustomSearchBox.tsx";
 import { getAllRooms, getInvitableUsers, inviteUserToEvent, RevokeEventAttendance, updateEvent } from "../../backendCall.ts";
+import { toLocalDatetimeInput } from "../../Utility.ts";
 
 interface EventDetailsPanelProps {
     data: EventDto;
@@ -85,20 +86,9 @@ const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefr
 
 
     function displayUsersInEvent() {
-        let accepted: any[] = [];
-        let invited: any[] = [];
-        eventData.attendees.forEach(a => {
-            if (a.id === eventData.OrganizerId) {
-                return;
-            }
-            if (a.acceptedInvite) {
-                accepted.push(a)
-            }
-            else {
-                invited.push(a);
-            }
-
-        })
+        const accepted = eventData.attendees.filter(a => a.id !== eventData.organizerId && a.acceptedInvite);
+        const invited = eventData.attendees.filter(a => a.id !== eventData.organizerId && !a.acceptedInvite);
+        eventData.attendees.forEach(a => console.log(a))
         return (
             <div>
                 <h1>People in this event</h1>
@@ -116,7 +106,7 @@ const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefr
 
     function displayuser(userId: number, userName: string) {
         return (
-            <div className="edit-event-user">
+            <div key={userId} className="edit-event-user">
                 <p>{userName}</p>
                 <button onClick={() => revokeAttendance(userId)}>Remove</button>
             </div>
@@ -152,25 +142,47 @@ const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefr
                         }
                     }))}
                 />
+
                 <CustomInput
-                    type="date"
+                    type="datetime-local"
                     label="Start Date"
-                    defaultValue={eventData.startDate.toString().substring(0, 10)}
-                    onChange={(e) => setEventData(prev => ({ ...prev, startDate: new Date(e) }))}
+                    defaultValue={toLocalDatetimeInput(eventData.startDate)}
+                    onChange={(e) => {
+                        const value = e;
+                        if (!value) return;
+                        const newDate = new Date(value);
+                        if (!isNaN(newDate.getTime())) {
+                            setEventData(prev => ({ ...prev, startDate: newDate }));
+                        }
+                    }}
                 />
+
                 <CustomInput
-                    type="date"
+                    type="datetime-local"
                     label="End Date"
-                    defaultValue={eventData.endDate.toString().substring(0, 10)}
-                    onChange={(e) => setEventData(prev => ({ ...prev, endDate: new Date(e) }))}
+                    defaultValue={toLocalDatetimeInput(eventData.endDate)}
+                    onChange={(e) => {
+                        const value = e;
+                        if (!value) return;
+                        const newDate = new Date(value);
+                        if (!isNaN(newDate.getTime())) {
+                            setEventData(prev => ({ ...prev, endDate: newDate }));
+                        }
+                    }}
                 />
+
                 <CustomCheckbox
                     label="Everyone can join"
                     defaultValue={eventData.isOpen.toString()}
                     onChange={(e) => setEventData(prev => ({ ...prev, isOpen: e }))}
                 />
-
-                <button onClick={saveChanges}>Save changes</button>
+                {eventData.startDate < new Date() ? (
+                    <p className="error">Cant save: Start date must be in the future</p>
+                ) : eventData.startDate > eventData.endDate ? (
+                    <p className="error">Cant save: Start date must be before end date</p>
+                ) : (
+                    <button onClick={saveChanges}>Save changes</button>
+                )}
             </div>
 
             {displayUsersInEvent()}

@@ -29,7 +29,11 @@ const EventManagementScreen: React.FC = () => {
 
         try {
             const details = await getEventDetails(selectedEventId);
-            setEventData(details);
+            setEventData({
+                ...details,
+                startDate: new Date(details.startDate),
+                endDate: new Date(details.endDate)
+            });
         } catch (err) {
             console.error("error fetching event data:", err);
         }
@@ -38,6 +42,11 @@ const EventManagementScreen: React.FC = () => {
     useEffect(() => {
         fetchDetails();
     }, [selectedEventId]);
+
+    const refresh = async () => {
+        await fetchAllMyEvents();
+        await fetchDetails();
+    };
 
     return (
         <div className="event-management-screen">
@@ -56,7 +65,7 @@ const EventManagementScreen: React.FC = () => {
                 {eventData ? (
                     <EventDetailsPanel
                         data={eventData}
-                        requestRefresh={fetchDetails}
+                        requestRefresh={refresh}
                     />
                 ) : (
                     <p>Select an event to see details</p>

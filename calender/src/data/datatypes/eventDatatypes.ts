@@ -24,7 +24,7 @@ export interface EventDto {
     startDate: Date;
     endDate: Date;
     isOpen: boolean;
-    OrganizerId: number;
+    organizerId: number;
     roomMinimal: {
         id: number;
         name: string;

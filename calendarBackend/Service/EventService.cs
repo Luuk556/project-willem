@@ -65,7 +65,8 @@ public class EventService
                 .Select(u => new UserMinimalDto
                 {
                     Id = u.Id,
-                    Name = u.Name
+                    Name = u.Name,
+                    AcceptedInvite = _eventAttendanceRepository.GetByUserAndEvent(u.Id, evt.Id).AcceptedInvite
                 })
                 .ToList()
         };

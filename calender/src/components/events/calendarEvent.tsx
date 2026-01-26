@@ -19,7 +19,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
         startDate: new Date(Date.now()),
         endDate: new Date(Date.now()),
         isOpen: false,
-        OrganizerId: -1,
+        organizerId: -1,
         roomMinimal: {
             id: -1,
             name: ""
@@ -63,7 +63,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
                     startDate: new Date(Date.now()),
                     endDate: new Date(Date.now()),
                     isOpen: false,
-                    OrganizerId: -1,
+                    organizerId: -1,
                     roomMinimal: {
                         id: -1,
                         name: "No room found"
