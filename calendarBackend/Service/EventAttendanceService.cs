@@ -1,5 +1,6 @@
 using CalendarBackend.Data;
 using CalendarBackend.Model;
+using MyBackend.Dtos;
 
 namespace CalendarBackend.Service;
 
@@ -25,9 +26,23 @@ public class EventAttendanceService
         await _eventAttendanceRepository.SaveChangesAsync();
     }
 
-    public EventAttendees GetAttendance(int userId, int eventId)
+    public EventAttendees? GetAttendance(int userId, int eventId)
     {
         return _eventAttendanceRepository.GetByUserAndEvent(userId, eventId);
     }
     
+    public async Task UpdateAttendance(int eventId, int userId, bool acceptedInvite)
+    {
+        var attendance = _eventAttendanceRepository
+            .GetByUserAndEvent(userId, eventId);
+
+        if (attendance == null)
+        {
+            throw new UnauthorizedAccessException("User is not invited to this event");
+        }
+
+        attendance.AcceptedInvite = acceptedInvite;
+
+        await _eventAttendanceRepository.SaveChangesAsync();
+    }
 }

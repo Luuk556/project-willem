@@ -15,14 +15,20 @@ public class EventAttendanceRepository : Repository<EventAttendees>
         return _dbSet.Where(a => a.EventId == eventId).Select(a => a.UserId).ToArray();
     }
     
-    public int[] GetEventsIdsByUser(int userId)
-    {
-        return _dbSet.Where(a => a.UserId == userId).Select(a => a.EventId).ToArray();
-    }
 
     public EventAttendees GetByUserAndEvent(int userId, int eventId)
     {
         return _dbSet.Where(a => a.UserId == userId && a.EventId == eventId).SingleOrDefault();
+    }
+
+    public int[] GetUserInvitations(int userId)
+    {
+        return _dbSet.Where(a => a.UserId == userId && a.AcceptedInvite == false).Select(a => a.EventId).ToArray();
+    }
+    
+    public int[] GetUserAcceptedInvitations(int userId)
+    {
+        return _dbSet.Where(a => a.UserId == userId && a.AcceptedInvite == true).Select(a => a.EventId).ToArray();
     }
     
 }

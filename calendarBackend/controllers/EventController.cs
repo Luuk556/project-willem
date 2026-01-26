@@ -117,4 +117,25 @@ public class EventController : ControllerBase
 
         return NoContent();
     }
+    
+    [HttpGet("my-invitations")]
+    [Authorize]
+    public async Task<IActionResult> GetMyInvitations()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        return Ok(new { message = "Events found", events = _eventService.GetUserInvitations(userId)});
+    }
+    
+    
+    [HttpGet("my-accepted-invitations")]
+    [Authorize]
+    public async Task<IActionResult> GetMyAcceptedInvitations()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        return Ok(new { message = "Events found", events = _eventService.GetUserAcceptedInvitations(userId)});
+    }
 }

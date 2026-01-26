@@ -35,11 +35,13 @@
 .event-details-panel {
     background-color: white;
     width: 75%;
+    box-shadow: 0px 0px 2px rgb(99, 118, 129);
 }
 
 .event-details-panel-container {
     display: flex;
     flex-direction: row;
+    margin: 20px;
 }
 
 .edit-event-user {

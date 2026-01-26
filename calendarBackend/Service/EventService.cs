@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using CalendarBackend.Data;
 using CalendarBackend.Model;
+using Microsoft.AspNetCore.Mvc;
 using MyBackend.Dtos;
 
 namespace CalendarBackend.Service;
@@ -24,7 +25,7 @@ public class EventService
     {
         DateTime dateStart = date.Date;
         DateTime dateEnd = dateStart.AddDays(1).AddTicks(-1);
-        int[] includedIds = _eventAttendanceRepository.GetEventsIdsByUser(userId);
+        int[] includedIds = _eventAttendanceRepository.GetUserAcceptedInvitations(userId);
         return _eventRepository.GetPreviewByDateAndIdList(dateStart, dateEnd, includedIds);
     }
 
@@ -84,5 +85,17 @@ public class EventService
     public void Update(Event eventData)
     {
         _eventRepository.Update(eventData);
+    }
+    
+    public EventPreviewDto[] GetUserInvitations(int userId)
+    {
+        int[] eventIds =  _eventAttendanceRepository.GetUserInvitations(userId);
+        return _eventRepository.GetMultipleById(eventIds);
+    }
+    
+    public EventPreviewDto[] GetUserAcceptedInvitations(int userId)
+    {
+        int[] eventIds =  _eventAttendanceRepository.GetUserAcceptedInvitations(userId);
+        return _eventRepository.GetMultipleById(eventIds);
     }
 }

@@ -48,14 +48,13 @@ public class EventAttendanceController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("leave")]
-    [Authorize]
-    public async Task<IActionResult> LeaveEvent([FromQuery] int eventId)
+    [HttpPut("leave/{eventId}")]
+    public async Task<IActionResult> LeaveEvent([FromRoute] int eventId)
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
             return Unauthorized();
-        await _eventAttendanceService.DeleteAttendance(userId, eventId);
+        await _eventAttendanceService.UpdateAttendance(eventId, userId, false);
         return Ok();
     }
     
@@ -63,6 +62,26 @@ public class EventAttendanceController : ControllerBase
     public async Task<IActionResult> RemoveAttendees([FromBody] RemoveAttendeeDto eventAttendee)
     {
         await _eventAttendanceService.DeleteAttendance(eventAttendee.UserId, eventAttendee.EventId);
+        return Ok();
+    }
+
+    [HttpPut("accept/{eventId}")]
+    public async Task<IActionResult> AcceptEvent([FromRoute] int eventId)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        await _eventAttendanceService.UpdateAttendance(eventId, userId, true);
+        return Ok();
+    }
+    
+    [HttpPost("reject/{eventId}")]
+    public async Task<IActionResult> RejectInvite([FromRoute] int eventId)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        await _eventAttendanceService.DeleteAttendance(userId, eventId);
         return Ok();
     }
 }

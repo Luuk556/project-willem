@@ -26,10 +26,10 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
       [1, { title: "Home", isHovering: false, isActive: true, linkTo: "/home" }],
       [2, { title: "Calendar", isHovering: false, isActive: false, linkTo: "/calendar" }],
       [3, { title: "My events", isHovering: false, isActive: false, linkTo: "/my-events" }],
-      [4, { title: "Rooms", isHovering: false, isActive: false, linkTo: "/rooms" }],
-      [5, { title: "Register", isHovering: false, isActive: false, linkTo: "/register" }],
-      [6, { title: "Logout", isHovering: false, isActive: false, linkTo: "/logout" }],
-      [7, {
+      [4, { title: "invitations", isHovering: false, isActive: false, linkTo: "/invitations" }],
+      [5, { title: "Rooms", isHovering: false, isActive: false, linkTo: "/rooms" }],
+      [7, { title: "Logout", isHovering: false, isActive: false, linkTo: "/logout" }],
+      [8, {
         title: "Admin", isHovering: false, isActive: false, linkTo: "#",
         subNavs: [
           { name: "Users", link: "/Admin/user-dashboard" },

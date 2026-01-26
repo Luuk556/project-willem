@@ -144,7 +144,13 @@ const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefr
                     items={rooms}
                     defaultValueId={eventData.roomMinimal.id}
                     label="Select room"
-                    onSelect={(id) => setEventData(prev => ({ ...prev, roomId: id }))}
+                    onSelect={(id) => setEventData(prev => ({
+                        ...prev,
+                        roomMinimal: {
+                            ...prev.roomMinimal,
+                            id: id
+                        }
+                    }))}
                 />
                 <CustomInput
                     type="date"

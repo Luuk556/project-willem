@@ -15,6 +15,7 @@ import Register from './components/profile/Register.tsx';
 import CreateEvent from './components/events/create_event.tsx';
 import Logout from './components/profile/Logout.tsx';
 import EventManagementScreen from './components/events/EventManagementScreen.tsx';
+import EventInvites from './components/events/EventInvites.tsx';
 
 function isLoggedIn() {
   return (localStorage.getItem("token") != null)
@@ -40,6 +41,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/Home" element={<Home />} />
           <Route path="/my-events" element={<EventManagementScreen />} />
+          <Route path="/invitations" element={<EventInvites />} />
           <Route path='/calendar' element={<CalendarScreen />} />
           <Route path="/Admin/room-dashboard" element={<AdminRoomDashboard />} />
           <Route path="/Admin/event-dashboard" element={<AdminEventDashboard />} />
