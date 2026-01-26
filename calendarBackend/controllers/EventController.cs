@@ -53,38 +53,57 @@ public class EventController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("create")]
-    public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto dto)
+[HttpPost("create")]
+public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto dto)
+{
+    if (string.IsNullOrWhiteSpace(dto.Title))
+        return BadRequest("Title is required");
+
+    if (dto.RoomId <= 0)
+        return BadRequest("RoomId is invalid");
+
+    if (!DateTime.TryParse($"{dto.StartDate} {dto.StartTime}", out var start) ||
+        !DateTime.TryParse($"{dto.EndDate} {dto.EndTime}", out var end))
+        return BadRequest("Invalid date/time format");
+
+    if (end <= start)
+        return BadRequest("End datetime must be after start datetime");
+
+    if (start < DateTime.UtcNow)
+        return BadRequest("Event cannot start in the past");
+
+    if ((end - start).TotalHours > 24)
+        return BadRequest("Event duration cannot exceed 24 hours");
+
+    var organizerIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    if (organizerIdClaim == null || !int.TryParse(organizerIdClaim, out int organizerId))
+        return Unauthorized();
+
+    bool overlap = await _context.Events
+        .AnyAsync(e => e.RoomId == dto.RoomId &&
+                       ((start >= e.StartDate && start < e.EndDate) ||
+                        (end > e.StartDate && end <= e.EndDate) ||
+                        (start <= e.StartDate && end >= e.EndDate)));
+    if (overlap)
+        return Conflict("There is already an event in this room that overlaps with the requested time");
+
+    var newEvent = new Event
     {
-        // parse datetimes
-        if (!DateTime.TryParse($"{dto.StartDate} {dto.StartTime}", out var start) ||
-            !DateTime.TryParse($"{dto.EndDate} {dto.EndTime}", out var end))
-            return BadRequest("Invalid date/time");
+        Title = dto.Title.Trim(),
+        Description = dto.Description?.Trim(),
+        RoomId = dto.RoomId,
+        StartDate = start,
+        EndDate = end,
+        OrganizerId = organizerId,
+        IsOpen = true
+    };
 
-        if (end <= start)
-            return BadRequest("End datetime must be after start datetime");
+    await _context.Events.AddAsync(newEvent);
+    await _context.SaveChangesAsync();
 
-        // get organizer id from json web token
-        var organizerIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (organizerIdClaim == null || !int.TryParse(organizerIdClaim, out int organizerId))
-            return Unauthorized();
+    return Ok(new { message = "Event created", eventId = newEvent.Id });
+}
 
-        var newEvent = new Event
-        {
-            Title = dto.Title,
-            Description = dto.Description,
-            RoomId = dto.RoomId,
-            StartDate = start,
-            EndDate = end,
-            OrganizerId = organizerId,
-            IsOpen = true
-        };
-
-        await _context.Events.AddAsync(newEvent);
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "Event created", eventId = newEvent.Id });
-    }
 
     [HttpPut("edit/{id}")]
     public async Task<IActionResult> PutEvent(int id, [FromBody] UpdateEventDto event_u)

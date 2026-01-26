@@ -23,18 +23,41 @@ public class UserService
         _jwtExpiryHours = int.Parse(config["Jwt:ExpiryHours"] ?? "2");
     }
 
-    public async Task<bool> EmailExistsAsync(string email) =>
-        await _context.Users.AnyAsync(u => u.Email == email);
+    public async Task<bool> NameExistsAsync(string name, int? excludeUserId = null)
+    {
+        var normalized = name.Trim().ToLowerInvariant();
+
+        return await _context.Users.AnyAsync(u =>
+            u.Name == normalized &&
+            (!excludeUserId.HasValue || u.Id != excludeUserId.Value));
+    }
+
+    public async Task<bool> EmailExistsAsync(string email, int? excludeUserId = null)
+    {
+        var normalized = email.Trim().ToLowerInvariant();
+
+        return await _context.Users.AnyAsync(u =>
+            u.Email == normalized &&
+            (!excludeUserId.HasValue || u.Id != excludeUserId.Value));
+    }
+
+
 
     public async Task<User> CreateUserAsync(User user)
     {
+        user.Email = user.Email.Trim().ToLowerInvariant();
+        user.Name  = user.Name.Trim().ToLowerInvariant();
+
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
         return user;
     }
 
-    public async Task<User> GetByEmailAsync(string email) =>
-        await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+        var normalized = email.Trim().ToLowerInvariant();
+        return await _context.Users.FirstOrDefaultAsync(u => u.Email == normalized);
+    }
 
     public async Task<User> GetByIdAsync(int id) =>
         await _context.Users.FindAsync(id);
