@@ -91,12 +91,14 @@ public class EventService
     public EventPreviewDto[] GetUserInvitations(int userId)
     {
         int[] eventIds =  _eventAttendanceRepository.GetUserInvitations(userId);
-        return _eventRepository.GetMultipleById(eventIds);
+        EventPreviewDto[] events = _eventRepository.GetMultipleById(eventIds);
+        return events.Where(e => GetEventById(e.Id).OrganizerId != userId).ToArray();
     }
     
     public EventPreviewDto[] GetUserAcceptedInvitations(int userId)
     {
-        int[] eventIds =  _eventAttendanceRepository.GetUserAcceptedInvitations(userId);
-        return _eventRepository.GetMultipleById(eventIds);
+        int[] eventIds = _eventAttendanceRepository.GetUserAcceptedInvitations(userId);
+        EventPreviewDto[] events = _eventRepository.GetMultipleById(eventIds);
+        return events.Where(e => GetEventById(e.Id).OrganizerId != userId).ToArray();
     }
 }
