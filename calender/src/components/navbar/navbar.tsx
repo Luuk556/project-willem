@@ -39,14 +39,14 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
 
   const [navbarCells, setNavbarCells] = useState<Map<number, Cell>>(
     new Map([
-      [1, { title: "Home", isHovering: false, isActive: true, linkTo: "/home" }],
-      [2, { title: "Calendar", isHovering: false, isActive: false, linkTo: "/calendar" }],
-      [3, { title: "My events", isHovering: false, isActive: false, linkTo: "/my-events" }],
-      [4, { title: "invitations", isHovering: false, isActive: false, linkTo: "/invitations" }],
-      [5, { title: "Rooms", isHovering: false, isActive: false, linkTo: "/rooms" }],
-      [7, { title: "Logout", isHovering: false, isActive: false, linkTo: "/logout" }],
+      [1, { title: "Home", isHovering: false, isActive: true, linkTo: "/home", role: 0 }],
+      [2, { title: "Calendar", isHovering: false, isActive: false, linkTo: "/calendar", role: 0 }],
+      [3, { title: "My events", isHovering: false, isActive: false, linkTo: "/my-events", role: 0 }],
+      [4, { title: "invitations", isHovering: false, isActive: false, linkTo: "/invitations", role: 0 }],
+      [5, { title: "Rooms", isHovering: false, isActive: false, linkTo: "/rooms", role: 0 }],
+      [7, { title: "Logout", isHovering: false, isActive: false, linkTo: "/logout", role: 0 }],
       [8, {
-        title: "Admin", isHovering: false, isActive: false, linkTo: "#",
+        title: "Admin", isHovering: false, isActive: false, linkTo: "#", role: 1,
         subNavs: [
           { name: "Users", link: "/Admin/user-dashboard" },
           { name: "Rooms", link: "/Admin/room-dashboard" },
