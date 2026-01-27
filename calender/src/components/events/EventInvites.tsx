@@ -20,10 +20,7 @@ const EventInvites: React.FC = () => {
 
     const fetchAllMyInvitedEvents = async () => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) return;
-
-            const events = await getMyInvitedEvents(token);
+            const events = await getMyInvitedEvents();
             setInvites(events);
         } catch (err) {
             console.error("Failed to fetch events:", err);
@@ -32,10 +29,7 @@ const EventInvites: React.FC = () => {
 
     const fetchAllMyAcceptedEvents = async () => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) return;
-
-            const events = await getMyAcceptedInvitedEvents(token);
+            const events = await getMyAcceptedInvitedEvents();
             setAcceptedInvites(events);
         } catch (err) {
             console.error("Failed to fetch events:", err);
@@ -78,9 +72,7 @@ const EventInvites: React.FC = () => {
 
     const acceptEventInvite = async (eventId: number) => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) return;
-            await acceptInvite(token, eventId)
+            await acceptInvite(eventId)
             setHasJoinedEvent(true)
             await refresh()
         }
@@ -91,10 +83,8 @@ const EventInvites: React.FC = () => {
 
     const leave = async (eventId: number) => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) return;
 
-            await leaveEvent(token, eventId);
+            await leaveEvent(eventId);
             setHasJoinedEvent(false)
             await refresh();
         }
@@ -105,10 +95,8 @@ const EventInvites: React.FC = () => {
 
     const reject = async (eventId: number) => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) return;
 
-            await rejectEventInvite(token, eventId);
+            await rejectEventInvite(eventId);
             setEventData(null);
             setSelectedEventId(null);
 

@@ -11,7 +11,6 @@ interface CalendarEventProperties {
  * @param eventID The id of an event 
  */
 const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
-    const token = localStorage.getItem("token");
     const [hasAttendance, setHasAttendance] = useState<boolean | null>(null)
     const [eventDetails, setEventDetails] = useState<EventDto>({
         id: eventID,
@@ -74,10 +73,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
     useEffect(() => {
         const fetchHasAttendance = async () => {
             try {
-                if (!token) {
-                    throw new Error("no authorization token found")
-                }
-                const result: boolean = await getEventAttendance(token, eventID) != "";
+                const result: boolean = await getEventAttendance(eventID) != "";
                 setHasAttendance(result)
 
             } catch (err) {
@@ -96,10 +92,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
             return;
         }
         try {
-            if (!token) {
-                throw new Error("no authorization token found")
-            }
-            addAttendance(token, eventID)
+            addAttendance(eventID)
             setHasAttendance(true);
 
         } catch (err) {
@@ -114,11 +107,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
             return;
         }
         try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                throw new Error("No authorization token found")
-            }
-            leaveEvent(token, eventID)
+            leaveEvent(eventID)
 
             setHasAttendance(false);
         } catch (err) {

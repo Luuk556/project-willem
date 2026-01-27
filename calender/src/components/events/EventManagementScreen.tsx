@@ -11,10 +11,7 @@ const EventManagementScreen: React.FC = () => {
 
     const fetchAllMyEvents = async () => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) return;
-
-            const events = await getMyEvents(token);
+            const events = await getMyEvents();
             setMyEvents(events);
         } catch (err) {
             console.error("Failed to fetch events:", err);
