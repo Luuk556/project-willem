@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { EventPreview, EventDto } from "../../data/datatypes/eventDatatypes";
-import { acceptInvite, getEventDetails, getMyAcceptedInvitedEvents, getMyInvitedEvents, leaveEvent, rejectEventInvite } from "../../backendCall.ts";
 import ManageEventCard from "./ManageEventCard.tsx";
 import CustomTextDisplay from "../displays/CustomTextDisplay.tsx";
 import { getTimeDetails } from "../../Utility.ts";
+import { acceptInvite, leaveEvent, rejectEventInvite } from "../../services/eventAttendanceService.ts";
+import { getMyInvitedEvents, getMyAcceptedInvitedEvents, getEventDetails } from "../../services/eventService.ts";
 
 const EventInvites: React.FC = () => {
     const [invites, setInvites] = useState<EventPreview[]>([]);

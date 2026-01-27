@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import ManageEventCard from "./ManageEventCard.tsx"
 import { EventDto, EventPreview } from "../../data/datatypes/eventDatatypes.ts"
 import EventDetailsPanel from "./EventDetailsPanel.tsx"
-import { getEventDetails, getMyEvents } from "../../backendCall.ts"
+import { getEventDetails, getMyEvents } from "../../services/eventService.ts"
 
 const EventManagementScreen: React.FC = () => {
     const [myEvents, setMyEvents] = useState<EventPreview[]>([]);

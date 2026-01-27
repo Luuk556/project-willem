@@ -3,8 +3,11 @@ import { EventDto } from "../../data/datatypes/eventDatatypes"
 import CustomInput from "../inputs/CustomInput.tsx";
 import CustomCheckbox from "../inputs/CustomCheckbox.tsx";
 import CustomSearchBox from "../inputs/CustomSearchBox.tsx";
-import { getAllRooms, getInvitableUsers, inviteUserToEvent, RevokeEventAttendance, updateEvent } from "../../backendCall.ts";
 import { toLocalDatetimeInput } from "../../Utility.ts";
+import { inviteUserToEvent, RevokeEventAttendance } from "../../services/eventAttendanceService.ts";
+import { updateEvent } from "../../services/eventService.ts";
+import { getAllRooms } from "../../services/roomService.ts";
+import { getInvitableUsers } from "../../services/userService.ts";
 
 interface EventDetailsPanelProps {
     data: EventDto;

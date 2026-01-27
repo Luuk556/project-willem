@@ -1,6 +1,7 @@
-import axios from "axios";
 import { EventDto } from "../../data/datatypes/eventDatatypes.ts";
 import { useEffect, useState } from "react";
+import { getEventDetails } from "../../services/eventService.ts";
+import { addAttendance, getEventAttendance, leaveEvent } from "../../services/eventAttendanceService.ts";
 interface CalendarEventProperties {
     eventID: number;
 }
@@ -11,7 +12,7 @@ interface CalendarEventProperties {
  */
 const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
     const token = localStorage.getItem("token");
-    const [hasAttendance, setHasAttendance] = useState<Boolean | null>(null)
+    const [hasAttendance, setHasAttendance] = useState<boolean | null>(null)
     const [eventDetails, setEventDetails] = useState<EventDto>({
         id: eventID,
         title: "Fetching event data",
@@ -39,20 +40,12 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
     useEffect(() => {
         const fetchEventDetails = async () => {
             try {
-                const response = await axios.get<EventDto>(
-                    "http://localhost:5184/event/details",
-                    {
-                        params: {
-                            eventId: eventID
-                        }
-                    }
-                );
+                const response = await getEventDetails(eventID)
 
-                const newEvent = response.data;
-                newEvent.startDate = new Date(newEvent.startDate);
-                newEvent.endDate = new Date(newEvent.endDate);
+                response.startDate = new Date(response.startDate);
+                response.endDate = new Date(response.endDate);
 
-                setEventDetails(newEvent);
+                setEventDetails(response);
             } catch (err) {
                 console.error("Failed to fetch event:", err);
 
@@ -81,19 +74,10 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
     useEffect(() => {
         const fetchHasAttendance = async () => {
             try {
-                const response = await axios.get(
-                    "http://localhost:5184/event-attendance/get",
-                    {
-                        params: {
-                            eventId: eventID
-                        },
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                console.log(response)
-                const result: boolean = response.data != "";
+                if (!token) {
+                    throw new Error("no authorization token found")
+                }
+                const result: boolean = await getEventAttendance(token, eventID) != "";
                 setHasAttendance(result)
 
             } catch (err) {
@@ -112,48 +96,31 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
             return;
         }
         try {
-            const response = await axios.post(
-                "http://localhost:5184/event-attendance/add",
-                null, {
-                params: {
-                    eventId: eventID
-                },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            if (!token) {
+                throw new Error("no authorization token found")
             }
-            )
-            const status = response.status;
-            if (status == 200) {
-                setHasAttendance(true);
-            }
+            addAttendance(token, eventID)
+            setHasAttendance(true);
+
         } catch (err) {
             console.error("Failed to join event:", err);
         }
 
     }
 
-    const leaveEvent = async () => {
+    const fetchLeaveEvent = async () => {
         if (!hasAttendance) {
             console.error("Failed to leave event. User has no attendance.");
             return;
         }
         try {
-            const response = await axios.post(
-                "http://localhost:5184/event-attendance/leave",
-                null, {
-                params: {
-                    eventId: eventID
-                },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const token = localStorage.getItem("token");
+            if (!token) {
+                throw new Error("No authorization token found")
             }
-            )
-            const status = response.status;
-            if (status == 200) {
-                setHasAttendance(false);
-            }
+            leaveEvent(token, eventID)
+
+            setHasAttendance(false);
         } catch (err) {
             console.error("Failed to leave event:", err);
         }
@@ -177,7 +144,7 @@ const CalendarEvent: React.FC<CalendarEventProperties> = ({ eventID = -1 }) => {
     };
 
     function getJoinEvent() {
-        if (eventDetails.isOpen) return hasAttendance ? <button onClick={leaveEvent}>Leave event</button> : <button onClick={joinEvent}>Join event</button>
+        if (eventDetails.isOpen) return hasAttendance ? <button onClick={fetchLeaveEvent}>Leave event</button> : <button onClick={joinEvent}>Join event</button>
     }
 
     return (

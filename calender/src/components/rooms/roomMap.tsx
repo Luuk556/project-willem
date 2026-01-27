@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Room } from '../../data/datatypes/roomDatatypes';
-import axios from 'axios';
 import CustomInput from '../inputs/CustomInput.tsx';
+import { getRoomMapDetails } from '../../services/roomService.ts';
 
 interface RoomMap extends Room {
     isAvailable: boolean;
@@ -15,13 +15,9 @@ const RoomMap: React.FC = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await axios.get<RoomMap[]>("http://localhost:5184/room/map", {
-                    params: {
-                        date: selectedDate
-                    }
-                });
+                const roomMapData = await getRoomMapDetails(selectedDate)
 
-                setRooms(response.data);
+                setRooms(roomMapData);
             } catch (err) {
                 console.error("Failed to fetch rooms:", err);
             }

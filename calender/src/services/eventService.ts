@@ -1,5 +1,6 @@
 import axios from "axios";
-import { EventDto, EventPreview } from "./data/datatypes/eventDatatypes";
+import { EventDto, EventPreview } from "../data/datatypes/eventDatatypes";
+
 
 const API_BASE = "http://localhost:5184";
 
@@ -31,15 +32,6 @@ export const getEventDetails = async (eventId: number): Promise<EventDto> => {
     return response.data;
 };
 
-// Invites a user to an event
-export const inviteUserToEvent = async (userId: number, eventId: number) => {
-    await axios.post(`${API_BASE}/event-attendance/invite`, {
-        UserId: userId,
-        EventId: eventId,
-        AcceptedInvite: false,
-    });
-};
-
 // Updates an event
 export const updateEvent = async (event: EventDto) => {
     const adjustedStartDate = new Date(event.startDate.getTime() - (event.startDate.getTimezoneOffset() * 60000));
@@ -55,45 +47,6 @@ export const updateEvent = async (event: EventDto) => {
         IsOpen: event.isOpen,
     });
 };
-
-// Gets the minimal information of all the rooms
-export const getAllRooms = async (): Promise<Map<number, string>> => {
-    const res = await axios.get(`${API_BASE}/room/all`);
-
-    const result = new Map<number, string>();
-    res.data.forEach((r: { id: number; name: string }) => {
-        result.set(r.id, r.name);
-    });
-
-    return result;
-};
-
-// Gets minimal information of all the users that can be invited to an event (All users that are not already invited)
-export const getInvitableUsers = async (attendeeIds: number[]): Promise<Map<number, string>> => {
-    const res = await axios.get(`${API_BASE}/api/user`);
-
-    const invited = new Set(attendeeIds);
-    const result = new Map<number, string>();
-
-    res.data
-        .filter((u: { id: number }) => !invited.has(u.id))
-        .forEach((u: { id: number; name: string }) => {
-
-            result.set(u.id, u.name);
-        });
-
-    return result;
-};
-
-// Removes the event attendance of a user
-export const RevokeEventAttendance = async (userId: number, eventId: number) => {
-    await axios.post(`${API_BASE}/event-attendance/remove`,
-        {
-            UserId: userId,
-            EventId: eventId
-        }
-    )
-}
 
 // Gets the events of a user where the user is only invited, but has not yet accepted
 export const getMyInvitedEvents = async (token: string): Promise<EventPreview[]> => {
@@ -127,35 +80,8 @@ export const getMyAcceptedInvitedEvents = async (token: string): Promise<EventPr
     }));
 };
 
-// Deletes an event
+export const getAllEvents = async (): Promise<{ id: number; title: string; date: string; }[]> => {
+    const response = await axios.get<{ id: number; title: string; date: string; }[]>(`${API_BASE}/event/all`);
 
-
-// Allows the logged in user to accept an invite for an event
-export const acceptInvite = async (token: string, eventId: number) => {
-    await axios.put(`${API_BASE}/event-attendance/accept/${eventId}`,
-        null,
-        {
-            headers: { Authorization: `Bearer ${token}` }
-        }
-    )
-}
-
-// Allows the logged in user to leave an event
-export const leaveEvent = async (token: string, eventId: number) => {
-    await axios.put(`${API_BASE}/event-attendance/leave/${eventId}`,
-        null,
-        {
-            headers: { Authorization: `Bearer ${token}` }
-        }
-    )
-}
-
-// Rejects an event invitation
-export const rejectEventInvite = async (token: string, eventId: number) => {
-    await axios.post(`${API_BASE}/event-attendance/reject/${eventId}`,
-        null,
-        {
-            headers: { Authorization: `Bearer ${token}` }
-        }
-    )
+    return response.data;
 };
