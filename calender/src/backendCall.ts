@@ -129,7 +129,6 @@ export const getMyAcceptedInvitedEvents = async (token: string): Promise<EventPr
 
 // Deletes an event
 
-// Gets the minimal information of all events a user is invited to / is participating
 
 // Allows the logged in user to accept an invite for an event
 export const acceptInvite = async (token: string, eventId: number) => {

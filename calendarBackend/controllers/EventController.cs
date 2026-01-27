@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalendarBackend.Controllers;
+
 [ApiController]
 [Route("event")]
 public class EventController : ControllerBase
@@ -67,34 +68,55 @@ public class EventController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto dto)
     {
-        // get organizer id from json web token
-        var organizerIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (organizerIdClaim == null || !int.TryParse(organizerIdClaim, out int organizerId))
-            return Unauthorized();
-        // parse datetimes
+        if (string.IsNullOrWhiteSpace(dto.Title))
+            return BadRequest("Title is required");
+
+        if (dto.RoomId <= 0)
+            return BadRequest("RoomId is invalid");
+
         if (!DateTime.TryParse($"{dto.StartDate} {dto.StartTime}", out var start) ||
             !DateTime.TryParse($"{dto.EndDate} {dto.EndTime}", out var end))
-            return BadRequest("Invalid date/time");
+            return BadRequest("Invalid date/time format");
 
         if (end <= start)
             return BadRequest("End datetime must be after start datetime");
 
+        if (start < DateTime.UtcNow)
+            return BadRequest("Event cannot start in the past");
+
+        if ((end - start).TotalHours > 24)
+            return BadRequest("Event duration cannot exceed 24 hours");
+
+        var organizerIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (organizerIdClaim == null || !int.TryParse(organizerIdClaim, out int organizerId))
+            return Unauthorized();
+
+        bool overlap = await _context.Events
+            .AnyAsync(e => e.RoomId == dto.RoomId &&
+                           ((start >= e.StartDate && start < e.EndDate) ||
+                            (end > e.StartDate && end <= e.EndDate) ||
+                            (start <= e.StartDate && end >= e.EndDate)));
+        if (overlap)
+            return Conflict("There is already an event in this room that overlaps with the requested time");
+
         var newEvent = new Event
         {
-            Title = dto.Title,
-            Description = dto.Description,
+            Title = dto.Title.Trim(),
+            Description = dto.Description?.Trim(),
             RoomId = dto.RoomId,
             StartDate = start,
             EndDate = end,
             OrganizerId = organizerId,
             IsOpen = true
         };
+
         await _context.Events.AddAsync(newEvent);
         await _context.SaveChangesAsync();
         await _eventAttendanceService.CreateAttendance(organizerId, newEvent.Id, true);
 
         return Ok(new { message = "Event created", eventId = newEvent.Id });
     }
+
 
     [HttpPut("edit/{id}")]
     public async Task<IActionResult> PutEvent(int id, [FromBody] UpdateEventDto event_u)
@@ -117,7 +139,7 @@ public class EventController : ControllerBase
 
         return NoContent();
     }
-    
+
     [HttpGet("my-invitations")]
     [Authorize]
     public async Task<IActionResult> GetMyInvitations()
@@ -125,10 +147,10 @@ public class EventController : ControllerBase
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
             return Unauthorized();
-        return Ok(new { message = "Events found", events = _eventService.GetUserInvitations(userId)});
+        return Ok(new { message = "Events found", events = _eventService.GetUserInvitations(userId) });
     }
-    
-    
+
+
     [HttpGet("my-accepted-invitations")]
     [Authorize]
     public async Task<IActionResult> GetMyAcceptedInvitations()
@@ -136,6 +158,6 @@ public class EventController : ControllerBase
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
             return Unauthorized();
-        return Ok(new { message = "Events found", events = _eventService.GetUserAcceptedInvitations(userId)});
+        return Ok(new { message = "Events found", events = _eventService.GetUserAcceptedInvitations(userId) });
     }
 }

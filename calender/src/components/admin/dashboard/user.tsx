@@ -59,7 +59,7 @@ const AdminUserDashboard: FC = () => {
             <p className="dashboard-card__title">Users</p>
             <CustomInput
                 type="text"
-                label="Search rooms"
+                label="Search users"
                 defaultValue={search}
                 onChange={result => { setSearch(result) }}
             />

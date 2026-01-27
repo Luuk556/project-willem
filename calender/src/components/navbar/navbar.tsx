@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavbarCell from "./navbar-cell/navbar-cell.tsx";
 import "./navbar.css"
 import { Link } from 'react-router-dom';
@@ -8,6 +8,7 @@ interface Cell {
   title: string;
   isHovering: boolean;
   isActive: boolean;
+  role: number;
   subNavs?: {
     name: string;
     link: string;
@@ -19,7 +20,22 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
+  const [userRole, setUserRole] = useState<number>(0);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    fetch("http://localhost:5184/api/profile/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((req) => req.json())
+      .then((data) => {
+        setUserRole(data.role)
+      })
+      .catch((err) => console.error("Failed to fetch profile:", err));
+
+  }, []);
 
   const [navbarCells, setNavbarCells] = useState<Map<number, Cell>>(
     new Map([
@@ -64,11 +80,9 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
     };
   };
 
-
-
   return (
     <header className="navbar-container">
-      {Array.from(navbarCells.entries()).map(([key, cell]) => (
+      {Array.from(navbarCells.entries()).filter(([key, cell]) => cell.role <= userRole).map(([key, cell]) => (
         <div
           key={key}
           onMouseEnter={() => setHover(key, true)}

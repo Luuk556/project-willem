@@ -3,6 +3,7 @@ using System;
 using CalendarBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260126103916_AddUniqueUserNameAndEmail")]
+    partial class AddUniqueUserNameAndEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -185,9 +188,6 @@ namespace MyBackend.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("AcceptedInvite")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("EventId", "UserId");
 
                     b.HasIndex("UserId");
@@ -198,74 +198,62 @@ namespace MyBackend.Migrations
                         new
                         {
                             EventId = 4,
-                            UserId = 3,
-                            AcceptedInvite = false
+                            UserId = 3
                         },
                         new
                         {
                             EventId = 4,
-                            UserId = 1,
-                            AcceptedInvite = false
+                            UserId = 1
                         },
                         new
                         {
                             EventId = 4,
-                            UserId = 2,
-                            AcceptedInvite = false
+                            UserId = 2
                         },
                         new
                         {
                             EventId = 5,
-                            UserId = 3,
-                            AcceptedInvite = false
+                            UserId = 3
                         },
                         new
                         {
                             EventId = 5,
-                            UserId = 1,
-                            AcceptedInvite = false
+                            UserId = 1
                         },
                         new
                         {
                             EventId = 5,
-                            UserId = 2,
-                            AcceptedInvite = false
+                            UserId = 2
                         },
                         new
                         {
                             EventId = 1,
-                            UserId = 3,
-                            AcceptedInvite = false
+                            UserId = 3
                         },
                         new
                         {
                             EventId = 1,
-                            UserId = 2,
-                            AcceptedInvite = false
+                            UserId = 2
                         },
                         new
                         {
                             EventId = 1,
-                            UserId = 1,
-                            AcceptedInvite = false
+                            UserId = 1
                         },
                         new
                         {
                             EventId = 2,
-                            UserId = 1,
-                            AcceptedInvite = false
+                            UserId = 1
                         },
                         new
                         {
                             EventId = 3,
-                            UserId = 3,
-                            AcceptedInvite = false
+                            UserId = 3
                         },
                         new
                         {
                             EventId = 3,
-                            UserId = 1,
-                            AcceptedInvite = false
+                            UserId = 1
                         });
                 });
 

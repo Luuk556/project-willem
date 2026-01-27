@@ -1,6 +1,7 @@
 using CalendarBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using MyBackend.Dtos;
+using CalendarBackend.Model;
 
 namespace CalendarBackend.Controllers;
 
@@ -16,11 +17,16 @@ public class LoginController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginUserDto dto)
+    public async Task<IActionResult> Login([FromBody] LoginUserDto dto)
     {
-        var user = await _userService.GetByEmailAsync(dto.Email);
+        var normalizedEmail = dto.Email.Trim().ToLowerInvariant();
+
+        var user = await _userService.GetByEmailAsync(normalizedEmail);
         if (user == null || !_userService.VerifyPassword(user.Password, dto.Password))
             return Unauthorized("Invalid credentials");
+
+        if (dto.IsAdmin && user.Role != Role.Admin)
+            return Unauthorized("User is not an admin");
 
         var token = _userService.GenerateJwtToken(user);
         return Ok(new { token });

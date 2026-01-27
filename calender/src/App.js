@@ -14,6 +14,9 @@ import Profile from './components/profile/Profile.tsx';
 import Register from './components/profile/Register.tsx';
 import CreateEvent from './components/events/create_event.tsx';
 import Logout from './components/profile/Logout.tsx';
+
+// Middleware
+import MiddlewareAdmin from './components/middleware/MiddlewareAdmin.tsx'
 import EventManagementScreen from './components/events/EventManagementScreen.tsx';
 import EventInvites from './components/events/EventInvites.tsx';
 
@@ -43,9 +46,12 @@ function App() {
           <Route path="/my-events" element={<EventManagementScreen />} />
           <Route path="/invitations" element={<EventInvites />} />
           <Route path='/calendar' element={<CalendarScreen />} />
-          <Route path="/Admin/room-dashboard" element={<AdminRoomDashboard />} />
-          <Route path="/Admin/event-dashboard" element={<AdminEventDashboard />} />
-          <Route path="/Admin/user-dashboard" element={<AdminUserDashboard />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/admin" element={<MiddlewareAdmin />}>
+            <Route path="room-dashboard" element={<AdminRoomDashboard />} />
+            <Route path="event-dashboard" element={<AdminEventDashboard />} />
+            <Route path="user-dashboard" element={<AdminUserDashboard />} />
+          </Route>
           <Route path="/rooms" element={<RoomMap />} />
           <Route path="/rooms/:id" element={<Room />} />
           <Route path="/profile" element={<Profile />} />

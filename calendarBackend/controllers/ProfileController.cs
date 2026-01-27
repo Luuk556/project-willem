@@ -35,6 +35,7 @@ public class ProfileController : ControllerBase
         {
             name = user.Name,
             email = user.Email,
+            role = user.Role,
             profilePictureUrl = "/api/profile/me/picture"
         });
     }
@@ -64,10 +65,20 @@ public class ProfileController : ControllerBase
         if (user == null) return NotFound();
 
         if (!string.IsNullOrEmpty(dto.Name))
-            user.Name = dto.Name;
+        {
+            if (await _userService.NameExistsAsync(dto.Name, user.Id))
+                return Conflict("Name already in use");
+
+            user.Name  = dto.Name.Trim().ToLowerInvariant();
+        }
 
         if (!string.IsNullOrEmpty(dto.Email))
-            user.Email = dto.Email;
+        {
+            if (await _userService.EmailExistsAsync(dto.Email, user.Id))
+                return Conflict("Email already in use");
+
+            user.Email = dto.Email.Trim().ToLowerInvariant();
+        }
 
         if (!string.IsNullOrEmpty(dto.Password))
             user.Password = _userService.HashPassword(dto.Password);

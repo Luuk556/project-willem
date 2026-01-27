@@ -22,14 +22,18 @@ public class RegisterController : ControllerBase
         if (await _userService.EmailExistsAsync(dto.Email))
             return Conflict("Email already exists");
 
+        if (await _userService.NameExistsAsync(dto.Name))
+            return Conflict("Username already exists");
+
         var user = new User
         {
-            Name = dto.Name,
-            Email = dto.Email,
+            Email = dto.Email.Trim().ToLowerInvariant(),
+            Name  = dto.Name.Trim().ToLowerInvariant(),
             Password = _userService.HashPassword(dto.Password),
             Biography = "",
             Role = Role.User
         };
+
 
         await _userService.CreateUserAsync(user);
         return StatusCode(201, "User registered successfully");
