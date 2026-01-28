@@ -16,7 +16,7 @@ public class EventRepository : Repository<Event>
     {
         return _dbSet
             .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart && includedIds.Contains(e.Id))
-            .Select(e => new EventPreviewDto{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
+            .Select(e => new EventPreviewDto(e))
             .ToArray();
     }
     
@@ -24,7 +24,7 @@ public class EventRepository : Repository<Event>
     {
         return _dbSet
             .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart && e.IsOpen == true)
-            .Select(e => new EventPreviewDto{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
+            .Select(e => new EventPreviewDto(e))
             .ToArray();
     }
 
@@ -40,7 +40,7 @@ public class EventRepository : Repository<Event>
     {
         return _dbSet
             .Where(e => e.OrganizerId == userId)
-            .Select(e => new EventPreviewDto{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
+            .Select(e => new EventPreviewDto(e))
             .ToArray();
     }
     
@@ -49,7 +49,7 @@ public class EventRepository : Repository<Event>
 
         return _dbSet
             .Where(e => e.StartDate <= dateEnd && e.EndDate >= dateStart && e.RoomId == roomId && e.IsOpen)
-            .Select(e => new EventPreviewDto{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
+            .Select(e => new EventPreviewDto(e))
             .ToArray();
     }
 
@@ -57,7 +57,7 @@ public class EventRepository : Repository<Event>
     {
         return _dbSet
             .Where(e => ids.Contains(e.Id))
-            .Select(e => new EventPreviewDto{Id = e.Id, StartDate = e.StartDate, EndDate = e.EndDate, Title = e.Title})
+            .Select(e => new EventPreviewDto(e))
             .ToArray();
     }
 

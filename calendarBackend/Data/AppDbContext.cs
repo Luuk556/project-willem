@@ -1,5 +1,6 @@
 using CalendarBackend.Model;
 using Microsoft.EntityFrameworkCore;
+using MyBackend.Enums;
 
 namespace CalendarBackend.Data;
 

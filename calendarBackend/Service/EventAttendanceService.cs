@@ -26,9 +26,9 @@ public class EventAttendanceService
         await _eventAttendanceRepository.SaveChangesAsync();
     }
 
-    public EventAttendees? GetAttendance(int userId, int eventId)
+    public EventAttendanceDto GetAttendance(int userId, int eventId)
     {
-        return _eventAttendanceRepository.GetByUserAndEvent(userId, eventId);
+        return new EventAttendanceDto(_eventAttendanceRepository.GetByUserAndEvent(userId, eventId));
     }
     
     public async Task UpdateAttendance(int eventId, int userId, bool acceptedInvite)

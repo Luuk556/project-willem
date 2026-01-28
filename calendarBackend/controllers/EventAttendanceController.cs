@@ -21,12 +21,13 @@ public class EventAttendanceController : ControllerBase
 
         [HttpGet("get")]
         [Authorize]
-        public EventAttendees GetAttendees([FromQuery] int eventId)
+        public IActionResult GetAttendees([FromQuery] int eventId)
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
-                return null;
-            return _eventAttendanceService.GetAttendance(userId, eventId);
+                return Unauthorized();
+            EventAttendanceDto result = _eventAttendanceService.GetAttendance(userId, eventId);
+            return Ok(result);
         }
 
     [HttpPost("add")]
@@ -43,7 +44,6 @@ public class EventAttendanceController : ControllerBase
     [HttpPost("invite")]
     public async Task<IActionResult> AddInvite([FromBody] EventAttendanceDto eventAttendee)
     {
-        
         await _eventAttendanceService.CreateAttendance(eventAttendee.UserId, eventAttendee.EventId, false);
         return Ok();
     }

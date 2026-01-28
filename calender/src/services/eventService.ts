@@ -13,7 +13,8 @@ const parseEventPreviewDates = (events: any[]): EventPreview[] =>
 // Gets minimal information of the events of the logged in user
 export const getMyEvents = async (): Promise<EventPreview[]> => {
     const response = await client.get("/event/my-events");
-    return parseEventPreviewDates(response.data.events);
+    console.log(response)
+    return parseEventPreviewDates(response.data);
 };
 
 // Gets all details of a specific event
@@ -45,13 +46,13 @@ export const updateEvent = async (event: EventDto) => {
 // Gets events the user is invited to but hasn't accepted
 export const getMyInvitedEvents = async (): Promise<EventPreview[]> => {
     const response = await client.get("/event/my-invitations");
-    return parseEventPreviewDates(response.data.events);
+    return parseEventPreviewDates(response.data);
 };
 
 // Gets events the user has accepted invites for
 export const getMyAcceptedInvitedEvents = async (): Promise<EventPreview[]> => {
     const response = await client.get("/event/my-accepted-invitations");
-    return parseEventPreviewDates(response.data.events);
+    return parseEventPreviewDates(response.data);
 };
 
 // Gets all events

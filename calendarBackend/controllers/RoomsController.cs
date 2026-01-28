@@ -28,13 +28,15 @@ namespace MyBackend.Controllers;
 
     // GET: api/Rooms
     [HttpGet("GetById")]
-    public Room GetRooms([FromQuery]int roomId)
+    public IActionResult GetRooms([FromQuery]int roomId)
     {
-        return _roomService.GetById(roomId);
+        RoomDto result = _roomService.GetById(roomId);
+        return Ok(result);
     }
 
     // GET: api/Rooms/5
-    [HttpGet("{id}")] public async Task<ActionResult<Room>> GetRoom(int id)
+    [HttpGet("{id}")] 
+    public async Task<ActionResult<Room>> GetRoom(int id)
     {
         var room = await _context.Rooms.FindAsync(id);
 
@@ -67,14 +69,15 @@ namespace MyBackend.Controllers;
     public IActionResult GetAllRoomsForMap([FromQuery]DateTime date)
     {
         
-        RoomMapDto[] rooms = _roomService.GetAllRoomsForMap(date);
+        RoomDto[] rooms = _roomService.GetAllRoomsForMap(date);
 
         return Ok(rooms);
     }
 
     // POST: api/Rooms
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost] public async Task<ActionResult<Room>> PostRoom(Room room)
+    [HttpPost] 
+    public async Task<ActionResult<Room>> PostRoom(Room room)
     {
         _context.Rooms.Add(room);
         await _context.SaveChangesAsync();
@@ -109,7 +112,8 @@ namespace MyBackend.Controllers;
         }
 
     // DELETE: api/Rooms/5
-    [HttpDelete("{id}")] public async Task<IActionResult> DeleteRoom(int id)
+    [HttpDelete("{id}")] 
+    public async Task<IActionResult> DeleteRoom(int id)
     {
         var room = await _context.Rooms.FindAsync(id);
         if (room == null)

@@ -16,9 +16,9 @@ public class EventService
          _eventAttendanceRepository = new  EventAttendanceRepository(context);
     }
 
-    public Event[] GetAll()
+    public EventDetailsDto[] GetAll()
     {
-        return _eventRepository.GetAll();
+        return _eventRepository.GetAll().Select(e => new EventDetailsDto(e)).ToArray();
     }
     
     public EventPreviewDto[] GetPreviewByDateAndUser(DateTime date, int userId)
@@ -45,32 +45,7 @@ public class EventService
 
     public EventDetailsDto GetEventById(int id)
     {
-        Event evt =  _eventRepository.GetEventById(id);
-        
-        return new EventDetailsDto
-        {
-            Id = evt.Id,
-            Title = evt.Title,
-            Description = evt.Description,
-            StartDate = evt.StartDate,
-            EndDate = evt.EndDate,
-            OrganizerId = evt.OrganizerId,
-            IsOpen = evt.IsOpen,
-            RoomMinimal = new RoomMinimalDto
-            {
-                Id = evt.Room.Id,
-                Name = evt.Room.Name
-            },
-            Attendees = evt.Attendees
-                .Select(u => new UserMinimalDto
-                {
-                    Id = u.Id,
-                    Name = u.Name,
-                    AcceptedInvite = _eventAttendanceRepository.GetByUserAndEvent(u.Id, evt.Id).AcceptedInvite
-                })
-                .ToList()
-        };
-        
+        return new EventDetailsDto(_eventRepository.GetEventById(id));
     }
 
     public bool GetHasEventOnDate(DateTime date, int roomId)

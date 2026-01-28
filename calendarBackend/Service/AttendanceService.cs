@@ -1,4 +1,5 @@
 using CalendarBackend.Model;
+using MyBackend.Dtos;
 
 namespace CalendarBackend.Service;
 
@@ -58,14 +59,14 @@ public class AttendanceService
     }
 
     // get attendance for today
-    public Attendance? GetTodayAttendance(int userId)
+    public AttendanceDto? GetTodayAttendance(int userId)
     {
-        return _attendanceRepository.GetAttendanceByUserAndDate(userId, DateTime.Now.Date);
+        return new AttendanceDto(_attendanceRepository.GetAttendanceByUserAndDate(userId, DateTime.Now.Date));
     }
 
     // get active users in a room
-    public List<User> GetActiveUsersInRoom(int roomId)
+    public List<UserMinimalDto> GetActiveUsersInRoom(int roomId)
     {
-        return _attendanceRepository.GetActiveUsersByRoom(roomId);
+        return _attendanceRepository.GetActiveUsersByRoom(roomId).Select(u => new UserMinimalDto(u)).ToList();
     }
 }
