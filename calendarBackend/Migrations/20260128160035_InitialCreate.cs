@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MyBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,7 +57,8 @@ namespace MyBackend.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     RoomId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -118,7 +119,8 @@ namespace MyBackend.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    EventId = table.Column<int>(type: "INTEGER", nullable: false)
+                    EventId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AcceptedInvite = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -177,26 +179,27 @@ namespace MyBackend.Migrations
                     { 4, "Call with product owner", new DateTime(2025, 10, 3, 16, 30, 0, 0, DateTimeKind.Unspecified), false, 1, 9, null, new DateTime(2025, 10, 3, 15, 30, 0, 0, DateTimeKind.Unspecified), "P.O. meeting part 2" },
                     { 5, "Call with product owner", new DateTime(2025, 10, 3, 17, 30, 0, 0, DateTimeKind.Unspecified), false, 1, 9, null, new DateTime(2025, 10, 3, 16, 30, 0, 0, DateTimeKind.Unspecified), "P.O. meeting part 3" },
                     { 6, "Daily standup description", new DateTime(2025, 10, 4, 11, 30, 0, 0, DateTimeKind.Unspecified), false, 1, 10, null, new DateTime(2025, 10, 4, 11, 0, 0, 0, DateTimeKind.Unspecified), "Daily standup" },
-                    { 7, "Lunch in canteen", new DateTime(2025, 10, 4, 13, 15, 0, 0, DateTimeKind.Unspecified), true, 1, 1, null, new DateTime(2025, 10, 4, 12, 30, 0, 0, DateTimeKind.Unspecified), "Lunch" }
+                    { 7, "Lunch in canteen", new DateTime(2025, 10, 4, 13, 15, 0, 0, DateTimeKind.Unspecified), true, 1, 1, null, new DateTime(2025, 10, 4, 12, 30, 0, 0, DateTimeKind.Unspecified), "Lunch" },
+                    { 8, "", new DateTime(2025, 10, 3, 20, 30, 0, 0, DateTimeKind.Unspecified), true, 1, 9, null, new DateTime(2025, 10, 3, 19, 30, 0, 0, DateTimeKind.Unspecified), "Ping pong" }
                 });
 
             migrationBuilder.InsertData(
                 table: "EventAttendees",
-                columns: new[] { "EventId", "UserId" },
+                columns: new[] { "EventId", "UserId", "AcceptedInvite" },
                 values: new object[,]
                 {
-                    { 1, 1 },
-                    { 1, 2 },
-                    { 1, 3 },
-                    { 2, 1 },
-                    { 3, 1 },
-                    { 3, 3 },
-                    { 4, 1 },
-                    { 4, 2 },
-                    { 4, 3 },
-                    { 5, 1 },
-                    { 5, 2 },
-                    { 5, 3 }
+                    { 1, 1, false },
+                    { 1, 2, false },
+                    { 1, 3, false },
+                    { 2, 1, false },
+                    { 3, 1, false },
+                    { 3, 3, false },
+                    { 4, 1, false },
+                    { 4, 2, false },
+                    { 4, 3, false },
+                    { 5, 1, false },
+                    { 5, 2, false },
+                    { 5, 3, false }
                 });
 
             migrationBuilder.CreateIndex(
@@ -228,6 +231,18 @@ namespace MyBackend.Migrations
                 name: "IX_Events_RoomId1",
                 table: "Events",
                 column: "RoomId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Name",
+                table: "Users",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />

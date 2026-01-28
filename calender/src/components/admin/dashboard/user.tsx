@@ -75,7 +75,7 @@ const AdminUserDashboard: FC = () => {
                     <div key={user.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: 4 }}>
                         <p>{ user.name }</p>
                         <p>{ user.email }</p>
-                        <FontAwesomeIcon icon={faPenToSquare} onClick={() => {setUpdatePopup(user)}}/>
+                        <FontAwesomeIcon icon={faPenToSquare} onClick={() => {setPopup(user)}}/>
                         { user.role === 0 ? (
                             <FontAwesomeIcon icon={faTrash} onClick={() => {setPopup(user)}}/>
                         ) : (
