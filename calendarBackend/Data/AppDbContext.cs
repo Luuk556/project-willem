@@ -53,12 +53,6 @@ public class AppDbContext : DbContext
 
             entity.HasIndex(u => u.Email)
                 .IsUnique();
-
-            entity.Property(u => u.Name)
-                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
-
-            entity.Property(u => u.Email)
-                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
         
         Seed(modelBuilder);
