@@ -43,9 +43,15 @@ public class EventService
         return _eventRepository.GetEventByRoomAndDate(roomId,  dateStart, dateEnd);
     }
 
-    public EventDetailsDto GetEventById(int id)
+    public EventDetailsDto? GetEventById(int id)
     {
-        EventDetailsDto result =  new EventDetailsDto(_eventRepository.GetEventById(id));
+        Event eventData = _eventRepository.GetEventById(id);
+        if (eventData == null)
+        {
+            return null;
+        }
+        EventDetailsDto result =  new EventDetailsDto(eventData);
+        
         result.Attendees.ForEach(a =>
         {
             a.AcceptedInvite = _eventAttendanceRepository.GetByUserAndEvent(a.Id, result.Id).AcceptedInvite;
@@ -68,11 +74,20 @@ public class EventService
         _eventRepository.Update(eventData);
     }
 
-    public void DeleteById(int id)
+    public async Task<int> DeleteById(int id, int userId)
     {
-        Event eventToDelete = _eventRepository.GetEventById(id);
+        Event? eventToDelete = _eventRepository.GetEventById(id);
+        if (eventToDelete == null)
+        {
+            return 2;
+        }
+        if (userId != eventToDelete.OrganizerId)
+        {
+            return 1;
+        }
         _eventRepository.Delete(eventToDelete);
-        _eventRepository.SaveChanges();
+        await _eventRepository.SaveChangesAsync();
+        return 0;
     }
     public EventPreviewDto[] GetUserInvitations(int userId)
     {

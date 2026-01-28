@@ -43,7 +43,15 @@ const EventManagementScreen: React.FC = () => {
     const refresh = async () => {
         await fetchAllMyEvents();
         await fetchDetails();
+
     };
+
+    const handleDeleteEvent = async () => {
+        setSelectedEventId(null);
+        setEventData(null);
+        setMyEvents([]);
+        await fetchAllMyEvents();
+    }
 
     return (
         <div className="event-management-screen">
@@ -63,6 +71,7 @@ const EventManagementScreen: React.FC = () => {
                     <EventDetailsPanel
                         data={eventData}
                         requestRefresh={refresh}
+                        onDeleteEvent={handleDeleteEvent}
                     />
                 ) : (
                     <p>Select an event to see details</p>

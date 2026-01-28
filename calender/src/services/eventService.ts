@@ -3,12 +3,16 @@ import { client } from "./client.ts";
 import { EventDto, EventPreview } from "../data/datatypes/eventDatatypes";
 
 // Helper to parse EventPreview dates
-const parseEventPreviewDates = (events: any[]): EventPreview[] =>
-    events.map((e: any) => ({
+const parseEventPreviewDates = (events: any[]): EventPreview[] => {
+    if (events.length === 0 || events == null) {
+        return [];
+    }
+    return events.map((e: any) => ({
         ...e,
         startDate: new Date(e.startDate),
         endDate: new Date(e.endDate),
-    }));
+    }))
+};
 
 // Gets minimal information of the events of the logged in user
 export const getMyEvents = async (): Promise<EventPreview[]> => {

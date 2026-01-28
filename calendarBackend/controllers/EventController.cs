@@ -170,9 +170,20 @@ public class EventController : ControllerBase
     }
 
     [HttpPost("delete/{id}")]
-    public IActionResult DeleteEvent(int id)
+    public async Task<IActionResult> DeleteEvent(int id)
     {
-        _eventService.DeleteById(id);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        int result = await _eventService.DeleteById(id, userId);
+        if (result == 2)
+        {
+            return NotFound();
+        }
+        if (result == 1)
+        {
+            return Unauthorized();
+        }
         return Ok();
     }
     

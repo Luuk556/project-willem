@@ -12,8 +12,9 @@ import { getInvitableUsers } from "../../services/userService.ts";
 interface EventDetailsPanelProps {
     data: EventDto;
     requestRefresh: () => void;
+    onDeleteEvent: () => void;
 }
-const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefresh }) => {
+const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefresh, onDeleteEvent }) => {
     useEffect(() => {
         setEventData(data);
     }, [data]);
@@ -89,7 +90,7 @@ const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefr
     const fetchDeleteEvent = async () => {
         try {
             await deleteEvent(eventData.id);
-            requestRefresh();
+            onDeleteEvent();
         }
         catch (err) {
             console.error("Could not delete event: ", err)
