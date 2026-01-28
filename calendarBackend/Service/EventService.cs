@@ -45,7 +45,12 @@ public class EventService
 
     public EventDetailsDto GetEventById(int id)
     {
-        return new EventDetailsDto(_eventRepository.GetEventById(id));
+        EventDetailsDto result =  new EventDetailsDto(_eventRepository.GetEventById(id));
+        result.Attendees.ForEach(a =>
+        {
+            a.AcceptedInvite = _eventAttendanceRepository.GetByUserAndEvent(a.Id, result.Id).AcceptedInvite;
+        });
+        return result;
     }
 
     public bool GetHasEventOnDate(DateTime date, int roomId)

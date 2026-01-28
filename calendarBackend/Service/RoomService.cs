@@ -1,5 +1,4 @@
 using CalendarBackend.Data;
-using CalendarBackend.Model;
 using MyBackend.Dtos;
 
 namespace CalendarBackend.Service;

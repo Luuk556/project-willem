@@ -17,6 +17,5 @@ public class UserMinimalDto
         Id = user.Id;
         Name = user.Name;
         Role = user.Role;
-        
     }
 }
