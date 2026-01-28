@@ -60,3 +60,8 @@ export const getAllEvents = async (): Promise<{ id: number; title: string; date:
     const response = await client.get("/event/all");
     return response.data;
 };
+
+// deletes an event
+export const deleteEvent = async (id: number) => {
+    await client.post(`/event/delete/${id}`);
+}

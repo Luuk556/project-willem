@@ -168,4 +168,12 @@ public class EventController : ControllerBase
             return Unauthorized();
         return Ok(_eventService.GetUserAcceptedInvitations(userId));
     }
+
+    [HttpPost("delete/{id}")]
+    public IActionResult DeleteEvent(int id)
+    {
+        _eventService.DeleteById(id);
+        return Ok();
+    }
+    
 }

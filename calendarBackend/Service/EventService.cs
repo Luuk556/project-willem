@@ -67,7 +67,13 @@ public class EventService
     {
         _eventRepository.Update(eventData);
     }
-    
+
+    public void DeleteById(int id)
+    {
+        Event eventToDelete = _eventRepository.GetEventById(id);
+        _eventRepository.Delete(eventToDelete);
+        _eventRepository.SaveChanges();
+    }
     public EventPreviewDto[] GetUserInvitations(int userId)
     {
         int[] eventIds =  _eventAttendanceRepository.GetUserInvitations(userId);
