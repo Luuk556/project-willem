@@ -69,7 +69,7 @@ namespace MyBackend.Controllers;
     public IActionResult GetAllRoomsForMap([FromQuery]DateTime date)
     {
         
-        RoomDto[] rooms = _roomService.GetAllRoomsForMap(date);
+        RoomDto[] rooms = _roomService.GetAll();
 
         return Ok(rooms);
     }
