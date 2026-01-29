@@ -9,6 +9,7 @@ import { getMyInvitedEvents, getMyAcceptedInvitedEvents, getEventDetails } from 
 const EventInvites: React.FC = () => {
     const [invites, setInvites] = useState<EventPreview[]>([]);
     const [acceptedInvites, setAcceptedInvites] = useState<EventPreview[]>([]);
+    const [pastEvents, setPastEvents] = useState<EventPreview[]>([]);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
     const [eventData, setEventData] = useState<EventDto | null>(null)
     const [timeDetails, setTimeDetails] = useState<{
@@ -21,7 +22,15 @@ const EventInvites: React.FC = () => {
     const fetchAllMyInvitedEvents = async () => {
         try {
             const events = await getMyInvitedEvents();
-            setInvites(events);
+            const upcoming: EventPreview[] = [];
+            const now = new Date();
+            events.forEach(event => {
+                if (new Date(event.startDate) > now) {
+                    upcoming.push(event);
+                }
+            });
+
+            setInvites(upcoming);
         } catch (err) {
             console.error("Failed to fetch events:", err);
         }
@@ -30,7 +39,19 @@ const EventInvites: React.FC = () => {
     const fetchAllMyAcceptedEvents = async () => {
         try {
             const events = await getMyAcceptedInvitedEvents();
-            setAcceptedInvites(events);
+            const upcoming: EventPreview[] = [];
+            const past: EventPreview[] = [];
+            const now = new Date();
+            events.forEach(event => {
+                if (new Date(event.startDate) > now) {
+                    upcoming.push(event);
+                } else {
+                    past.push(event);
+                }
+            });
+
+            setPastEvents(past);
+            setAcceptedInvites(upcoming);
         } catch (err) {
             console.error("Failed to fetch events:", err);
         }
@@ -120,6 +141,14 @@ const EventInvites: React.FC = () => {
                 )}
                 <h1>Accepted</h1>
                 {acceptedInvites.map(i => {
+                    return <ManageEventCard
+                        eventData={i}
+                        key={i.id}
+                        onSelect={() => { setSelectedEventId(i.id); setHasJoinedEvent(true); }} />
+                }
+                )}
+                <h1>Past events</h1>
+                {pastEvents.map(i => {
                     return <ManageEventCard
                         eventData={i}
                         key={i.id}

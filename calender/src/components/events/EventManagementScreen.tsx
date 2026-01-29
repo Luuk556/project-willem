@@ -5,14 +5,27 @@ import EventDetailsPanel from "./EventDetailsPanel.tsx"
 import { getEventDetails, getMyEvents } from "../../services/eventService.ts"
 
 const EventManagementScreen: React.FC = () => {
-    const [myEvents, setMyEvents] = useState<EventPreview[]>([]);
+    const [myUpcomingEvents, setMyUpcomingEvents] = useState<EventPreview[]>([]);
+    const [myPastEvents, setMyPastEvents] = useState<EventPreview[]>([]);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
     const [eventData, setEventData] = useState<EventDto | null>(null)
 
     const fetchAllMyEvents = async () => {
         try {
             const events = await getMyEvents();
-            setMyEvents(events);
+            const upcoming: EventPreview[] = [];
+            const past: EventPreview[] = [];
+            const now = new Date();
+            events.forEach(event => {
+                if (new Date(event.startDate) > now) {
+                    upcoming.push(event);
+                } else {
+                    past.push(event);
+                }
+            });
+
+            setMyUpcomingEvents(upcoming);
+            setMyPastEvents(past);
         } catch (err) {
             console.error("Failed to fetch events:", err);
         }
@@ -49,7 +62,7 @@ const EventManagementScreen: React.FC = () => {
     const handleDeleteEvent = async () => {
         setSelectedEventId(null);
         setEventData(null);
-        setMyEvents([]);
+        setMyUpcomingEvents([]);
         await fetchAllMyEvents();
     }
 
@@ -57,7 +70,15 @@ const EventManagementScreen: React.FC = () => {
         <div className="event-management-screen">
             <div className="event-management-card-list">
                 <h1>My events</h1>
-                {myEvents.map(e => {
+                {myUpcomingEvents.map(e => {
+                    return <ManageEventCard
+                        eventData={e}
+                        key={e.id}
+                        onSelect={() => setSelectedEventId(e.id)} />
+                }
+                )}
+                <h1>Past events</h1>
+                {myPastEvents.map(e => {
                     return <ManageEventCard
                         eventData={e}
                         key={e.id}
