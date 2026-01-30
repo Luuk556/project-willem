@@ -187,7 +187,7 @@ const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefr
 
                 <CustomCheckbox
                     label="Everyone can join"
-                    defaultValue={eventData.isOpen.toString()}
+                    defaultValue={eventData.isOpen}
                     onChange={(e) => setEventData(prev => ({ ...prev, isOpen: e }))}
                 />
                 {eventData.startDate < new Date() ? (

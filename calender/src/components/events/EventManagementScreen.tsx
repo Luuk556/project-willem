@@ -3,12 +3,15 @@ import ManageEventCard from "./ManageEventCard.tsx"
 import { EventDto, EventPreview } from "../../data/datatypes/eventDatatypes.ts"
 import EventDetailsPanel from "./EventDetailsPanel.tsx"
 import { getEventDetails, getMyEvents } from "../../services/eventService.ts"
+import { useNavigate } from "react-router-dom"
 
 const EventManagementScreen: React.FC = () => {
     const [myUpcomingEvents, setMyUpcomingEvents] = useState<EventPreview[]>([]);
     const [myPastEvents, setMyPastEvents] = useState<EventPreview[]>([]);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
     const [eventData, setEventData] = useState<EventDto | null>(null)
+
+    const navigate = useNavigate();
 
     const fetchAllMyEvents = async () => {
         try {
@@ -69,6 +72,7 @@ const EventManagementScreen: React.FC = () => {
     return (
         <div className="event-management-screen">
             <div className="event-management-card-list">
+                <button onClick={() => { navigate("/event/create") }} className="calendar-newevent">New event</button>
                 <h1>My events</h1>
                 {myUpcomingEvents.map(e => {
                     return <ManageEventCard
