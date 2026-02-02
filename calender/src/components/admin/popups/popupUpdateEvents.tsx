@@ -9,10 +9,10 @@ interface popupEventData {
     roomId: number;
     date: string;
   };
-  saveEventChanges: (changedData: { name: string, date: string, id: Number }) => void;
+  saveEventChanges: (changedData) => void;
 }
 
-const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) => {
+const PopupUpdateEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) => {
   const [eventChanges, setEventChanges] = useState<popupEventData["eventData"]>({
     id: eventData.id,
     title: eventData.title,
@@ -49,4 +49,4 @@ const PopupEvents: React.FC<popupEventData> = ({ eventData, saveEventChanges }) 
   );
 };
 
-export default PopupEvents;
+export default PopupUpdateEvents;

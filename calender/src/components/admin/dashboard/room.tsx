@@ -3,7 +3,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Popup from "../popups/popup.tsx";
-import PopupRooms from "../popups/popupRooms.tsx";
+import PopupUdateRooms from "../popups/popupUpdateRooms.tsx";
 import CustomInput from "../../inputs/CustomInput.tsx";
 
 interface RoomDetails {
@@ -55,7 +55,7 @@ const AdminRoomDashboard: FC = () => {
     <main className="admin">
         <Popup closePopup={() => setPopup({})} openPopup={popup} >
         { popup ? (
-            <PopupRooms roomData={popup} saveRoomChanges={roomChanges} />
+            <PopupUdateRooms roomData={popup} saveRoomChanges={roomChanges} />
         ): null}
         </Popup>
         <section className="dashboard-card">

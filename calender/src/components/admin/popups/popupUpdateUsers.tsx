@@ -11,7 +11,7 @@ interface popupUserData {
   saveUserChanges: (userData) => void;
 }
 
-const PopupUsers: React.FC<popupUserData> = ({ userData, saveUserChanges }) => {
+const PopupUpdateUsers: React.FC<popupUserData> = ({ userData, saveUserChanges }) => {
   const [userChanges, setUserChanges] = useState<popupUserData["userData"]>({
     id: userData.id,
     name: userData.name,
@@ -54,4 +54,4 @@ const PopupUsers: React.FC<popupUserData> = ({ userData, saveUserChanges }) => {
   );
 };
 
-export default PopupUsers;
+export default PopupUpdateUsers;

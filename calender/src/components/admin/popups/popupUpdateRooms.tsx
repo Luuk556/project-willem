@@ -14,7 +14,7 @@ interface popupRoomData {
     saveRoomChanges: (roomData) => void;
 }
 
-const PopupRooms: React.FC<popupRoomData> = ({ roomData, saveRoomChanges }) => {
+const PopupUpdateRooms: React.FC<popupRoomData> = ({ roomData, saveRoomChanges }) => {
   const [roomChanges, setRoomChanges] = useState<popupRoomData["roomData"]>({
     id: roomData.id,
     name: roomData.name,
@@ -82,4 +82,4 @@ const PopupRooms: React.FC<popupRoomData> = ({ roomData, saveRoomChanges }) => {
   );
 };
 
-export default PopupRooms;
+export default PopupUpdateRooms;

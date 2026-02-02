@@ -186,5 +186,25 @@ public class EventController : ControllerBase
         }
         return Ok();
     }
-    
+
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> DeleteEvent(int id)
+    {
+        var ev = await _context.Events
+            .Include(e => e.Attendees)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (ev == null)
+            return NotFound();
+
+        _context.EventAttendees.RemoveRange(
+            _context.EventAttendees.Where(ea => ea.EventId == id)
+        );
+
+        _context.Events.Remove(ev);
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
