@@ -3,6 +3,7 @@ using CalendarBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using MyBackend.Dtos;
 using MyBackend.Enums;
+using System.Text.RegularExpressions;
 
 namespace CalendarBackend.Controllers;
 
@@ -25,6 +26,11 @@ public class RegisterController : ControllerBase
 
         if (await _userService.NameExistsAsync(dto.Name))
             return Conflict("Username already exists");
+
+        var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+
+        if (!emailRegex.IsMatch(dto.Email))
+        return BadRequest("Invalid email format");
 
         var user = new User
         {
