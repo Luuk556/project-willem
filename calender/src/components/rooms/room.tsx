@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { getUsersInRoom } from "../../services/roomService.ts";
 
 const Room: React.FC = () => {
   const { id } = useParams();
@@ -9,8 +9,8 @@ const Room: React.FC = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const res = await axios.get(`http://localhost:5184/api/rooms/${id}/active-users`);
-        setMembers(res.data);
+        const usersInRoom = await getUsersInRoom(id);
+        setMembers(usersInRoom);
       } catch (err) {
         console.error("Failed to load room members", err);
       }

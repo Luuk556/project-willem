@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Room } from '../../data/datatypes/roomDatatypes';
-import axios from 'axios';
 import CustomInput from '../inputs/CustomInput.tsx';
+import { getRoomMapDetails } from '../../services/roomService.ts';
 
 interface RoomMap extends Room {
     isAvailable: boolean;
@@ -11,17 +11,14 @@ interface RoomMap extends Room {
 const RoomMap: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
     const [rooms, setRooms] = useState<RoomMap[]>([])
+    const [roomsOob, setRoomsOob] = useState<RoomMap[]>([])
 
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await axios.get<RoomMap[]>("http://localhost:5184/room/map", {
-                    params: {
-                        date: selectedDate
-                    }
-                });
+                const roomMapData = await getRoomMapDetails(selectedDate)
 
-                setRooms(response.data);
+                setRooms(roomMapData);
             } catch (err) {
                 console.error("Failed to fetch rooms:", err);
             }
@@ -29,6 +26,20 @@ const RoomMap: React.FC = () => {
 
         fetchRooms();
     }, [selectedDate]);
+
+    function calculateMapBounds() {
+        setRoomsOob([]);
+        rooms.forEach(r => {
+            if (r.positionX >= 100 || r.positionY >= 100 || r.positionX < 0 || r.positionY < 0) {
+                console.log(r)
+                setRoomsOob(prev => [...prev, r])
+            }
+        })
+    }
+
+    useEffect(() => {
+        calculateMapBounds();
+    }, [rooms]);
 
     function placeRoom(room: RoomMap) {
         return (
@@ -41,7 +52,7 @@ const RoomMap: React.FC = () => {
                         left: `${room.positionX}vw`,
                         height: `${room.sizeY}vh`,
                         width: `${room.sizeX}vw`,
-                        backgroundColor: `${room.isAvailable ? "rgb(136, 229, 128)" : "rgb(252, 125, 109)"}`
+                        backgroundColor: `${room.isAvailable ? "rgb(136, 229, 128)" : /*"rgb(252, 125, 109)"*/ "rgb(136, 229, 128)"}`
                     }}
                 >
                     {room.name || `Room ${room.id}`}
@@ -50,14 +61,20 @@ const RoomMap: React.FC = () => {
         );
     }
 
+    function displayRoomsOob() {
+        return (
+            <div className='roommap-header'>
+                <p>Rooms not visible on map: </p>
+                {roomsOob.map(r => (
+                    <Link key={r.id} to={`/rooms/${r.id}`}> <button>{r.name}</button> </Link>
+                ))}
+            </div>
+        )
+    }
+
     return (
         <div className='roommap-container'>
-            <CustomInput
-                type="datetime-local"
-                label="Select date:"
-                onChange={selectedDate => { setSelectedDate(new Date(selectedDate)); }}
-                defaultValue={""}
-            />
+            {roomsOob.length > 0 ? displayRoomsOob() : <></>}
             {rooms.map(placeRoom)}
         </div>
     );

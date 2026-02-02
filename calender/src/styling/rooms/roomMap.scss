@@ -9,9 +9,18 @@
         box-shadow: 0px 0px 2px inset black;
         border: 1px solid black;
         border-radius: 2px;
+        z-index: 1
     }
 
     .room-button:hover {
         box-shadow: 0px 0px 5px inset black;
+    }
+
+    .roommap-header {
+        display: flex;
+        flex-direction: row;
+        box-shadow: 0px 0px 2px black;
+        padding: 5px;
+        z-index: 2;
     }
 }

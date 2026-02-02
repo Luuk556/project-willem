@@ -1,8 +1,7 @@
+using MyBackend.Enums;
+
 namespace CalendarBackend.Model;
-public enum Role {
-    User = 0,
-    Admin = 1,
-}
+
 public class User
 {
     public int Id { get; set; }

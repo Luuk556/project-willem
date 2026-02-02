@@ -16,9 +16,9 @@ public class EventService
          _eventAttendanceRepository = new  EventAttendanceRepository(context);
     }
 
-    public Event[] GetAll()
+    public EventDetailsDto[] GetAll()
     {
-        return _eventRepository.GetAll();
+        return _eventRepository.GetAll().Select(e => new EventDetailsDto(e)).ToArray();
     }
     
     public EventPreviewDto[] GetPreviewByDateAndUser(DateTime date, int userId)
@@ -43,34 +43,20 @@ public class EventService
         return _eventRepository.GetEventByRoomAndDate(roomId,  dateStart, dateEnd);
     }
 
-    public EventDetailsDto GetEventById(int id)
+    public EventDetailsDto? GetEventById(int id)
     {
-        Event evt =  _eventRepository.GetEventById(id);
-        
-        return new EventDetailsDto
+        Event eventData = _eventRepository.GetEventById(id);
+        if (eventData == null)
         {
-            Id = evt.Id,
-            Title = evt.Title,
-            Description = evt.Description,
-            StartDate = evt.StartDate,
-            EndDate = evt.EndDate,
-            OrganizerId = evt.OrganizerId,
-            IsOpen = evt.IsOpen,
-            RoomMinimal = new RoomMinimalDto
-            {
-                Id = evt.Room.Id,
-                Name = evt.Room.Name
-            },
-            Attendees = evt.Attendees
-                .Select(u => new UserMinimalDto
-                {
-                    Id = u.Id,
-                    Name = u.Name,
-                    AcceptedInvite = _eventAttendanceRepository.GetByUserAndEvent(u.Id, evt.Id).AcceptedInvite
-                })
-                .ToList()
-        };
+            return null;
+        }
+        EventDetailsDto result =  new EventDetailsDto(eventData);
         
+        result.Attendees.ForEach(a =>
+        {
+            a.AcceptedInvite = _eventAttendanceRepository.GetByUserAndEvent(a.Id, result.Id).AcceptedInvite;
+        });
+        return result;
     }
 
     public bool GetHasEventOnDate(DateTime date, int roomId)
@@ -87,7 +73,22 @@ public class EventService
     {
         _eventRepository.Update(eventData);
     }
-    
+
+    public async Task<int> DeleteById(int id, int userId)
+    {
+        Event? eventToDelete = _eventRepository.GetEventById(id);
+        if (eventToDelete == null)
+        {
+            return 2;
+        }
+        if (userId != eventToDelete.OrganizerId)
+        {
+            return 1;
+        }
+        _eventRepository.Delete(eventToDelete);
+        await _eventRepository.SaveChangesAsync();
+        return 0;
+    }
     public EventPreviewDto[] GetUserInvitations(int userId)
     {
         int[] eventIds =  _eventAttendanceRepository.GetUserInvitations(userId);

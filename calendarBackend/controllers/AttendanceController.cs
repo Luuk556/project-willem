@@ -25,7 +25,7 @@ public class AttendanceController : ControllerBase
 
     // update attendance
     [HttpPut]
-    public IActionResult Update([FromBody]UpdateAttendanceDto dto)
+    public IActionResult Update([FromBody]AddAttendanceDto dto)
     {
         _attendanceService.UpdateAttendance(dto.UserId, dto.RoomId);
         return Ok();
@@ -33,9 +33,9 @@ public class AttendanceController : ControllerBase
 
     // end attendance
     [HttpPost("end")]
-    public IActionResult End(UserDto dto)
+    public IActionResult End(int userId)
     {
-        _attendanceService.EndAttendance(dto.UserId);
+        _attendanceService.EndAttendance(userId);
         return Ok();
     }
 

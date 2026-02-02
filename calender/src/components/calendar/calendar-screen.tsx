@@ -1,7 +1,8 @@
+import CustomCheckbox from "../inputs/CustomCheckbox.tsx";
 import CustomDropdown from "../inputs/CustomDropdown.tsx";
 import CustomInput from "../inputs/CustomInput.tsx";
+import WeekSelector from "../inputs/WeekSelector.tsx";
 import Calendar from "./calendar.tsx"
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const CalendarScreen = () => {
@@ -9,37 +10,32 @@ const CalendarScreen = () => {
     const [date, setDate] = useState(new Date());
     const [dayAmount, setDayAmount] = useState(5);
     const [isCompact, setIsCompact] = useState(false);
-    const navigate = useNavigate();
+    const [showWeekends, setShowWeekends] = useState<boolean>(false);
 
     return (
         <div className="calendar">
             <div className="calendar-sidemenu">
-                <button onClick={() => {navigate("/event/create")}} className="calendar-newevent">New event</button>
-                <CustomInput
-                    type="date"
-                    label="Select date:"
-                    onChange={selectedDate => { setDate(new Date(selectedDate)); }}
-                    defaultValue={date}
-                />
-                <CustomDropdown
-                    onChange={selectedAmount => { setDayAmount(Number(selectedAmount)); }}
-                    label="Amount of days:"
-                    defaultValue={dayAmount}
-                    values={[1, 2, 3, 4, 5, 6, 7]}
+
+                <WeekSelector
+                    getDate={setDate}
                 />
 
-                <p>compact view</p>
-                <input type="checkbox" className="calendar-screen-is-compact"
-                    onChange={e => {
-                        setIsCompact(e.target.checked);
-                    }}
+                <CustomCheckbox
+                    label="Compact view"
+                    defaultValue={isCompact}
+                    onChange={setIsCompact}
+                />
+
+                <CustomCheckbox
+                    label="Show weekends"
+                    defaultValue={showWeekends}
+                    onChange={setShowWeekends}
                 />
             </div>
             <div className="calendar-window">
                 <Calendar
                     selectedDate={date}
-                    //selectedDate={new Date(2025, 9, 3)}
-                    dateAmount={dayAmount}
+                    dateAmount={showWeekends ? 7 : 5}
                     isCompact={isCompact}
                     onlyOpenEvents={false}
                 />

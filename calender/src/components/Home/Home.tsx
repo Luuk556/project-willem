@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Calendar from "../calendar/calendar.tsx";
-import CustomDropdown from "../inputs/CustomDropdown.tsx";
 import Profile from "../../components/profile/Profile.tsx";
 import { Room } from "../../data/datatypes/roomDatatypes";
+import { getAllRooms } from "../../services/roomService.ts";
 
 const Home: React.FC = () => {
-  const [rooms, setRooms] = useState<Room[]>([]);
+  const [rooms, setRooms] = useState<Map<number, string>>(new Map);
   const [selectedRoomId, setSelectedRoomId] = useState<number | "">("");
   const [isPresent, setIsPresent] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:5184/room/all")
-      .then((res) => {
-        setRooms(res.data);
-      })
-      .catch((err) => {
-        console.error("Rooms fout:", err);
-      });
+    const fetchRooms = async () => {
+      const allRooms = await getAllRooms();
+      setRooms(allRooms);
+    }
+
+    fetchRooms();
   }, []);
 
   useEffect(() => {
@@ -69,9 +68,9 @@ const Home: React.FC = () => {
                 defaultValue={selectedRoomId}
                 onChange={(e) => setSelectedRoomId(Number(e.target.value))}
               >
-                {rooms.map((room) => (
-                  <option key={room.id} value={room.id}>
-                    {room.name}
+                {Array.from(rooms.entries()).map(([id, name]) => (
+                  <option key={id} value={id}>
+                    {name}
                   </option>
                 ))}
               </select>

@@ -1,5 +1,6 @@
 using CalendarBackend.Model;
 using Microsoft.EntityFrameworkCore;
+using MyBackend.Enums;
 
 namespace CalendarBackend.Data;
 
@@ -26,11 +27,13 @@ public class AppDbContext : DbContext
                 _ => _
                     .HasOne(ea => ea.User)
                     .WithMany()
-                    .HasForeignKey(ea => ea.UserId),
+                    .HasForeignKey(ea => ea.UserId)
+                    .OnDelete(DeleteBehavior.Cascade),
                 _ => _
                     .HasOne(ea => ea.Event)
                     .WithMany()
                     .HasForeignKey(ea => ea.EventId)
+                    .OnDelete(DeleteBehavior.Cascade)
             );
         
         modelBuilder.Entity<Event>()

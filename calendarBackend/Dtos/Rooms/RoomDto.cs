@@ -1,6 +1,8 @@
+using CalendarBackend.Model;
+
 namespace MyBackend.Dtos;
 
-public class RoomMapDto
+public class RoomDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
@@ -10,4 +12,15 @@ public class RoomMapDto
     public int PositionX { get; set; }
     public int PositionY { get; set; }
     public bool IsAvailable { get; set; }
+
+    public RoomDto(Room room)
+    {
+        Id = room.Id;
+        Name = room.Name;
+        Capacity = room.Capacity;
+        SizeX = room.SizeX;
+        SizeY = room.SizeY;
+        PositionX = room.PositionX;
+        PositionY = room.PositionY;
+    }
 }

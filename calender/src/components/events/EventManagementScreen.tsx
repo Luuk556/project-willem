@@ -2,20 +2,33 @@ import { useEffect, useState } from "react"
 import ManageEventCard from "./ManageEventCard.tsx"
 import { EventDto, EventPreview } from "../../data/datatypes/eventDatatypes.ts"
 import EventDetailsPanel from "./EventDetailsPanel.tsx"
-import { getEventDetails, getMyEvents } from "../../backendCall.ts"
+import { getEventDetails, getMyEvents } from "../../services/eventService.ts"
+import { useNavigate } from "react-router-dom"
 
 const EventManagementScreen: React.FC = () => {
-    const [myEvents, setMyEvents] = useState<EventPreview[]>([]);
+    const [myUpcomingEvents, setMyUpcomingEvents] = useState<EventPreview[]>([]);
+    const [myPastEvents, setMyPastEvents] = useState<EventPreview[]>([]);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
     const [eventData, setEventData] = useState<EventDto | null>(null)
 
+    const navigate = useNavigate();
+
     const fetchAllMyEvents = async () => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) return;
+            const events = await getMyEvents();
+            const upcoming: EventPreview[] = [];
+            const past: EventPreview[] = [];
+            const now = new Date();
+            events.forEach(event => {
+                if (new Date(event.startDate) > now) {
+                    upcoming.push(event);
+                } else {
+                    past.push(event);
+                }
+            });
 
-            const events = await getMyEvents(token);
-            setMyEvents(events);
+            setMyUpcomingEvents(upcoming);
+            setMyPastEvents(past);
         } catch (err) {
             console.error("Failed to fetch events:", err);
         }
@@ -46,13 +59,30 @@ const EventManagementScreen: React.FC = () => {
     const refresh = async () => {
         await fetchAllMyEvents();
         await fetchDetails();
+
     };
+
+    const handleDeleteEvent = async () => {
+        setSelectedEventId(null);
+        setEventData(null);
+        setMyUpcomingEvents([]);
+        await fetchAllMyEvents();
+    }
 
     return (
         <div className="event-management-screen">
             <div className="event-management-card-list">
+                <button onClick={() => { navigate("/event/create") }} className="calendar-newevent">New event</button>
                 <h1>My events</h1>
-                {myEvents.map(e => {
+                {myUpcomingEvents.map(e => {
+                    return <ManageEventCard
+                        eventData={e}
+                        key={e.id}
+                        onSelect={() => setSelectedEventId(e.id)} />
+                }
+                )}
+                <h1>Past events</h1>
+                {myPastEvents.map(e => {
                     return <ManageEventCard
                         eventData={e}
                         key={e.id}
@@ -66,6 +96,7 @@ const EventManagementScreen: React.FC = () => {
                     <EventDetailsPanel
                         data={eventData}
                         requestRefresh={refresh}
+                        onDeleteEvent={handleDeleteEvent}
                     />
                 ) : (
                     <p>Select an event to see details</p>

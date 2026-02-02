@@ -7,6 +7,7 @@ using MyBackend.Dtos;
 using CalendarBackend.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CalendarBackend.Controllers;
 
@@ -33,13 +34,14 @@ public class EventController : ControllerBase
 
     [Authorize]
     [HttpGet("event-previews")]
-    public EventPreviewDto[] GetPreviews([FromQuery] DateTime date)
+    public IActionResult GetPreviews([FromQuery] DateTime date)
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
-            return Array.Empty<EventPreviewDto>();
+            return Unauthorized();
 
-        return _eventService.GetPreviewByDateAndUser(date, userId);
+        EventPreviewDto[] result = _eventService.GetPreviewByDateAndUser(date, userId);
+        return Ok(result);
     }
 
     [HttpGet("my-events")]
@@ -47,21 +49,27 @@ public class EventController : ControllerBase
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        var result = _eventService.GetMyEvents(userId);
+        if (result.IsNullOrEmpty())
+        {
             return NotFound();
-        return Ok(new { message = "Events found", events = _eventService.GetMyEvents(userId) });
+        }
+        return Ok(result);
     }
 
     [HttpGet("details")]
-    public EventDetailsDto GetDetails([FromQuery] int eventId)
+    public IActionResult GetDetails([FromQuery] int eventId)
     {
-        EventDetailsDto eventDetails = _eventService.GetEventById(eventId);
-        return eventDetails;
+        EventDetailsDto result = _eventService.GetEventById(eventId);
+        return Ok(result);
     }
 
     [HttpGet("open")]
-    public EventPreviewDto[] GetOpenEventsByDate([FromQuery] DateTime date)
+    public IActionResult GetOpenEventsByDate([FromQuery] DateTime date)
     {
-        return _eventService.GetPreviewOpenByDate(date);
+        EventPreviewDto[] result = _eventService.GetPreviewOpenByDate(date);
+        return Ok(result);
     }
 
     [Authorize]
@@ -147,7 +155,7 @@ public class EventController : ControllerBase
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
             return Unauthorized();
-        return Ok(new { message = "Events found", events = _eventService.GetUserInvitations(userId) });
+        return Ok(_eventService.GetUserInvitations(userId));
     }
 
 
@@ -158,7 +166,25 @@ public class EventController : ControllerBase
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
             return Unauthorized();
-        return Ok(new { message = "Events found", events = _eventService.GetUserAcceptedInvitations(userId) });
+        return Ok(_eventService.GetUserAcceptedInvitations(userId));
+    }
+
+    [HttpPost("delete/{id}")]
+    public async Task<IActionResult> DeleteEvent(int id)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        int result = await _eventService.DeleteById(id, userId);
+        if (result == 2)
+        {
+            return NotFound();
+        }
+        if (result == 1)
+        {
+            return Unauthorized();
+        }
+        return Ok();
     }
 
     [HttpDelete("delete/{id}")]

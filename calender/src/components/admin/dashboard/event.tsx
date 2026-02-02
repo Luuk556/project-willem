@@ -6,6 +6,7 @@ import Popup from "../popups/popup.tsx";
 import PopupUpdateEvents from "../popups/popupUpdateEvents.tsx";
 import PopupDeleteEvents from "../popups/popupDeleteEvents.tsx";
 import CustomInput from "../../inputs/CustomInput.tsx";
+import { getAllEvents } from "../../../services/eventService.ts";
 
 interface EventsDetails {
     id: number;
@@ -26,11 +27,17 @@ const AdminEventDashboard: FC = () => {
     const [search, setSearch] = useState<String>("");
 
     useEffect(() => {
-        axios.get("http://localhost:5184/event/all")
-            .then(req => {
-                setEvents(req.data);
-            })
-            .catch(err => console.error(err));
+        const fetchAllEvents = async () => {
+            try {
+
+                const response = await getAllEvents();
+                setEvents(response)
+            }
+            catch (err) {
+                console.error(err);
+            }
+        }
+        fetchAllEvents()
     }, []);
 
     const filterList = () => {

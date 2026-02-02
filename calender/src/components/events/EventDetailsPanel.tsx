@@ -3,14 +3,18 @@ import { EventDto } from "../../data/datatypes/eventDatatypes"
 import CustomInput from "../inputs/CustomInput.tsx";
 import CustomCheckbox from "../inputs/CustomCheckbox.tsx";
 import CustomSearchBox from "../inputs/CustomSearchBox.tsx";
-import { getAllRooms, getInvitableUsers, inviteUserToEvent, RevokeEventAttendance, updateEvent } from "../../backendCall.ts";
 import { toLocalDatetimeInput } from "../../Utility.ts";
+import { inviteUserToEvent, RevokeEventAttendance } from "../../services/eventAttendanceService.ts";
+import { deleteEvent, updateEvent } from "../../services/eventService.ts";
+import { getAllRooms } from "../../services/roomService.ts";
+import { getInvitableUsers } from "../../services/userService.ts";
 
 interface EventDetailsPanelProps {
     data: EventDto;
     requestRefresh: () => void;
+    onDeleteEvent: () => void;
 }
-const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefresh }) => {
+const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefresh, onDeleteEvent }) => {
     useEffect(() => {
         setEventData(data);
     }, [data]);
@@ -80,6 +84,16 @@ const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefr
             requestRefresh();
         } catch (err) {
             console.log("Failed to revoke attendance of event:", err)
+        }
+    }
+
+    const fetchDeleteEvent = async () => {
+        try {
+            await deleteEvent(eventData.id);
+            onDeleteEvent();
+        }
+        catch (err) {
+            console.error("Could not delete event: ", err)
         }
     }
 
@@ -173,7 +187,7 @@ const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefr
 
                 <CustomCheckbox
                     label="Everyone can join"
-                    defaultValue={eventData.isOpen.toString()}
+                    defaultValue={eventData.isOpen}
                     onChange={(e) => setEventData(prev => ({ ...prev, isOpen: e }))}
                 />
                 {eventData.startDate < new Date() ? (
@@ -181,7 +195,11 @@ const EventDetailsPanel: React.FC<EventDetailsPanelProps> = ({ data, requestRefr
                 ) : eventData.startDate > eventData.endDate ? (
                     <p className="error">Cant save: Start date must be before end date</p>
                 ) : (
-                    <button onClick={saveChanges}>Save changes</button>
+                    <div>
+                        <button onClick={saveChanges}>Save changes</button>
+
+                        <button onClick={fetchDeleteEvent}>Delete event</button>
+                    </div>
                 )}
             </div>
 

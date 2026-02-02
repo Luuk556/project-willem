@@ -1,5 +1,4 @@
 using CalendarBackend.Data;
-using CalendarBackend.Model;
 using MyBackend.Dtos;
 
 namespace CalendarBackend.Service;
@@ -14,48 +13,33 @@ public class RoomService
         _eventRepository = new EventRepository(context);
     }
 
-    public Room GetById(int id)
+    public RoomDto GetById(int id)
     {
-        return _roomRepository.GetById(id);
+        return new RoomDto(_roomRepository.GetById(id));
     }
 
     public RoomMinimalDto[] GetAllRoomMinimal()
     {
         return _roomRepository.GetAll()
-            .Select(r => new RoomMinimalDto
-            {
-                Id = r.Id,
-                Name = r.Name
-            })
+            .Select(r => new RoomMinimalDto(r))
             .ToArray();
     }
 
-    public RoomMapDto[] GetAllRoomsForMap(DateTime date)
+    public RoomDto[] GetAllRoomsForMap(DateTime date)
     {
-        List<RoomMapDto> result = new List<RoomMapDto>();
-        Room[] rooms = _roomRepository.GetAll();
+        List<RoomDto> result = new List<RoomDto>();
+        RoomDto[] rooms = _roomRepository.GetAll().Select(r => new RoomDto(r)).ToArray();
 
-        foreach (Room room in rooms)
+        foreach (RoomDto room in rooms)
         {
-            RoomMapDto r = new RoomMapDto
-            {
-                Capacity = room.Capacity,
-                Id = room.Id,
-                Name = room.Name,
-                PositionX = room.PositionX,
-                PositionY = room.PositionY,
-                SizeX = room.SizeX,
-                SizeY = room.SizeY,
-                IsAvailable = !_eventRepository.getRoomHasEventOnDate(date, room.Id)
-            };
-            result.Add(r);
-        }
 
+            room.IsAvailable = !_eventRepository.getRoomHasEventOnDate(date, room.Id);
+        };
         return result.ToArray();
     }
 
-    public Room[] GetAll()
+    public RoomDto[] GetAll()
     {
-        return _roomRepository.GetAll();
+        return _roomRepository.GetAll().Select(r => new RoomDto(r)).ToArray();
     }
 }

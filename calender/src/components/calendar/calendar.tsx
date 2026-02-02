@@ -4,6 +4,7 @@ import PopupComponent from "../popup/popup.tsx";
 import { EventPreview } from "../../data/datatypes/eventDatatypes.ts";
 import EventButton from "./EventButton.tsx";
 import axios from "axios";
+import { getTimeDetails } from "../../Utility.ts";
 
 
 //An interface that contains the settings of the calendar
@@ -43,12 +44,6 @@ const Calendar: React.FC<CalendarSettings> = ({
     const timeArray = new Array<number>()
     for (let i = 0; i < 24; i++) {
         timeArray.push(i);
-    }
-
-    //Gets the name of the current day of the week
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']
-    function getDayName(dayIndex: number) {
-        return days[dayIndex];
     }
 
 
@@ -126,32 +121,34 @@ const Calendar: React.FC<CalendarSettings> = ({
         )
     }
 
+    const displayDateHeaders = () => {
+        return dateArray.map((date) => (
+            <th key={date.toISOString()} className="calendar-table-cell">
+                {getTimeDetails(date, date).date}
+            </th>
+        ));
+    };
+
+    const displayTimeRows = () => {
+        return timeArray.map((time) => (
+            <tr className="calendar-table-row" key={time}>
+                <td className="calendar-table-cell">{time}:00</td>
+                {dateArray.map((date) => displayCell(date, time))}
+            </tr>
+        ));
+    };
+
     return (
         <div className="calendar">
             <table cellSpacing={0} className="calendar-table">
                 <thead className="calendar-table-head">
                     <tr className="calendar-table-row">
                         <th className="calendar-table-cell"> </th>
-                        {
-                            dateArray.map((date) => (
-                                <th key={date.toISOString()} className="calendar-table-cell">{getDayName(date.getDay())} {date.getMonth()} / {date.getDate()}</th>
-                            ))
-                        }
+                        {displayDateHeaders()}
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        timeArray.map((time) => (
-                            <tr className="calendar-table-row" key={time}>
-                                <td className="calendar-table-cell">{time + ":00"}</td>
-                                {
-                                    dateArray.map((date) => (
-                                        displayCell(date, time)
-                                    ))
-                                }
-                            </tr>
-                        ))
-                    }
+                    {displayTimeRows()}
                 </tbody>
             </table>
 

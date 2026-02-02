@@ -18,10 +18,6 @@ public class RoomRepository : Repository<Room>
 
     public RoomMinimalDto[] GetAllRooms()
     {
-        return _dbSet.Select(room => new RoomMinimalDto
-        {
-            Id = room.Id,
-            Name = room.Name
-        }).ToArray();
+        return _dbSet.Select(room => new RoomMinimalDto(room)).ToArray();
     }
 }

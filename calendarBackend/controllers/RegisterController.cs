@@ -2,6 +2,7 @@ using CalendarBackend.Model;
 using CalendarBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using MyBackend.Dtos;
+using MyBackend.Enums;
 
 namespace CalendarBackend.Controllers;
 
