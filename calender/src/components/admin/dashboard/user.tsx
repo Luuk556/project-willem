@@ -3,7 +3,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Popup from "../popups/popup.tsx";
-import PopupUsers from "../popups/popupUsers.tsx";
+import PopupUpdateUsers from "../popups/popupUpdateUsers.tsx";
+import PopupDeleteUsers from "../popups/popupDeleteUsers.tsx";
 import CustomInput from "../../inputs/CustomInput.tsx";
 
 interface UserDetails {
@@ -14,9 +15,14 @@ interface UserDetails {
     role: number;
 }
 
+interface popupDetails {
+    update?: UserDetails;
+    delete?: UserDetails;
+}
+
 const AdminUserDashboard: FC = () => {
     const [users, setUsers] = useState<UserDetails[]>([]);
-    const [popup, setPopup] = useState({});
+    const [popup, setPopup] = useState<popupDetails>({});
     const [search, setSearch] = useState<String>("");
 
     useEffect(() => {
@@ -49,12 +55,30 @@ const AdminUserDashboard: FC = () => {
         setPopup({})
     }
 
+    const userDeletes = (userDelete: UserDetails) => {
+        const token = localStorage.getItem("token");
+        axios.delete(`http://localhost:5184/api/user/${userDelete.id}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(() => {
+            setUsers(() =>
+                users.filter(user => user.id !== userDelete.id)
+            );
+        })
+        setPopup({})
+    }
+
     return (
     <main className="admin">
         <Popup closePopup={() => setPopup({})} openPopup={popup} >
-        { popup ? (
-            <PopupUsers userData={popup} saveUserChanges={userChanges} />
-        ): null}
+        { popup.update ? (
+            <PopupUpdateUsers userData={popup.update} saveUserChanges={userChanges} />
+        ) : popup.delete ? (
+            <PopupDeleteUsers userData={popup.delete} saveDeleteUser={userDeletes} />
+        ) : null }
         </Popup>
         <section className="dashboard-card">
             <p className="dashboard-card__title">Users</p>
@@ -75,9 +99,9 @@ const AdminUserDashboard: FC = () => {
                     <div key={user.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: 4 }}>
                         <p>{ user.name }</p>
                         <p>{ user.email }</p>
-                        <FontAwesomeIcon icon={faPenToSquare} onClick={() => {setPopup(user)}}/>
+                        <FontAwesomeIcon icon={faPenToSquare} onClick={() => {setPopup({update: user})}}/>
                         { user.role === 0 ? (
-                            <FontAwesomeIcon icon={faTrash} onClick={() => {setPopup(user)}}/>
+                            <FontAwesomeIcon icon={faTrash} onClick={() => {setPopup({delete: user})}}/>
                         ) : (
                             <p></p>
                         )}

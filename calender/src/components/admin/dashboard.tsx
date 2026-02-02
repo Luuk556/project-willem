@@ -1,8 +1,8 @@
 import { FC, useState, useEffect } from "react";
 import Popup from "./popups/popup.tsx";
-import PopupUsers from "./popups/popupUsers.tsx";
-import PopupRooms from "./popups/popupRooms.tsx";
-import PopupEvents from "./popups/popupEvents.tsx";
+import PopupUsers from "./popups/popupUpdateUsers.tsx";
+import PopupRooms from "./popups/popupUpdateRooms.tsx";
+import PopupEvents from "./popups/popupUpdateEvents.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";

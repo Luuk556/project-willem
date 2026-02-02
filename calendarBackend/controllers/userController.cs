@@ -77,13 +77,31 @@ namespace MyBackend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users
+                .Include(u => u.Events)
+                .Include(u => u.Attendances)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
             if (user == null)
-            {
                 return NotFound();
+
+            _context.EventAttendees.RemoveRange(
+                _context.EventAttendees.Where(ea => ea.UserId == id)
+            );
+
+            foreach (var ev in user.Events)
+            {
+                _context.EventAttendees.RemoveRange(
+                    _context.EventAttendees.Where(ea => ea.EventId == ev.Id)
+                );
             }
 
+            _context.Events.RemoveRange(user.Events);
+
+            _context.Attendances.RemoveRange(user.Attendances);
+
             _context.Users.Remove(user);
+
             await _context.SaveChangesAsync();
 
             return NoContent();
