@@ -67,5 +67,5 @@ export const getAllEvents = async (): Promise<{ id: number; title: string; date:
 
 // deletes an event
 export const deleteEvent = async (id: number) => {
-    await client.post(`/event/delete/${id}`);
+    await client.delete(`/event/delete/${id}`);
 }

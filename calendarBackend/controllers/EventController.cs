@@ -169,7 +169,7 @@ public class EventController : ControllerBase
         return Ok(_eventService.GetUserAcceptedInvitations(userId));
     }
 
-    [HttpPost("delete/{id}")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeleteEvent(int id)
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);

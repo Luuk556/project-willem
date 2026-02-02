@@ -16,9 +16,9 @@ public class EventService
          _eventAttendanceRepository = new  EventAttendanceRepository(context);
     }
 
-    public EventDetailsDto[] GetAll()
+    public Event[] GetAll()
     {
-        return _eventRepository.GetAll().Select(e => new EventDetailsDto(e)).ToArray();
+        return _eventRepository.GetAll();
     }
     
     public EventPreviewDto[] GetPreviewByDateAndUser(DateTime date, int userId)
