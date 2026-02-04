@@ -23,6 +23,10 @@ const Profile: React.FC = () => {
         setName(data.name || "");
         setEmail(data.email || "");
         setPassword(""); // password not returned for security
+        // Store userId in localStorage for use in other components
+        if (data.id) {
+          localStorage.setItem("userId", data.id.toString());
+        }
       })
       .catch((err) => console.error("Failed to fetch profile:", err));
 

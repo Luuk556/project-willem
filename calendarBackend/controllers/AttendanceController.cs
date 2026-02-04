@@ -44,8 +44,8 @@ public class AttendanceController : ControllerBase
     public IActionResult GetToday(int userId)
     {
         var attendance = _attendanceService.GetTodayAttendance(userId);
-        if (attendance == null) return NotFound(new { success = false, message = "No data records" });
-        return Ok(new { success = true, attendance });
+        if (attendance == null) return Ok(null);
+        return Ok(attendance);
     }
 
     // get active users in a room

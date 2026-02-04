@@ -19,39 +19,53 @@ const Home: React.FC = () => {
     fetchRooms();
   }, []);
 
+  // Load current attendance status when component mounts
   useEffect(() => {
-    const updateAttendance = () => {
+    const loadAttendanceStatus = async () => {
+      const userId = localStorage.getItem("userId");
+      const currentUserId = userId ? parseInt(userId, 10) : 1;
 
-      if (isPresent) {
-        axios.put('http://localhost:5184/api/attendance', {
-          userId: 1,
-          roomId: selectedRoomId
-        })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      } else {
-        axios.post('http://localhost:5184/api/attendance/end', {
-          userId: 1
-        })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+      try {
+        const response = await axios.get(`http://localhost:5184/api/attendance/today/${currentUserId}`);
+        if (response.data) {
+          setIsPresent(true);
+          setSelectedRoomId(response.data.roomId);
+        } else {
+          setIsPresent(false);
+          setSelectedRoomId("");
+        }
+      } catch (error) {
+        setIsPresent(false);
+        setSelectedRoomId("");
       }
     };
 
-    updateAttendance();
-  }, [isPresent]);
+    loadAttendanceStatus();
+  }, []);
 
-  const handleAttendance = () => {
-    if (!selectedRoomId) return alert("Select a room first");
-    setIsPresent(!isPresent);
+  const handleAttendance = async () => {
+    if (!isPresent && !selectedRoomId) return alert("Select a room first");
+    
+    const userId = localStorage.getItem("userId");
+    const currentUserId = userId ? parseInt(userId, 10) : 1;
+
+    try {
+      if (isPresent) {
+        // Sign off
+        await axios.post(`http://localhost:5184/api/attendance/end?userId=${currentUserId}`);
+        setIsPresent(false);
+        setSelectedRoomId("");
+      } else {
+        // Sign in
+        await axios.put('http://localhost:5184/api/attendance', {
+          userId: currentUserId,
+          roomId: selectedRoomId
+        });
+        setIsPresent(true);
+      }
+    } catch (error) {
+      console.error("Attendance error:", error);
+    }
   }
 
   return (
@@ -65,9 +79,10 @@ const Home: React.FC = () => {
             <div className="custom-dropdown">
               <label className="dropdown-width">Select a room</label>
               <select
-                defaultValue={selectedRoomId}
+                value={selectedRoomId}
                 onChange={(e) => setSelectedRoomId(Number(e.target.value))}
               >
+                <option value="">Choose a room</option>
                 {Array.from(rooms.entries()).map(([id, name]) => (
                   <option key={id} value={id}>
                     {name}
@@ -77,7 +92,7 @@ const Home: React.FC = () => {
             </div>
 
             <button
-              onClick={() => handleAttendance()}
+              onClick={handleAttendance}
               className={isPresent ? "btn red" : "btn green"}
             >
               {isPresent ? "Sign off" : "Sign in"}
