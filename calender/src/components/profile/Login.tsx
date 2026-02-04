@@ -11,7 +11,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      if (localStorage.getItem("token")) { navigate("/home") }
+    if (localStorage.getItem("token")) { navigate("/home") }
   }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -19,7 +19,7 @@ const Login: React.FC = () => {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:5184/api/login", {
+      const res = await fetch("http://localhost:8080/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, isAdmin }),

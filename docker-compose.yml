@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./calendarBackend
+    container_name: calendar_backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - sqlite_data:/app/database
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+
+  frontend:
+    build:
+      context: ./calender
+    container_name: calender_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  sqlite_data:

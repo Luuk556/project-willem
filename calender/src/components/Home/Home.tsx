@@ -23,7 +23,7 @@ const Home: React.FC = () => {
     const updateAttendance = () => {
 
       if (isPresent) {
-        axios.put('http://localhost:5184/api/attendance', {
+        axios.put('http://localhost:8080/api/attendance', {
           userId: 1,
           roomId: selectedRoomId
         })
@@ -34,7 +34,7 @@ const Home: React.FC = () => {
             console.log(error);
           });
       } else {
-        axios.post('http://localhost:5184/api/attendance/end', {
+        axios.post('http://localhost:8080/api/attendance/end', {
           userId: 1
         })
           .then(function (response) {

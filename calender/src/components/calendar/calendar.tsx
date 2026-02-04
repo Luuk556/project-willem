@@ -59,7 +59,7 @@ const Calendar: React.FC<CalendarSettings> = ({
             try {
                 const token = localStorage.getItem("token");
                 if (!token) return;
-                let url = onlyOpenEvents ? "http://localhost:5184/event/open" : "http://localhost:5184/event/event-previews"
+                let url = onlyOpenEvents ? "http://localhost:8080/event/open" : "http://localhost:8080/event/event-previews"
                 for (const date of dateArray) {
                     const response = await axios.get<EventPreview[]>(
                         url,

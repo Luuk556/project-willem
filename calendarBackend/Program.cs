@@ -1,7 +1,6 @@
 
 // See https://aka.ms/new-console-template for more information
 using CalendarBackend.Data;
-using CalendarBackend.Model;
 using CalendarBackend.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,7 +14,7 @@ var jwtSecret = jwtConfig["Secret"];
 var jwtExpiryHours = int.Parse(jwtConfig["ExpiryHours"] ?? "2");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=Database.db"));
+    options.UseSqlite("Data Source=/app/database/Database.db"));
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AttendanceRepository>();
@@ -33,7 +32,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("ReactPolicy", policy =>
     {
         policy
-            .WithOrigins("http://localhost:3000")
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -63,6 +62,12 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 app.UseCors("ReactPolicy");
 app.UseAuthentication();
