@@ -6,7 +6,7 @@ const MiddlewareAdmin = () => {
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/profile/me", {
+        fetch(`http://${process.env.REACT_APP_IP}:8080/api/profile/me`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((req) => req.json())

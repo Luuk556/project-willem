@@ -26,7 +26,7 @@ const AdminUserDashboard: FC = () => {
     const [search, setSearch] = useState<String>("");
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/user")
+        axios.get(`http://${process.env.REACT_APP_IP}:8080/api/user`)
             .then(req => {
                 setUsers(req.data);
             })
@@ -44,7 +44,7 @@ const AdminUserDashboard: FC = () => {
 
 
     const userChanges = (userChanges: UserDetails) => {
-        axios.put(`http://localhost:8080/api/user/${userChanges.id}`, userChanges)
+        axios.put(`http://${process.env.REACT_APP_IP}:8080/api/user/${userChanges.id}`, userChanges)
             .then(() => {
                 setUsers(users =>
                     users.map(oldUser =>
@@ -57,7 +57,7 @@ const AdminUserDashboard: FC = () => {
 
     const userDeletes = (userDelete: UserDetails) => {
         const token = localStorage.getItem("token");
-        axios.delete(`http://localhost:8080/api/user/${userDelete.id}`,
+        axios.delete(`http://${process.env.REACT_APP_IP}:8080/api/user/${userDelete.id}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`

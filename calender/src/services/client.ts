@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = `http://${process.env.REACT_APP_IP}:8080`;
 
 export const client = axios.create({
     baseURL: API_BASE,

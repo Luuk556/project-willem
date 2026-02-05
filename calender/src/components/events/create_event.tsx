@@ -18,7 +18,7 @@ const CreateEvent: React.FC = () => {
 
   // Fetch all rooms from backend
   useEffect(() => {
-    fetch("http://localhost:8080/room/all")
+    fetch(`http://${process.env.REACT_APP_IP}:8080/room/all`)
       .then(res => res.json())
       .then(data => {
         setRooms(data);
@@ -43,7 +43,7 @@ const CreateEvent: React.FC = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:8080/event/create", {
+      const res = await fetch(`http://${process.env.REACT_APP_IP}:8080/event/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

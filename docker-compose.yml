@@ -20,6 +20,8 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    environment:
+      - REACT_APP_IP=localhost
 
 volumes:
   sqlite_data:

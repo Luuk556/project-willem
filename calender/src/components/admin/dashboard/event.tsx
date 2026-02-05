@@ -49,7 +49,7 @@ const AdminEventDashboard: FC = () => {
     }
 
     const eventChanges = (eventChanges: EventsDetails) => {
-        axios.put(`http://localhost:8080/event/edit/${eventChanges.id}`, eventChanges)
+        axios.put(`http://${process.env.REACT_APP_IP}:8080/event/edit/${eventChanges.id}`, eventChanges)
             .then(() => {
                 setEvents(events =>
                     events.map(oldEvent =>
@@ -62,7 +62,7 @@ const AdminEventDashboard: FC = () => {
 
     const eventDeletes = (eventDelete: EventsDetails) => {
         const token = localStorage.getItem("token");
-        axios.delete(`http://localhost:8080/event/delete/${eventDelete.id}`,
+        axios.delete(`http://${process.env.REACT_APP_IP}:8080/event/delete/${eventDelete.id}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`

@@ -15,7 +15,7 @@ const Profile: React.FC = () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    fetch("http://localhost:8080/api/profile/me", {
+    fetch(`http://${process.env.REACT_APP_IP}:8080/api/profile/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -26,7 +26,7 @@ const Profile: React.FC = () => {
       })
       .catch((err) => console.error("Failed to fetch profile:", err));
 
-    fetch("http://localhost:8080/api/profile/me/picture", {
+    fetch(`http://${process.env.REACT_APP_IP}:8080/api/profile/me/picture`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -65,7 +65,7 @@ const Profile: React.FC = () => {
     if (file) formData.append("ProfilePicture", file);
 
     try {
-      const res = await fetch("http://localhost:8080/api/profile/me", {
+      const res = await fetch(`http://${process.env.REACT_APP_IP}:8080/api/profile/me`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -86,7 +86,7 @@ const Profile: React.FC = () => {
       // update (refresh) profile picture
       if (updatedUser.profilePictureUrl) {
         const pictureRes = await fetch(
-          "http://localhost:8080" + updatedUser.profilePictureUrl,
+          `http://${process.env.REACT_APP_IP}:8080` + updatedUser.profilePictureUrl,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const blob = await pictureRes.blob();

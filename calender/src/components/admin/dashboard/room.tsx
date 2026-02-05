@@ -22,7 +22,7 @@ const AdminRoomDashboard: FC = () => {
     const [search, setSearch] = useState<String>("");
 
     useEffect(() => {
-        axios.get("http://localhost:8080/room/all-full")
+        axios.get(`http://${process.env.REACT_APP_IP}:8080/room/all-full`)
             .then(req => {
                 setRooms(req.data);
             })
@@ -40,7 +40,7 @@ const AdminRoomDashboard: FC = () => {
 
 
     const roomChanges = (roomChanges: RoomDetails) => {
-        axios.put(`http://localhost:8080/room/edit/${roomChanges.id}`, roomChanges)
+        axios.put(`http://${process.env.REACT_APP_IP}:8080/room/edit/${roomChanges.id}`, roomChanges)
             .then(() => {
                 setRooms(rooms =>
                     rooms.map(oldRoom =>
