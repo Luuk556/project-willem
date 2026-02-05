@@ -33,6 +33,7 @@ public class ProfileController : ControllerBase
 
         return Ok(new
         {
+            id = user.Id,
             name = user.Name,
             email = user.Email,
             role = user.Role,
@@ -94,6 +95,7 @@ public class ProfileController : ControllerBase
 
         return Ok(new
         {
+            id = user.Id,
             name = user.Name,
             email = user.Email,
             profilePictureUrl = "/api/profile/me/picture"
