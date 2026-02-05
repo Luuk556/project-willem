@@ -108,11 +108,11 @@ const Home: React.FC = () => {
         <div className="calendars">
           <div className="homescreen-calendar">
             <p>Events today</p>
-            <p>Events today</p>
             <Calendar
               isCompact={true}
               dateAmount={1}
               selectedDate={new Date()}
+              onlyOpenEvents={true}
             />
           </div>
         </div>
