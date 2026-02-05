@@ -7,6 +7,7 @@ interface CustomCheckboxProps {
 }
 
 const CustomCheckbox: React.FC<CustomCheckboxProps> = ({ onChange, label = "", defaultValue = false }) => {
+    console.log(defaultValue)
     return (
         <div className="custom-input">
             <label>{label}</label>
@@ -14,7 +15,7 @@ const CustomCheckbox: React.FC<CustomCheckboxProps> = ({ onChange, label = "", d
                 className="custom-checkbox"
                 type="checkbox"
                 onChange={(e) => onChange(e.target.checked)}
-                value={defaultValue.toString()}
+                checked={defaultValue}
             />
         </div>
     );

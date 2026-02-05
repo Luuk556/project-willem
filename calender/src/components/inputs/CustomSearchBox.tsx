@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface CustomSearchBoxProps {
     defaultValueId: number | null;
@@ -7,8 +7,8 @@ interface CustomSearchBoxProps {
     label: string;
 }
 
-const CustomSearchBox: React.FC<CustomSearchBoxProps> = ({ items, onSelect, defaultValueId = 0, label }) => {
-    const [query, setQuery] = useState(items.get(defaultValueId || 0) || "");
+const CustomSearchBox: React.FC<CustomSearchBoxProps> = ({ items, onSelect, defaultValueId = 1, label }) => {
+    const [query, setQuery] = useState(items.get(defaultValueId || 1) || "");
     const [showResults, setShowResults] = useState(false);
 
     const filteredItems = Array.from(items.entries()).filter(([id, value]) =>
@@ -20,6 +20,10 @@ const CustomSearchBox: React.FC<CustomSearchBoxProps> = ({ items, onSelect, defa
         setShowResults(false);
         onSelect(id);
     };
+
+    useEffect(() => {
+        setQuery(items.get(defaultValueId || 0) || "");
+    }, [items, defaultValueId]);
 
     return (
         <div className="custom-search-box">
