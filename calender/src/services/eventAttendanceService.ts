@@ -29,7 +29,7 @@ export const rejectEventInvite = async (eventId: number) => {
 };
 
 export const addAttendance = async (eventId: number) => {
-    await client.post("/event-attendance", null, {
+    await client.post("/event-attendance/add", null, {
         params: { eventId },
     });
 };
