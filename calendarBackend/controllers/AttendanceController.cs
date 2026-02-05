@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CalendarBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using MyBackend.Dtos;
@@ -5,7 +6,7 @@ using MyBackend.Dtos;
 namespace CalendarBackend.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("attendance")]
 public class AttendanceController : ControllerBase
 {
     private readonly AttendanceService _attendanceService;
@@ -19,7 +20,10 @@ public class AttendanceController : ControllerBase
     [HttpPost]
     public IActionResult Add(AddAttendanceDto dto)
     {
-        _attendanceService.AddAttendance(dto.UserId, dto.RoomId);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        _attendanceService.AddAttendance(userId, dto.RoomId);
         return Ok();
     }
 
@@ -27,22 +31,31 @@ public class AttendanceController : ControllerBase
     [HttpPut]
     public IActionResult Update([FromBody]AddAttendanceDto dto)
     {
-        _attendanceService.UpdateAttendance(dto.UserId, dto.RoomId);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        _attendanceService.UpdateAttendance(userId, dto.RoomId);
         return Ok();
     }
 
     // end attendance
     [HttpPost("end")]
-    public IActionResult End(int userId)
+    public IActionResult End()
     {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
         _attendanceService.EndAttendance(userId);
         return Ok();
     }
 
     // get today's attendance
-    [HttpGet("today/{userId}")]
-    public IActionResult GetToday(int userId)
+    [HttpGet("today")]
+    public IActionResult GetToday()
     {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
         var attendance = _attendanceService.GetTodayAttendance(userId);
         if (attendance == null) return Ok(null);
         return Ok(attendance);
@@ -54,5 +67,16 @@ public class AttendanceController : ControllerBase
     {
         var users = _attendanceService.GetActiveUsersInRoom(roomId);
         return Ok(users.Select(u => new { userId = u.Id, name = u.Name }));
+    }
+
+    // check if user is present in room
+    [HttpGet("is-present/{roomId}")]
+    public IActionResult IsUserPresentInRoom(int roomId)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized();
+        var isPresent = _attendanceService.IsUserPresentInRoom(userId, roomId);
+        return Ok(new { isPresent });
     }
 }

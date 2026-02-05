@@ -4,6 +4,7 @@ export interface EventPreview {
     startDate: Date;
     endDate: Date;
     id: number;
+    isOpen?: boolean;
 }
 
 export interface EventDetails {
