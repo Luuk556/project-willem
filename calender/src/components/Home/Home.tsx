@@ -87,22 +87,11 @@ const Home: React.FC = () => {
 
         <div className="calendars">
           <div className="homescreen-calendar">
-            <p>My events today</p>
+            <p>Events today</p>
             <Calendar
               isCompact={true}
               dateAmount={1}
-              selectedDate={new Date(2025, 9, 4)}
-              onlyOpenEvents={false}
-            />
-          </div>
-
-          <div className="homescreen-calendar">
-            <p>Open events today</p>
-            <Calendar
-              isCompact={true}
-              dateAmount={1}
-              selectedDate={new Date(2025, 9, 4)}
-              onlyOpenEvents={true}
+              selectedDate={new Date()}
             />
           </div>
         </div>

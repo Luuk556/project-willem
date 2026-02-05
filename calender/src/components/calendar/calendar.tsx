@@ -59,26 +59,79 @@ const Calendar: React.FC<CalendarSettings> = ({
             try {
                 const token = localStorage.getItem("token");
                 if (!token) return;
-                let url = onlyOpenEvents ? "http://localhost:5184/event/open" : "http://localhost:5184/event/event-previews"
+                
                 for (const date of dateArray) {
-                    const response = await axios.get<EventPreview[]>(
-                        url,
-                        {
-                            params: {
-                                date: date.toISOString()
-                            },
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                        }
-                    );
-
-                    const events: EventPreview[] = response.data;
                     const hourMap = new Map<number, EventPreview[]>();
 
+                    // Send date as YYYY-MM-DD to avoid timezone shifts
+                    const dateString = date.toISOString().split('T')[0];
+                    console.debug("Fetching events for date", dateString);
+
+                    // Fetch open events (no auth required)
+                    const openResponse = await axios.get<any[]>(
+                        "http://localhost:5184/event/open",
+                        { params: { date: dateString } }
+                    );
+
+                    const openEvents: any[] = openResponse.data || [];
+
+                    // Fetch user-specific events (requires token)
+                    let userEvents: any[] = [];
+                    try {
+                        const userResponse = await axios.get<any[]>(
+                            "http://localhost:5184/event/event-previews",
+                            {
+                                params: { date: dateString },
+                                headers: { Authorization: `Bearer ${token}` }
+                            }
+                        );
+                        userEvents = userResponse.data || [];
+                    } catch (e) {
+                        // ignore auth errors (user not logged in)
+                        userEvents = [];
+                    }
+
+                    // Fetch all events and filter by date (includes closed events)
+                    let allEvents: any[] = [];
+                    try {
+                        const allResponse = await axios.get<any[]>("http://localhost:5184/event/all");
+                        const allData = allResponse.data || [];
+                        const dateStart = new Date(date);
+                        dateStart.setHours(0,0,0,0);
+                        const dateEnd = new Date(date);
+                        dateEnd.setHours(23,59,59,999);
+
+                        // Include only events that start on this date (prevents old multi-day events from showing)
+                        allEvents = allData.filter(ev => {
+                            const s = new Date(ev.StartDate ?? ev.startDate);
+                            return s >= dateStart && s <= dateEnd;
+                        });
+
+                        // Debug logging to help identify unexpected events
+                        console.debug("Calendar fetch for date", date.toDateString(), "counts -> open:", openEvents.length, "user:", userEvents.length, "allFiltered:", allEvents.length, "ids:", allEvents.map(a => a.Id ?? a.id));
+                    } catch (e) {
+                        allEvents = [];
+                    }
+
+                    // Merge and deduplicate by id (prioritize detailed allEvents/userEvents over openEvents)
+                    const mergedById = new Map<number, any>();
+                    for (const ev of [...openEvents, ...userEvents, ...allEvents]) {
+                        mergedById.set(ev.Id ?? ev.id, ev);
+                    }
+
+                    const events: EventPreview[] = Array.from(mergedById.values()).map((ev: any) => {
+                        // normalize fields and add isOpen flag
+                        const normalized: any = {
+                            id: ev.Id ?? ev.id,
+                            title: ev.Title ?? ev.title,
+                            startDate: new Date(ev.StartDate ?? ev.startDate),
+                            endDate: new Date(ev.EndDate ?? ev.endDate),
+                            isOpen: (ev.IsOpen ?? ev.isOpen) !== undefined ? (ev.IsOpen ?? ev.isOpen) : true
+                        };
+                        return normalized as EventPreview;
+                    });
+
                     for (const event of events) {
-                        event.startDate = new Date(event.startDate);
-                        event.endDate = new Date(event.endDate);
                         const hour = event.startDate.getHours();
                         if (!hourMap.has(hour)) {
                             hourMap.set(hour, []);

@@ -22,7 +22,11 @@ const EventButton: React.FC<EventButtonProps> = ({ data: eventData }: EventButto
     return (
         <button
             key={eventData.id}
-            style={{ height: getEventHeight(eventData.startDate, eventData.endDate), top: getEventTop(eventData.startDate) }}
+            style={{ 
+                height: getEventHeight(eventData.startDate, eventData.endDate), 
+                top: getEventTop(eventData.startDate),
+                backgroundColor: eventData.isOpen === false ? '#ff6b6b' : undefined
+            }}
             className="calendar-event-button"
         >{eventData.title}</button>
     )

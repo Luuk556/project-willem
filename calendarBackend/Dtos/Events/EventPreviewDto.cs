@@ -8,6 +8,7 @@ public class EventPreviewDto
     public string Title { get; set; } = "";
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public bool IsOpen { get; set; }
 
     public EventPreviewDto(Event eventData)
     {
@@ -15,5 +16,6 @@ public class EventPreviewDto
         Title = eventData.Title;
         StartDate = eventData.StartDate;
         EndDate = eventData.EndDate;
+        IsOpen = eventData.IsOpen;
     }
 }
