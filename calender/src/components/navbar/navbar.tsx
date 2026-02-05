@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ onActiveChange }) => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    fetch("http://localhost:5184/api/profile/me", {
+    fetch("http://localhost:8080/api/profile/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((req) => req.json())

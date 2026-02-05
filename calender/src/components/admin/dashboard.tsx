@@ -80,7 +80,7 @@ const AdminDashboard: FC = () => {
 
     const [rooms, setRooms] = useState<RoomDetails[]>([]);
     useEffect(() => {
-        axios.get("http://localhost:5184/api/Rooms")
+        axios.get("http://localhost:8080/api/Rooms")
             .then(res => {
                 setRooms(res.data);
             })

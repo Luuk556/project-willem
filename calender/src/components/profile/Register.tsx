@@ -12,7 +12,7 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {navigate("/home")}
+    if (localStorage.getItem("token")) { navigate("/home") }
   }, [])
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -21,10 +21,10 @@ const Register: React.FC = () => {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:5184/api/register", {
+      const res = await fetch("http://localhost:8080/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({name, email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       if (!res.ok) {

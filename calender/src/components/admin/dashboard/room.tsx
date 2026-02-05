@@ -22,7 +22,7 @@ const AdminRoomDashboard: FC = () => {
     const [search, setSearch] = useState<String>("");
 
     useEffect(() => {
-        axios.get("http://localhost:5184/room/all-full")
+        axios.get("http://localhost:8080/room/all-full")
             .then(req => {
                 setRooms(req.data);
             })
@@ -40,48 +40,48 @@ const AdminRoomDashboard: FC = () => {
 
 
     const roomChanges = (roomChanges: RoomDetails) => {
-        axios.put(`http://localhost:5184/room/edit/${roomChanges.id}`, roomChanges)
-        .then(() => {
-            setRooms(rooms =>
-                rooms.map(oldRoom =>
-                    (oldRoom.id === roomChanges.id) ? { ...oldRoom, ...roomChanges } : oldRoom
-                )
-            );
-        })
+        axios.put(`http://localhost:8080/room/edit/${roomChanges.id}`, roomChanges)
+            .then(() => {
+                setRooms(rooms =>
+                    rooms.map(oldRoom =>
+                        (oldRoom.id === roomChanges.id) ? { ...oldRoom, ...roomChanges } : oldRoom
+                    )
+                );
+            })
         setPopup({})
     }
 
     return (
-    <main className="admin">
-        <Popup closePopup={() => setPopup({})} openPopup={popup} >
-        { popup ? (
-            <PopupUdateRooms roomData={popup} saveRoomChanges={roomChanges} />
-        ): null}
-        </Popup>
-        <section className="dashboard-card">
-            <p className="dashboard-card__title">Rooms</p>
-            <CustomInput
-                type="text"
-                label="Search rooms"
-                defaultValue={search}
-                onChange={result => { setSearch(result) }}
-            />
-            <div className="dashboard-card__table">
-                <div className="dashboard-card__table-row dashboard-card__table-row--header" style={{ ["--row-count" as any]: 3 }}>
-                    <p>Name</p>
-                    <p>Capacity</p>
-                    <p>Edit</p>
-                </div>
-                {filterList().map((room: RoomDetails) => (
-                    <div key={room.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: 3 }}>
-                        <p>{ room.name }</p>
-                        <p>{ room.capacity }</p>
-                        <p onClick={() => {setPopup(room)}}><FontAwesomeIcon icon={faPenToSquare} /></p>
+        <main className="admin">
+            <Popup closePopup={() => setPopup({})} openPopup={popup} >
+                {popup ? (
+                    <PopupUdateRooms roomData={popup} saveRoomChanges={roomChanges} />
+                ) : null}
+            </Popup>
+            <section className="dashboard-card">
+                <p className="dashboard-card__title">Rooms</p>
+                <CustomInput
+                    type="text"
+                    label="Search rooms"
+                    defaultValue={search}
+                    onChange={result => { setSearch(result) }}
+                />
+                <div className="dashboard-card__table">
+                    <div className="dashboard-card__table-row dashboard-card__table-row--header" style={{ ["--row-count" as any]: 3 }}>
+                        <p>Name</p>
+                        <p>Capacity</p>
+                        <p>Edit</p>
                     </div>
-                ))}
-            </div>
-        </section>
-    </main>
+                    {filterList().map((room: RoomDetails) => (
+                        <div key={room.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: 3 }}>
+                            <p>{room.name}</p>
+                            <p>{room.capacity}</p>
+                            <p onClick={() => { setPopup(room) }}><FontAwesomeIcon icon={faPenToSquare} /></p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        </main>
     )
 }
 

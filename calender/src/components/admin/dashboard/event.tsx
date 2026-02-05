@@ -49,7 +49,7 @@ const AdminEventDashboard: FC = () => {
     }
 
     const eventChanges = (eventChanges: EventsDetails) => {
-        axios.put(`http://localhost:5184/event/edit/${eventChanges.id}`, eventChanges)
+        axios.put(`http://localhost:8080/event/edit/${eventChanges.id}`, eventChanges)
             .then(() => {
                 setEvents(events =>
                     events.map(oldEvent =>
@@ -62,28 +62,28 @@ const AdminEventDashboard: FC = () => {
 
     const eventDeletes = (eventDelete: EventsDetails) => {
         const token = localStorage.getItem("token");
-        axios.delete(`http://localhost:5184/event/delete/${eventDelete.id}`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        .then(() => {
-            setEvents(() =>
-                events.filter(event => event.id !== eventDelete.id)
-            );
-        })
+        axios.delete(`http://localhost:8080/event/delete/${eventDelete.id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(() => {
+                setEvents(() =>
+                    events.filter(event => event.id !== eventDelete.id)
+                );
+            })
         setPopup({})
     }
 
     return (
         <main className="admin">
             <Popup closePopup={() => setPopup({})} openPopup={popup} >
-                { popup.update ? (
+                {popup.update ? (
                     <PopupUpdateEvents eventData={popup.update} saveEventChanges={eventChanges} />
                 ) : popup.delete ? (
                     <PopupDeleteEvents eventData={popup.delete} saveDeleteEvent={eventDeletes} />
-                ) : null }
+                ) : null}
             </Popup>
             <section className="dashboard-card">
                 <p className="dashboard-card__title">Events</p>
@@ -102,8 +102,8 @@ const AdminEventDashboard: FC = () => {
                     {filterList().map((event: EventsDetails) => (
                         <div key={event.id} className="dashboard-card__table-row" style={{ ["--row-count" as any]: 3 }}>
                             <p>{event.title}</p>
-                            <FontAwesomeIcon icon={faPenToSquare} onClick={() => { setPopup({update: event}) }}/>
-                            <FontAwesomeIcon icon={faTrash} onClick={() => {setPopup({delete: event})}}/>
+                            <FontAwesomeIcon icon={faPenToSquare} onClick={() => { setPopup({ update: event }) }} />
+                            <FontAwesomeIcon icon={faTrash} onClick={() => { setPopup({ delete: event }) }} />
                         </div>
                     ))}
                 </div>
