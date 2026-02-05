@@ -69,4 +69,12 @@ public class AttendanceService
     {
         return _attendanceRepository.GetActiveUsersByRoom(roomId).Select(u => new UserMinimalDto(u)).ToList();
     }
+
+    // check if user is present in room
+    public bool IsUserPresentInRoom(int userId, int roomId)
+    {
+        var activeAttendance = _attendanceRepository.GetAttendanceByUserId(userId);
+        if (activeAttendance == null) return false;
+        return activeAttendance.RoomId == roomId;
+    }
 }
