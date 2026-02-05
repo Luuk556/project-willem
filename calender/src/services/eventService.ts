@@ -69,3 +69,19 @@ export const getAllEvents = async (): Promise<{ id: number; title: string; date:
 export const deleteEvent = async (id: number) => {
     await client.delete(`/event/delete/${id}`);
 }
+
+export const getOpenEvents = async (dateString: string): Promise<EventPreview[]> => {
+    const response = await client.get(
+        "/event/open",
+        { params: { date: dateString } }
+    );
+    return parseEventPreviewDates(response.data);
+}
+
+export const getEventPreviewsByDate = async (dateString: string): Promise<EventPreview[]> => {
+    const response = await client.get(
+        "/event/event-previews",
+        { params: { date: dateString } }
+    );
+    return parseEventPreviewDates(response.data);
+}

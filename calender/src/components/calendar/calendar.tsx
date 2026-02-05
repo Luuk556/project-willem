@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CalendarEvent from "../events/calendarEvent.tsx";
 import PopupComponent from "../popup/popup.tsx";
 import { EventPreview } from "../../data/datatypes/eventDatatypes.ts";
 import EventButton from "./EventButton.tsx";
 import axios from "axios";
 import { getTimeDetails } from "../../Utility.ts";
-
+import { getEventPreviewsByDate, getOpenEvents } from "../../services/eventService.ts";
 
 //An interface that contains the settings of the calendar
 interface CalendarSettings {
@@ -15,12 +15,6 @@ interface CalendarSettings {
     onlyOpenEvents: boolean | null;
 }
 
-/**
- *  A calendar that shows events for specified dates
- * @param selectedDate the first date of the calendar
- * @param dateAmount the amount of days that are shown on the calendar
- * @param isCompact wether the calendar should be shown at half size 
- */
 const Calendar: React.FC<CalendarSettings> = ({
     selectedDate = new Date(Date.now()),
     dateAmount = 5,
@@ -32,104 +26,59 @@ const Calendar: React.FC<CalendarSettings> = ({
     const [eventMap, setEventMap] = useState<Map<string, Map<number, EventPreview[]>>>(new Map());
 
     //gets the start date given to the calendar, and adds dates based on the amount of days shown
-    const dateArray = new Array<Date>;
-    for (let i = 0; i < dateAmount; i++) {
-        let date: Date = new Date(selectedDate);
-        date.setDate(selectedDate.getDate() + i)
-        dateArray.push(date);
-    }
+    const dateArray = useMemo(() => {
+        const dates = new Array<Date>();
+        for (let i = 0; i < dateAmount; i++) {
+            let date: Date = new Date(selectedDate);
+            date.setDate(selectedDate.getDate() + i);
+            dates.push(date);
+        }
+        return dates;
+    }, [selectedDate, dateAmount]);
 
-
-    //Creates an array that contains the numbers 0 - 24 that represent the hours of the day
-    const timeArray = new Array<number>()
-    for (let i = 0; i < 24; i++) {
-        timeArray.push(i);
-    }
-
+    const timeArray = useMemo(() => {
+        const times = new Array<number>();
+        for (let i = 0; i < 24; i++) {
+            times.push(i);
+        }
+        return times;
+    }, []);
 
     // Turns the date of an event int a key for a map
     function getDateKey(date: Date): string {
         return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
     }
 
+    // Helper function to format date without timezone conversion
+    function formatDateForAPI(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
 
     useEffect(() => {
         const fetchAllEvents = async () => {
             const newEvents = new Map<string, Map<number, EventPreview[]>>();
             try {
-                const token = localStorage.getItem("token");
-                if (!token) return;
-                
                 for (const date of dateArray) {
                     const hourMap = new Map<number, EventPreview[]>();
+                    const dateString = formatDateForAPI(date); // Use local timezone formatting
 
-                    // Send date as YYYY-MM-DD to avoid timezone shifts
-                    const dateString = date.toISOString().split('T')[0];
-                    console.debug("Fetching events for date", dateString);
+                    const openEvents: EventPreview[] = await getOpenEvents(dateString);
+                    const userEvents: EventPreview[] = await getEventPreviewsByDate(dateString);
 
-                    // Fetch open events (no auth required)
-                    const openResponse = await axios.get<any[]>(
-                        "http://localhost:5184/event/open",
-                        { params: { date: dateString } }
-                    );
+                    const eventMap = new Map<number, EventPreview>();
 
-                    const openEvents: any[] = openResponse.data || [];
-
-                    // Fetch user-specific events (requires token)
-                    let userEvents: any[] = [];
-                    try {
-                        const userResponse = await axios.get<any[]>(
-                            "http://localhost:5184/event/event-previews",
-                            {
-                                params: { date: dateString },
-                                headers: { Authorization: `Bearer ${token}` }
-                            }
-                        );
-                        userEvents = userResponse.data || [];
-                    } catch (e) {
-                        // ignore auth errors (user not logged in)
-                        userEvents = [];
-                    }
-
-                    // Fetch all events and filter by date (includes closed events)
-                    let allEvents: any[] = [];
-                    try {
-                        const allResponse = await axios.get<any[]>("http://localhost:5184/event/all");
-                        const allData = allResponse.data || [];
-                        const dateStart = new Date(date);
-                        dateStart.setHours(0,0,0,0);
-                        const dateEnd = new Date(date);
-                        dateEnd.setHours(23,59,59,999);
-
-                        // Include only events that start on this date (prevents old multi-day events from showing)
-                        allEvents = allData.filter(ev => {
-                            const s = new Date(ev.StartDate ?? ev.startDate);
-                            return s >= dateStart && s <= dateEnd;
-                        });
-
-                        // Debug logging to help identify unexpected events
-                        console.debug("Calendar fetch for date", date.toDateString(), "counts -> open:", openEvents.length, "user:", userEvents.length, "allFiltered:", allEvents.length, "ids:", allEvents.map(a => a.Id ?? a.id));
-                    } catch (e) {
-                        allEvents = [];
-                    }
-
-                    // Merge and deduplicate by id (prioritize detailed allEvents/userEvents over openEvents)
-                    const mergedById = new Map<number, any>();
-                    for (const ev of [...openEvents, ...userEvents, ...allEvents]) {
-                        mergedById.set(ev.Id ?? ev.id, ev);
-                    }
-
-                    const events: EventPreview[] = Array.from(mergedById.values()).map((ev: any) => {
-                        // normalize fields and add isOpen flag
-                        const normalized: any = {
-                            id: ev.Id ?? ev.id,
-                            title: ev.Title ?? ev.title,
-                            startDate: new Date(ev.StartDate ?? ev.startDate),
-                            endDate: new Date(ev.EndDate ?? ev.endDate),
-                            isOpen: (ev.IsOpen ?? ev.isOpen) !== undefined ? (ev.IsOpen ?? ev.isOpen) : true
-                        };
-                        return normalized as EventPreview;
+                    openEvents.forEach(event => {
+                        eventMap.set(event.id, event);
                     });
+
+                    userEvents.forEach(event => {
+                        eventMap.set(event.id, event);
+                    });
+
+                    const events: EventPreview[] = Array.from(eventMap.values());
 
                     for (const event of events) {
                         const hour = event.startDate.getHours();
@@ -152,7 +101,7 @@ const Calendar: React.FC<CalendarSettings> = ({
         };
 
         fetchAllEvents();
-    }, [selectedDate, dateAmount]);
+    }, [selectedDate, dateAmount, onlyOpenEvents]);
 
     const displayCell = (date: Date, time: number) => {
         const hourMap = eventMap.get(getDateKey(date));
@@ -164,7 +113,7 @@ const Calendar: React.FC<CalendarSettings> = ({
                 <div className="calendar-cell-content">
                     {
                         events.map((eventData) => (
-                            <div onClick={() => { setSelectedEvent(eventData.id); setOpenEventPopup(true) }}>
+                            <div key={eventData.id} onClick={() => { setSelectedEvent(eventData.id); setOpenEventPopup(true) }}>
                                 <EventButton data={eventData} />
                             </div>
                         ))
