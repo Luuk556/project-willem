@@ -12,7 +12,6 @@ const MiddlewareAdmin = () => {
         .then((req) => req.json())
         .then((user) => {
             (user.role === 1) ? setIsAdmin(true) : setIsAdmin(false)
-            console.log(user.role)
         })
         .catch((err) => console.error("Failed to fetch profile:", err));
     }, [token])
